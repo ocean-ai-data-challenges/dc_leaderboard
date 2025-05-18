@@ -1,0 +1,81 @@
+---
+title: "Data Challenge 1 (iGOR) Leaderboard"
+---
+
+```{python}
+import json
+import pandas as pd
+from pathlib import Path
+from IPython.display import display, Markdown
+
+# Lecture de tous les fichiers JSON du dossier results/
+files = list(Path("results").glob("*.json"))
+data = []
+
+for file in files:
+    with open(file) as f:
+        entries = json.load(f)
+        for entry in entries:
+            model = entry.get("model", file.stem)
+            metric = entry["metric"]
+            # Certains fichiers ont result déjà en dict, d'autres en str
+            result = entry["result"]
+            if isinstance(result, str):
+                result = json.loads(result)
+            for lead_day, variables in result.items():
+                for variable, score in variables.items():
+                    data.append({
+                        "model": model,
+                        "metric": metric,
+                        "lead_day": lead_day,
+                        "variable": variable,
+                        "score": score
+                    })
+
+df = pd.DataFrame(data)
+
+# cmap_code = 'RdYlGn_r'
+cmap_code = 'Spectral'
+# Pour chaque métrique, afficher un tableau par variable
+for metric in sorted(df.metric.unique()):
+    display(Markdown(f"### {metric.upper()}"))
+    metric_df = df[df.metric == metric]
+    for variable in sorted(metric_df.variable.unique()):
+        sub = metric_df[metric_df.variable == variable]
+        # On ne garde que les lead days présents pour tous les modèles
+        common_leads = set(sub.lead_day.unique())
+        for model in sub.model.unique():
+            common_leads &= set(sub[sub.model == model].lead_day.unique())
+        if not common_leads:
+            continue
+        sub = sub[sub.lead_day.isin(common_leads)]
+        # Tableau : modèles en lignes, lead days en colonnes
+        pivot = sub.pivot_table(index="model", columns="lead_day", values="score", aggfunc="mean")
+        # Classement par colonne (lead day)
+        ranked = pivot.rank(axis=0, method="min", ascending=True)
+        # Tri des lignes selon la performance moyenne
+        sorted_idx = ranked.mean(axis=1).sort_values().index
+        pivot = pivot.loc[sorted_idx]
+        # Affichage stylé avec code couleur selon le rang
+        styled = pivot.style.background_gradient(cmap=cmap_code, axis=0).format("{:.3f}")
+        display(Markdown(f"#### {variable}"))
+        display(styled)
+```
+
+---
+
+```{python}
+import matplotlib.pyplot as plt
+# cmap_code = 'RdYlGn_r'
+cmap_code = 'Spectral'
+fig, ax = plt.subplots(figsize=(5, 0.5))
+fig.subplots_adjust(bottom=0.5)
+cmap = plt.get_cmap(cmap_code)
+norm = plt.Normalize(1, len(df.model.unique()))
+cb1 = plt.colorbar(
+    plt.cm.ScalarMappable(norm=norm, cmap=cmap),
+    cax=ax, orientation='horizontal'
+)
+#cb1.set_label('Classement (1 = meilleur)')
+plt.show()
+```
