@@ -4,9 +4,21 @@ title: "Data Challenge 1 (iGOR) Leaderboard"
 
 ```{python}
 import json
+import numpy as np
 import pandas as pd
 from pathlib import Path
+import re
 from IPython.display import display, Markdown
+
+metrics_names = {
+    "rmsd": "Root Mean Squared Deviation",
+    "rmsd_geostrophic_currents": "RMSD of Geostrophic Currents",
+    "rmsd_mld": "RMSD of Mixed Layer Depth",
+    "lagrangian": "Lagrangian analysis",
+}
+
+# 1. Définir le nom du modèle de référence
+reference_model = "glonet"  # à adapter selon ton cas
 
 # Lecture de tous les fichiers JSON du dossier results/
 files = list(Path("results").glob("*.json"))
@@ -35,47 +47,140 @@ for file in files:
 df = pd.DataFrame(data)
 
 # cmap_code = 'RdYlGn_r'
-cmap_code = 'Spectral'
-# Pour chaque métrique, afficher un tableau par variable
+# cmap_code = 'RdBu_r'
+cmap_code = "coolwarm"
+# cmap_code = "seismic"
+
+vars_group_size = 3  # tableaux contenant vars_group_size variables
+
+
+# 1. Sélectionner les lead days impairs
+def is_odd_lead(lead):
+    m = re.search(r'(\d+)', lead)
+    return m and int(m.group(1)) % 2 == 1
+
+lead_days = sorted({ld for ld in df['lead_day'].unique() if is_odd_lead(ld)}, key=lambda x: int(re.search(r'\d+', x).group(0)))
+
+def bold_reference_index(val):
+    return 'font-weight: bold;' if val == reference_model else ''
+
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
+display(Markdown('<div style="height: 90px;"></div>'))
+
+# 2. Pour chaque métrique et variable, construire le tableau de pourcentage de différence
 for metric in sorted(df.metric.unique()):
-    display(Markdown(f"### {metric.upper()}"))
+    metric_complete_name = metrics_names.get(metric, metric)
+    display(Markdown(f"### {metric.upper()}: {metric_complete_name}"))
+    
     metric_df = df[df.metric == metric]
-    for variable in sorted(metric_df.variable.unique()):
-        sub = metric_df[metric_df.variable == variable]
-        # On ne garde que les lead days présents pour tous les modèles
-        common_leads = set(sub.lead_day.unique())
-        for model in sub.model.unique():
-            common_leads &= set(sub[sub.model == model].lead_day.unique())
-        if not common_leads:
-            continue
+    #print(f"METRIC: {metric}")
+    #print(f"metric_df: {metric_df}")
+    # 2. Grouper les variables par paquets de 3 ou 4
+    metric_variables = sorted(metric_df['variable'].unique())
+    for var_group in chunks(metric_variables, vars_group_size):
+        display(Markdown(f"#### Variables : {', '.join(var_group)}"))
+        # Filtrer sur variables du groupe et lead days impairs
+        sub = metric_df[metric_df.variable.isin(var_group) & metric_df.lead_day.isin(lead_days)]
+        # On ne garde que les lead days présents pour tous les modèles et toutes les variables du groupe
+        common_leads = set(lead_days)
+
+        # On prend tous les lead days du groupe, même si certains sont manquants
+        common_leads = sorted(common_leads, key=lambda x: int(re.search(r'\d+', x).group(0)))
         sub = sub[sub.lead_day.isin(common_leads)]
-        # Tableau : modèles en lignes, lead days en colonnes
-        pivot = sub.pivot_table(index="model", columns="lead_day", values="score", aggfunc="mean")
-        # Classement par colonne (lead day)
-        ranked = pivot.rank(axis=0, method="min", ascending=True)
-        # Tri des lignes selon la performance moyenne
-        sorted_idx = ranked.mean(axis=1).sort_values().index
-        pivot = pivot.loc[sorted_idx]
-        # Affichage stylé avec code couleur selon le rang
-        styled = pivot.style.background_gradient(cmap=cmap_code, axis=0).format("{:.3f}")
-        display(Markdown(f"#### {variable}"))
+        # Pivot multi-index : modèles en lignes, colonnes = (variable, lead_day)
+        pivot = sub.pivot_table(index="model", columns=["variable", "lead_day"], values="score", aggfunc="mean")
+        # S'assurer que toutes les colonnes attendues sont là (même si NaN)
+        #full_columns = pd.MultiIndex.from_product([var_group, common_leads])
+        #print(f"full_columns: {full_columns}")
+        #pivot = pivot.reindex(columns=full_columns)
+        # Si le modèle de référence n'est pas là, on ajoute une ligne NaN
+        #if reference_model not in pivot.index:
+        #    pivot.loc[reference_model] = np.nan
+        # Calcul du pourcentage de différence pour la couleur (là où c'est possible)
+
+        ref_values = pivot.loc[reference_model]
+        percent_diff = (pivot - ref_values) / ref_values * 100
+
+        def color_cells(val, percent):
+            import matplotlib.pyplot as plt
+            from matplotlib import cm
+            norm = plt.Normalize(-100, 100)
+            cmap = plt.get_cmap(cmap_code)
+            if pd.isna(percent):
+                return ''
+            color = cmap(norm(percent))
+            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'
+
+        def style_func(df):
+            styled = pd.DataFrame('', index=df.index, columns=df.columns)
+            for i in df.index:
+                for j in df.columns:
+                    percent = percent_diff.loc[i, j]
+                    styled.loc[i, j] = color_cells(df.loc[i, j], percent)
+            return styled
+
+        # Déterminer où commence chaque variable (dans l'ordre des colonnes multi-index)
+        styles = []
+        if isinstance(pivot.columns, pd.MultiIndex):
+            prev_var = None
+            for idx, (var, lead) in enumerate(pivot.columns):
+                if var != prev_var:
+                    if idx != 0:
+                        styles.append({
+                            'selector': f'th.col{idx+1}, td.col{idx+1}',
+                            'props': [('border-left', '15px solid #FFF')]
+                        })
+                    prev_var = var
+
+        styled = pivot.style.apply(style_func, axis=None).format("{:.3f}")
+        pivot.columns.names = ['', '']  # <-- supprimer cet affichage des noms
+        pivot.index.name = None  # Supprime le nom de l'index pour éviter la ligne "model"
+
+        styled = styled.set_table_styles(styles, axis=1)
+        # Centrer uniquement les cellules de valeurs (sauf première colonne) et les en-têtes de colonnes
+        extra_styles = [
+            # Centrer les cellules sauf la première colonne
+            {'selector': 'td:not(:first-child)', 'props': [('text-align', 'center')]},
+            # Centrer les en-têtes de colonnes (niveau 0 et 1 si MultiIndex)
+            {'selector': 'th.col_heading', 'props': [('text-align', 'center')]},
+            {'selector': 'th.col_heading.level0', 'props': [('text-align', 'center')]},
+            {'selector': 'th.col_heading.level1', 'props': [('text-align', 'center')]}
+        ]
+        styled = styled.set_table_styles(styles + extra_styles, axis=1)
+        styled = styled.map_index(bold_reference_index, axis=0)
         display(styled)
+
+        display(Markdown('<div style="height: 100px;"></div>'))
 ```
 
 ---
 
+<div style="height: 50px;"></div>
+<!-- hr style="margin: 30px 0;" -->
+
+<div style="display: flex; justify-content: center;">
 ```{python}
 import matplotlib.pyplot as plt
-# cmap_code = 'RdYlGn_r'
-cmap_code = 'Spectral'
-fig, ax = plt.subplots(figsize=(5, 0.5))
-fig.subplots_adjust(bottom=0.5)
+from matplotlib import cm
+
+cmap_code = "coolwarm"
 cmap = plt.get_cmap(cmap_code)
-norm = plt.Normalize(1, len(df.model.unique()))
+norm = plt.Normalize(-100, 100)
+
+fig, ax = plt.subplots(figsize=(8, 1.2))  # largeur augmentée
+fig.subplots_adjust(left=0.18, right=0.98, bottom=0.5, top=0.8)  # marges ajustées
+
 cb1 = plt.colorbar(
-    plt.cm.ScalarMappable(norm=norm, cmap=cmap),
+    cm.ScalarMappable(norm=norm, cmap=cmap),
     cax=ax, orientation='horizontal'
 )
-#cb1.set_label('Classement (1 = meilleur)')
+cb1.set_label('Différence en % par rapport au modèle de référence', fontsize=10)
+cb1.set_ticks([-100, -50, 0, 50, 100])
+cb1.set_ticklabels(['-100%', '-50%', '0%', '+50%', '+100%'])
 plt.show()
 ```
+</div>
