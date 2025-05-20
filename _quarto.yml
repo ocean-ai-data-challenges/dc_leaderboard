@@ -9,15 +9,16 @@ website:
         text: Home
       - about.qmd
   repo-url: https://github.com/ppr-ocean-ia/dc-tools
+  favicon: favicon.ico
 
 format:
   html:
     theme:
-      - yeti
+      - flatly
     css: styles.css
     toc: true
     echo: false
-    #page-layout: full
+    page-layout: full
 
 
 
