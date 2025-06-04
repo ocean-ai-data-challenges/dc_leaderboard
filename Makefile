@@ -17,4 +17,4 @@ html:
 
 clean:
 	@echo "🧹 Nettoyage..."
-	rm -f method_data.js $(OUTPUT_HTML) $(ABOUT_HTML)
+	rm -f $(OUTPUT_HTML) $(ABOUT_HTML)

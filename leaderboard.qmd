@@ -102,10 +102,31 @@ for metric in sorted(df.metric.unique()):
         #    pivot.loc[reference_model] = np.nan
         # Calcul du pourcentage de différence pour la couleur (là où c'est possible)
 
+
+        # Réordonner pour mettre le modèle de référence en premier
+        if reference_model in pivot.index:
+            new_order = [reference_model] + [m for m in pivot.index if m != reference_model]
+            pivot = pivot.reindex(new_order)
+
         ref_values = pivot.loc[reference_model]
         percent_diff = (pivot - ref_values) / ref_values * 100
 
+        # Calcul dynamique de l'échelle de couleur
+        absmax = np.nanmax(np.abs(percent_diff.values[1:]))  # on ignore la ligne de référence
+        absmax = max(absmax, 2)  # minimum % pour un contraste plus fort
+        import matplotlib.pyplot as plt
+        norm = plt.Normalize(-absmax, absmax)
+
         def color_cells(val, percent):
+            from matplotlib import cm
+            cmap = plt.get_cmap(cmap_code)
+            if pd.isna(percent):
+                return ''
+            color = cmap(norm(percent))
+            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'
+
+
+        """def color_cells(val, percent):
             import matplotlib.pyplot as plt
             from matplotlib import cm
             norm = plt.Normalize(-100, 100)
@@ -113,7 +134,7 @@ for metric in sorted(df.metric.unique()):
             if pd.isna(percent):
                 return ''
             color = cmap(norm(percent))
-            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'
+            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'"""
 
         def style_func(df):
             styled = pd.DataFrame('', index=df.index, columns=df.columns)
@@ -178,7 +199,7 @@ cb1 = plt.colorbar(
     cm.ScalarMappable(norm=norm, cmap=cmap),
     cax=ax, orientation='horizontal'
 )
-cb1.set_label('Différence en % par rapport au modèle de référence', fontsize=10)
+cb1.set_label('% difference in metric compared to reference model', fontsize=10)
 cb1.set_ticks([-100, -50, 0, 50, 100])
 cb1.set_ticklabels(['-100%', '-50%', '0%', '+50%', '+100%'])
 plt.show()
