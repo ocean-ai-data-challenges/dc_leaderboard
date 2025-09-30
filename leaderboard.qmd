@@ -18,7 +18,8 @@ metrics_names = {
 }
 
 # 1. Définir le nom du modèle de référence
-reference_model = "glonet"  # à adapter selon ton cas
+reference_model = "glonet"
+
 
 # Lecture de tous les fichiers JSON du dossier results/
 files = list(Path("results").glob("*.json"))
@@ -26,23 +27,64 @@ data = []
 
 for file in files:
     with open(file) as f:
-        entries = json.load(f)
-        for entry in entries:
-            model = entry.get("model", file.stem)
-            metric = entry["metric"]
-            # Certains fichiers ont result déjà en dict, d'autres en str
-            result = entry["result"]
-            if isinstance(result, str):
-                result = json.loads(result)
-            for lead_day, variables in result.items():
-                for variable, score in variables.items():
-                    data.append({
-                        "model": model,
-                        "metric": metric,
-                        "lead_day": lead_day,
-                        "variable": variable,
-                        "score": score
-                    })
+        content = json.load(f)
+        
+        # Cherche la clé principale (ex: "glonet", "fake_model", etc.)
+        if isinstance(content, dict):
+            for main_key, entries in content.items():
+                if isinstance(entries, list):
+                    for entry in entries:
+                        model = entry.get("model", main_key)
+                        ref_alias = entry.get("ref_alias", "unknown")
+                        lead_time = entry.get("lead_time", None)
+                        lead_day = f"Lead day {lead_time + 1}" if lead_time is not None else "unknown"
+                        result = entry.get("result")
+                        
+                        if isinstance(result, list):
+                            for item in result:
+                                variable = item.get("variable", "unknown")
+                                global_metrics = item.get("global", {})
+                                for metric_name, score in global_metrics.items():
+                                    data.append({
+                                        "model": model,
+                                        "metric": metric_name,
+                                        "lead_day": lead_day,
+                                        "variable": variable,
+                                        "score": score,
+                                        "ref_alias": ref_alias
+                                    })
+                        elif isinstance(result, dict):
+                            for metric_name, variables in result.items():
+                                for variable, score in variables.items():
+                                    data.append({
+                                        "model": model,
+                                        "metric": metric_name,
+                                        "lead_day": lead_day,
+                                        "variable": variable,
+                                        "score": score,
+                                        "ref_alias": ref_alias
+                                    })
+        # Format method_a/b/c.json (clé "results")
+        elif isinstance(content, dict) and "results" in content:
+            for result_entry in content["results"]:
+                model = result_entry.get("model", "unknown")
+                ref_alias = result_entry.get("ref_alias", "unknown")
+                lead_time = result_entry.get("lead_time", None)
+                lead_day = f"Lead day {lead_time + 1}" if lead_time is not None else "unknown"
+                result = result_entry.get("result")
+                if isinstance(result, dict):
+                    for metric_name, variables in result.items():
+                        for variable, score in variables.items():
+                            data.append({
+                                "model": model,
+                                "metric": metric_name,
+                                "lead_day": lead_day,
+                                "variable": variable,
+                                "score": score,
+                                "ref_alias": ref_alias
+                            })
+        else:
+            print(f"Skipping file with unknown format: {file}")
 
 df = pd.DataFrame(data)
 
@@ -71,111 +113,103 @@ def chunks(lst, n):
 
 display(Markdown('<div style="height: 90px;"></div>'))
 
-# 2. Pour chaque métrique et variable, construire le tableau de pourcentage de différence
-for metric in sorted(df.metric.unique()):
-    metric_complete_name = metrics_names.get(metric, metric)
-    display(Markdown(f"### {metric.upper()}: {metric_complete_name}"))
+# 2. Pour chaque dataset de référence et chaque métrique, construire le tableau
+for ref_alias in sorted(df['ref_alias'].unique()):
+    display(Markdown(f"## Reference dataset: {ref_alias.upper()}"))
     
-    metric_df = df[df.metric == metric]
-    #print(f"METRIC: {metric}")
-    #print(f"metric_df: {metric_df}")
-    # 2. Grouper les variables par paquets de 3 ou 4
-    metric_variables = sorted(metric_df['variable'].unique())
-    for var_group in chunks(metric_variables, vars_group_size):
-        display(Markdown(f"#### Variables : {', '.join(var_group)}"))
-        # Filtrer sur variables du groupe et lead days impairs
-        sub = metric_df[metric_df.variable.isin(var_group) & metric_df.lead_day.isin(lead_days)]
-        # On ne garde que les lead days présents pour tous les modèles et toutes les variables du groupe
-        common_leads = set(lead_days)
+    ref_df = df[df.ref_alias == ref_alias]
+    
+    # Boucle sur les métriques pour ce dataset de référence
+    for metric in sorted(ref_df.metric.unique()):
+        metric_complete_name = metrics_names.get(metric, metric)
+        display(Markdown(f"### Metric: {metric_complete_name}"))
+        
+        # Filtrer sur le ref_alias ET la métrique
+        ref_metric_df = ref_df[ref_df.metric == metric]
+        
+        # Grouper les variables par paquets de 3 ou 4
+        metric_variables = sorted(ref_metric_df['variable'].unique())
+        for var_group in chunks(metric_variables, vars_group_size):
+            display(Markdown(f"#### Variables: {', '.join(var_group)}"))
+            # Filtrer sur variables du groupe et lead days impairs
+            sub = ref_metric_df[ref_metric_df.variable.isin(var_group) & ref_metric_df.lead_day.isin(lead_days)]
+            # On ne garde que les lead days présents pour tous les modèles et toutes les variables du groupe
+            common_leads = set(lead_days)
 
-        # On prend tous les lead days du groupe, même si certains sont manquants
-        common_leads = sorted(common_leads, key=lambda x: int(re.search(r'\d+', x).group(0)))
-        sub = sub[sub.lead_day.isin(common_leads)]
-        # Pivot multi-index : modèles en lignes, colonnes = (variable, lead_day)
-        pivot = sub.pivot_table(index="model", columns=["variable", "lead_day"], values="score", aggfunc="mean")
-        # S'assurer que toutes les colonnes attendues sont là (même si NaN)
-        #full_columns = pd.MultiIndex.from_product([var_group, common_leads])
-        #print(f"full_columns: {full_columns}")
-        #pivot = pivot.reindex(columns=full_columns)
-        # Si le modèle de référence n'est pas là, on ajoute une ligne NaN
-        #if reference_model not in pivot.index:
-        #    pivot.loc[reference_model] = np.nan
-        # Calcul du pourcentage de différence pour la couleur (là où c'est possible)
+            # On prend tous les lead days du groupe, même si certains sont manquants
+            common_leads = sorted(common_leads, key=lambda x: int(re.search(r'\d+', x).group(0)))
+            sub = sub[sub.lead_day.isin(common_leads)]
+            # Pivot multi-index : modèles en lignes, colonnes = (variable, lead_day)
+            pivot = sub.pivot_table(index="model", columns=["variable", "lead_day"], values="score", aggfunc="mean")
 
+            # Réordonner pour mettre le modèle de référence en premier
+            if reference_model in pivot.index:
+                new_order = [reference_model] + [m for m in pivot.index if m != reference_model]
+                pivot = pivot.reindex(new_order)
 
-        # Réordonner pour mettre le modèle de référence en premier
-        if reference_model in pivot.index:
-            new_order = [reference_model] + [m for m in pivot.index if m != reference_model]
-            pivot = pivot.reindex(new_order)
+            ref_values = pivot.loc[reference_model]
+            percent_diff = (pivot - ref_values) / ref_values * 100
 
-        ref_values = pivot.loc[reference_model]
-        percent_diff = (pivot - ref_values) / ref_values * 100
-
-        # Calcul dynamique de l'échelle de couleur
-        absmax = np.nanmax(np.abs(percent_diff.values[1:]))  # on ignore la ligne de référence
-        absmax = max(absmax, 2)  # minimum % pour un contraste plus fort
-        import matplotlib.pyplot as plt
-        norm = plt.Normalize(-absmax, absmax)
-
-        def color_cells(val, percent):
-            from matplotlib import cm
-            cmap = plt.get_cmap(cmap_code)
-            if pd.isna(percent):
-                return ''
-            color = cmap(norm(percent))
-            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'
-
-
-        """def color_cells(val, percent):
+            # Calcul dynamique de l'échelle de couleur
+            non_ref_values = percent_diff.values[1:] if len(percent_diff) > 1 else []
+            if len(non_ref_values) > 0 and not np.all(np.isnan(non_ref_values)):
+                absmax = np.nanmax(np.abs(non_ref_values))
+                absmax = max(absmax, 2)  # minimum % pour un contraste plus fort
+            else:
+                absmax = 2  # valeur par défaut
+            
             import matplotlib.pyplot as plt
-            from matplotlib import cm
-            norm = plt.Normalize(-100, 100)
-            cmap = plt.get_cmap(cmap_code)
-            if pd.isna(percent):
-                return ''
-            color = cmap(norm(percent))
-            return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'"""
+            norm = plt.Normalize(-absmax, absmax)
 
-        def style_func(df):
-            styled = pd.DataFrame('', index=df.index, columns=df.columns)
-            for i in df.index:
-                for j in df.columns:
-                    percent = percent_diff.loc[i, j]
-                    styled.loc[i, j] = color_cells(df.loc[i, j], percent)
-            return styled
+            def color_cells(val, percent):
+                from matplotlib import cm
+                cmap = plt.get_cmap(cmap_code)
+                if pd.isna(percent):
+                    return ''
+                color = cmap(norm(percent))
+                return f'background-color: rgba({int(color[0]*255)},{int(color[1]*255)},{int(color[2]*255)},{color[3]:.2f})'
 
-        # Déterminer où commence chaque variable (dans l'ordre des colonnes multi-index)
-        styles = []
-        if isinstance(pivot.columns, pd.MultiIndex):
-            prev_var = None
-            for idx, (var, lead) in enumerate(pivot.columns):
-                if var != prev_var:
-                    if idx != 0:
-                        styles.append({
-                            'selector': f'th.col{idx+1}, td.col{idx+1}',
-                            'props': [('border-left', '15px solid #FFF')]
-                        })
-                    prev_var = var
+            def style_func(df):
+                styled = pd.DataFrame('', index=df.index, columns=df.columns)
+                for i in df.index:
+                    for j in df.columns:
+                        percent = percent_diff.loc[i, j]
+                        styled.loc[i, j] = color_cells(df.loc[i, j], percent)
+                return styled
 
-        styled = pivot.style.apply(style_func, axis=None).format("{:.3f}")
-        pivot.columns.names = ['', '']  # <-- supprimer cet affichage des noms
-        pivot.index.name = None  # Supprime le nom de l'index pour éviter la ligne "model"
+            # Déterminer où commence chaque variable (dans l'ordre des colonnes multi-index)
+            styles = []
+            if isinstance(pivot.columns, pd.MultiIndex):
+                prev_var = None
+                for idx, (var, lead) in enumerate(pivot.columns):
+                    if var != prev_var:
+                        if idx != 0:
+                            styles.append({
+                                'selector': f'th.col{idx+1}, td.col{idx+1}',
+                                'props': [('border-left', '15px solid #FFF')]
+                            })
+                        prev_var = var
 
-        styled = styled.set_table_styles(styles, axis=1)
-        # Centrer uniquement les cellules de valeurs (sauf première colonne) et les en-têtes de colonnes
-        extra_styles = [
-            # Centrer les cellules sauf la première colonne
-            {'selector': 'td:not(:first-child)', 'props': [('text-align', 'center')]},
-            # Centrer les en-têtes de colonnes (niveau 0 et 1 si MultiIndex)
-            {'selector': 'th.col_heading', 'props': [('text-align', 'center')]},
-            {'selector': 'th.col_heading.level0', 'props': [('text-align', 'center')]},
-            {'selector': 'th.col_heading.level1', 'props': [('text-align', 'center')]}
-        ]
-        styled = styled.set_table_styles(styles + extra_styles, axis=1)
-        styled = styled.map_index(bold_reference_index, axis=0)
-        display(styled)
+            styled = pivot.style.apply(style_func, axis=None).format("{:.3f}")
+            pivot.columns.names = ['', '']  # <-- supprimer cet affichage des noms
+            pivot.index.name = None  # Supprime le nom de l'index pour éviter la ligne "model"
 
-        display(Markdown('<div style="height: 100px;"></div>'))
+            styled = styled.set_table_styles(styles, axis=1)
+            # Centrer uniquement les cellules de valeurs (sauf première colonne) et les en-têtes de colonnes
+            extra_styles = [
+                # Centrer les cellules sauf la première colonne
+                {'selector': 'td:not(:first-child)', 'props': [('text-align', 'center')]},
+                # Centrer les en-têtes de colonnes (niveau 0 et 1 si MultiIndex)
+                {'selector': 'th.col_heading', 'props': [('text-align', 'center')]},
+                {'selector': 'th.col_heading.level0', 'props': [('text-align', 'center')]},
+                {'selector': 'th.col_heading.level1', 'props': [('text-align', 'center')]}
+            ]
+            styled = styled.set_table_styles(styles + extra_styles, axis=1)
+            styled = styled.map_index(bold_reference_index, axis=0)
+            display(styled)
+
+            display(Markdown('<div style="height: 100px;"></div>'))
+
 ```
 
 ---
