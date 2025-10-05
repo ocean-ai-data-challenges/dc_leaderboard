@@ -1,0 +1,121 @@
+[project]
+name = "dcleaderboard"
+description = "Create leaderboards for data challenges."
+readme = "README.md"
+authors = [
+    {name="Kamel Ait Mohand"},
+    {name="Guillermo Cossio"},
+    ]
+license = "GPL-3-only"
+keywords = ["data-challenge", "leaderboard", "ocean", "benchmark"]
+dynamic = [
+    "version",
+    "classifiers",
+    ]
+
+requires-python = ">=3.11.0,<3.14.0"
+dependencies = [
+    "PyYAML>=6.0.3",
+    "quarto>=0.1.0",
+    "nbformat>=5.10.4",
+    "numpy (>=1.25,<2.0.0)",
+    "pandas>=2.0.0",
+    "notebook>=7.4.7",
+    "jupyterlab>=4.4.9",
+    "ipykernel>=6.30.1",
+    "matplotlib>=3.10.6"
+]
+
+[project.urls]
+Repository = "https://https://github.com/ppr-ocean-ia/dc_leaderboard"
+
+[tool.poetry]
+version = "0.0.1"
+
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.33.0"
+pytest = "^7.3.1"
+pytest-cov = "^6.0.0"
+ruff = "^0.9.6"
+mypy = "*"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8.2.1"
+sphinx-rtd-theme = "^3.0.2"
+myst-parser = "^4.0.1"
+pygments = "^2.19.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "cython", "setuptools", "toml"]
+build-backend = "poetry.core.masonry.api"
+#[build-system]
+#requires = ["poetry-core", "cmake", "wheel", "setupttools"]
+
+#build-backend = "poetry.core.masonry.api"
+[tool.ruff]
+line-length = 100
+indent-width = 4
+exclude = [
+    ".eggs",
+    ".git",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "docs",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+[tool.ruff.lint]
+# E - pycodestyle subsets:
+		# E4 - whitespace
+		# E7 - multiple-statements
+		# E9 - trailing-whitespace
+# F - Enable Pyflakes
+# B - Enable flake8-bugbear
+# W - Enable pycodestyle
+# C901 - complex-structure
+# D - Enable flake8-docstrings
+# E501 - line-too-long
+select = ["D", "W", "F", "E", "B"]
+ignore = ["B008", "D401", "D406", "D407"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"  # Accepts: "google", "numpy", or "pep257".
+
+[tool.mypy]
+python_version = "3.13"
+disable_error_code = ["import-untyped"]
+check_untyped_defs = true
+ignore_missing_imports = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[tool.poe.tasks]
+types = "mypy --install-types --non-interactive dc1"
+lint = "ruff check 'dc1' 'tests'"
+test = "pytest --capture=no --cov=dc1 --cov-fail-under=80 tests/"
+# run all
+all = [ {ref="lint"}, {ref="types"}, {ref="test"} ]
+

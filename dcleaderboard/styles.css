@@ -1,0 +1,97 @@
+/* css styles */
+
+/* Centrer le titre principal */
+/* styles.css */
+/* Encadré stylé et relief pour le titre principal */
+h1.title, h1 {
+  font-family: 'Georgia', serif;
+  border: 2px solid #90caf9;
+  text-align: center;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* Importer la police Roboto */
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background: rgb(243, 247, 248);
+}
+/*body {
+  font-family: 'Georgia', serif;
+}*/
+/*tbody tr:nth-child(even) {
+  background: #f7fafd;
+}
+tbody tr:hover {
+  background: #e3f2fd;
+}*/
+
+
+/* Adapter la largeur du tableau à son contenu et le centrer */
+table {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 95vw;
+  margin-left: auto;
+  margin-right: auto;
+  table-layout: auto !important;
+}
+
+/* Limiter la largeur des cellules pour éviter qu'elles ne s'étalent trop */
+table th, table td {
+  max-width: 160px;
+  min-width: 60px;
+  width: auto;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+}
+
+
+/* Bordures blanches entre toutes les cases des tableaux Pandas */
+table.dataframe {
+  border-collapse: separate !important;
+  border-spacing: 6px !important; /* essaie 6px pour voir l'effet */
+  background: none !important;
+}
+
+table.dataframe th, table.dataframe td {
+  border: 2px solid #fff !important;
+  background: #f7fafd !important; /* ou une autre couleur claire */
+  border-radius: 4px !important;
+  padding: 3px 5px !important;
+}
+
+table, th, td {
+  border-collapse: separate !important;
+  border-spacing: 3px !important;
+  min-width: 50px !important;
+}
+
+/* Largeur minimale spécifique pour la première colonne (noms des modèles) */
+table td.row_heading, 
+table th.row_heading {
+  min-width: 160px !important;
+  max-width: 220px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  text-align: left !important;
+  font-weight: bold;
+}
+
+
+/* Cible toutes les cellules d'en-tête de niveau 1 (lead days) */
+th.col_heading.level1,
+th.level1 {
+  font-size: 0.8em !important;
+  font-weight: normal !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+/* Augmenter la taille de police de la première ligne d'en-tête (nom de la variable) */
+table.dataframe th.col_heading.level0, th.level0 {
+  font-size: 1.25em !important;
+  font-weight: bold !important;
+  color: #011425;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
