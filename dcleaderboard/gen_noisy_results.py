@@ -44,4 +44,4 @@ if __name__ == "__main__":
     process_file(src, dst, new_model, std_rel)
     
     
-    # python gen_noisy_results.py results/results_glonet.json results/results_challenger_model.json challenger_model 0.08
+    # python gen_noisy_results.py results/results_glonet.json results/results_challenger_model_1.json challenger_model_1 0.08

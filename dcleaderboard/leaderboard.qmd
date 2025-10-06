@@ -234,7 +234,8 @@ if len(df) > 0:
 
             # Traiter chaque groupe de variables
             for var_type, var_group in variables_by_type.items():
-                display(Markdown(f"#### {var_type.title()} Variables: {', '.join(var_group)}"))
+                display(Markdown(f"#### {var_type.title()} Variables"))
+                # display(Markdown(f"#### {var_type.title()} Variables: {', '.join(var_group)}"))
                 
                 # Filtrer sur variables du groupe et lead days impairs
                 sub = ref_metric_df[ref_metric_df.variable.isin(var_group) & ref_metric_df.lead_day.isin(lead_days)]
