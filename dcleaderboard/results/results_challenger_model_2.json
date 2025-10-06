@@ -1,0 +1,1076 @@
+{
+  "dataset": "challenger_model_2",
+  "results": {
+    "challenger_model_2": [
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.82236245,
+            "50m_salinity": 0.34510918,
+            "200m_salinity": 0.16498872,
+            "550m_salinity": 0.10574458,
+            "surface_temperature": 0.62662333,
+            "50m_temperature": 0.93801931,
+            "200m_temperature": 0.97895865,
+            "550m_temperature": 0.57513409,
+            "surface_northward_velocity": 0.11701368,
+            "50m_northward_velocity": 0.11535517,
+            "200m_northward_velocity": 0.10063553,
+            "550m_northward_velocity": 0.0886784,
+            "surface_eastward_velocity": 0.12655941,
+            "50m_eastward_velocity": 0.08640017,
+            "200m_eastward_velocity": 0.08963283,
+            "550m_eastward_velocity": 0.09091677,
+            "depthlevel.surface_surface_height": 0.06393329
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.81327482,
+            "50m_salinity": 0.32752262,
+            "200m_salinity": 0.1309879,
+            "550m_salinity": 0.10599795,
+            "surface_temperature": 0.75933521,
+            "50m_temperature": 1.05870089,
+            "200m_temperature": 0.71136222,
+            "550m_temperature": 0.49348045,
+            "surface_northward_velocity": 0.12667614,
+            "50m_northward_velocity": 0.09447691,
+            "200m_northward_velocity": 0.1077704,
+            "550m_northward_velocity": 0.08482365,
+            "surface_eastward_velocity": 0.12366636,
+            "50m_eastward_velocity": 0.10342291,
+            "200m_eastward_velocity": 0.13154671,
+            "550m_eastward_velocity": 0.0946334,
+            "depthlevel.surface_surface_height": 0.066796
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.86302863,
+            "50m_salinity": 0.30994614,
+            "200m_salinity": 0.15783005,
+            "550m_salinity": 0.07103083,
+            "surface_temperature": 0.59733179,
+            "50m_temperature": 1.02063248,
+            "200m_temperature": 0.90883061,
+            "550m_temperature": 0.53209661,
+            "surface_northward_velocity": 0.12100047,
+            "50m_northward_velocity": 0.1039579,
+            "200m_northward_velocity": 0.08718146,
+            "550m_northward_velocity": 0.08432515,
+            "surface_eastward_velocity": 0.11802262,
+            "50m_eastward_velocity": 0.12235188,
+            "200m_eastward_velocity": 0.11319709,
+            "550m_eastward_velocity": 0.07665986,
+            "depthlevel.surface_surface_height": 0.07442122
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.7531909,
+            "50m_salinity": 0.32383922,
+            "200m_salinity": 0.16470474,
+            "550m_salinity": 0.10084351,
+            "surface_temperature": 0.72021926,
+            "50m_temperature": 0.88584596,
+            "200m_temperature": 0.80929597,
+            "550m_temperature": 0.55216257,
+            "surface_northward_velocity": 0.13508357,
+            "50m_northward_velocity": 0.10320564,
+            "200m_northward_velocity": 0.10389598,
+            "550m_northward_velocity": 0.08220621,
+            "surface_eastward_velocity": 0.10694799,
+            "50m_eastward_velocity": 0.11936668,
+            "200m_eastward_velocity": 0.12686689,
+            "550m_eastward_velocity": 0.09609679,
+            "depthlevel.surface_surface_height": 0.08085828
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.80609376,
+            "50m_salinity": 0.34499643,
+            "200m_salinity": 0.16415014,
+            "550m_salinity": 0.1083471,
+            "surface_temperature": 0.85433934,
+            "50m_temperature": 1.38354135,
+            "200m_temperature": 0.6185158,
+            "550m_temperature": 0.58692837,
+            "surface_northward_velocity": 0.13202843,
+            "50m_northward_velocity": 0.11256162,
+            "200m_northward_velocity": 0.1068078,
+            "550m_northward_velocity": 0.07156042,
+            "surface_eastward_velocity": 0.13055967,
+            "50m_eastward_velocity": 0.12316026,
+            "200m_eastward_velocity": 0.12972168,
+            "550m_eastward_velocity": 0.09019009,
+            "depthlevel.surface_surface_height": 0.07356284
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.74775993,
+            "50m_salinity": 0.39499469,
+            "200m_salinity": 0.16032404,
+            "550m_salinity": 0.08519231,
+            "surface_temperature": 0.74446798,
+            "50m_temperature": 1.02543614,
+            "200m_temperature": 0.93602081,
+            "550m_temperature": 0.48381444,
+            "surface_northward_velocity": 0.11914467,
+            "50m_northward_velocity": 0.10344215,
+            "200m_northward_velocity": 0.08743366,
+            "550m_northward_velocity": 0.0944193,
+            "surface_eastward_velocity": 0.12717612,
+            "50m_eastward_velocity": 0.1101705,
+            "200m_eastward_velocity": 0.10627101,
+            "550m_eastward_velocity": 0.08025549,
+            "depthlevel.surface_surface_height": 0.06839476
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.75772642,
+            "50m_salinity": 0.32653173,
+            "200m_salinity": 0.1521416,
+            "550m_salinity": 0.0936987,
+            "surface_temperature": 0.82839253,
+            "50m_temperature": 1.01549337,
+            "200m_temperature": 0.86761562,
+            "550m_temperature": 0.50996258,
+            "surface_northward_velocity": 0.09693162,
+            "50m_northward_velocity": 0.10599689,
+            "200m_northward_velocity": 0.10415031,
+            "550m_northward_velocity": 0.11593901,
+            "surface_eastward_velocity": 0.12348187,
+            "50m_eastward_velocity": 0.11191547,
+            "200m_eastward_velocity": 0.10849206,
+            "550m_eastward_velocity": 0.0826505,
+            "depthlevel.surface_surface_height": 0.08188831
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.84453029,
+            "50m_salinity": 0.39678647,
+            "200m_salinity": 0.14023811,
+            "550m_salinity": 0.10543666,
+            "surface_temperature": 0.66083134,
+            "50m_temperature": 1.15800005,
+            "200m_temperature": 1.05758079,
+            "550m_temperature": 0.47011366,
+            "surface_northward_velocity": 0.11774546,
+            "50m_northward_velocity": 0.11131762,
+            "200m_northward_velocity": 0.09833089,
+            "550m_northward_velocity": 0.07545192,
+            "surface_eastward_velocity": 0.12882815,
+            "50m_eastward_velocity": 0.09957799,
+            "200m_eastward_velocity": 0.1154949,
+            "550m_eastward_velocity": 0.08530237,
+            "depthlevel.surface_surface_height": 0.08975021
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.70947157,
+            "50m_salinity": 0.36239092,
+            "200m_salinity": 0.17320827,
+            "550m_salinity": 0.08116765,
+            "surface_temperature": 0.95886148,
+            "50m_temperature": 1.38222478,
+            "200m_temperature": 0.72271125,
+            "550m_temperature": 0.5574576,
+            "surface_northward_velocity": 0.14069356,
+            "50m_northward_velocity": 0.12785096,
+            "200m_northward_velocity": 0.09181824,
+            "550m_northward_velocity": 0.07845611,
+            "surface_eastward_velocity": 0.14473287,
+            "50m_eastward_velocity": 0.12508187,
+            "200m_eastward_velocity": 0.11502085,
+            "550m_eastward_velocity": 0.09953983,
+            "depthlevel.surface_surface_height": 0.07744293
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "glorys",
+        "result": {
+          "rmsd": {
+            "surface_salinity": 0.79953808,
+            "50m_salinity": 0.38166239,
+            "200m_salinity": 0.14450551,
+            "550m_salinity": 0.11144467,
+            "surface_temperature": 0.91083334,
+            "50m_temperature": 0.97703842,
+            "200m_temperature": 0.91810883,
+            "550m_temperature": 0.47701603,
+            "surface_northward_velocity": 0.1395405,
+            "50m_northward_velocity": 0.12719124,
+            "200m_northward_velocity": 0.09515236,
+            "550m_northward_velocity": 0.10078503,
+            "surface_eastward_velocity": 0.13777885,
+            "50m_eastward_velocity": 0.12588739,
+            "200m_eastward_velocity": 0.13368356,
+            "550m_eastward_velocity": 0.09255353,
+            "depthlevel.surface_surface_height": 0.07301578
+          }
+        },
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.54370899
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.26459277
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.51440652
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.66102682
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 1.06947205
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 1.26126286
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2817541
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.04417646
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.029926
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.07067622
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.28974177
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.186509
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.58766754
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.95077899
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.00482173
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.22226015
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.71274814
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.65461669
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.39044982
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.34388418
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.33491557
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.43424647
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.97749121
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.58241429
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 3.5449354
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.12020215
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.0816962
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.04262929
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.94444162
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.43349919
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.22998572
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.06855529
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.04999813
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.14823679
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.47689092
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.23677625
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.91943321
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.3107631
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.27663975
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.30179253
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.97846437
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.76792641
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.52617335
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 4.98747393
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 4.95351283
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 5.47526
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.54981236
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.2239358
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.39649502
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 7.28556257
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 6.82605569
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 3.53084058
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 2.49661012
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.55788837
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.35014243
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 1.89864291
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.30327244
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 1.74035789
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.95909873
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.22478004
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.77736638
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.22179478
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.30251117
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.07143214
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.9709334
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71381624
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.468205
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6104686
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68388025
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.84355786
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.57577906
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70438574
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72532955
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.74834728
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.57761673
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64911621
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64274587
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61749715
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.82448935
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7036242
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59144657
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73568061
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.84120616
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_2"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.74528396
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_2"
+      }
+    ]
+  },
+  "metadata": {
+    "evaluation_date": "2025-10-06T02:30:53.203627",
+    "total_entries": 50,
+    "config": {
+      "start_time": "2024-01-03",
+      "end_time": "2024-01-13",
+      "n_days_forecast": 10,
+      "n_days_interval": 7
+    }
+  }
+}
