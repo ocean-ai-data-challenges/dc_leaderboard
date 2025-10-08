@@ -41,7 +41,7 @@ check-env: install
 	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python -c 'import jupyter, nbformat, IPython; print(\"✅ Jupyter OK\")'"
 
 # Compiler le leaderboard
-html: check-env
+html:
 	@echo "🛠️ Compilation Quarto..."
 	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && quarto render $(INPUT_QMD) --to html"
 	@echo "🛠️ Compilation de la page About..."
