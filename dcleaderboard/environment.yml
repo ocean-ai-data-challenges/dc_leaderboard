@@ -1,0 +1,41 @@
+name: dcleaderboard
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Python version
+  - python>=3.11,<3.14
+  
+  # Core dependencies from pyproject.toml
+  - pyyaml>=6.0.3
+  - nbformat>=5.10.4
+  - numpy>=1.25,<2.0.0
+  - pandas>=2.0.0
+  - notebook>=7.4.7
+  - jupyterlab>=4.4.9
+  - ipykernel>=6.30.1
+  - matplotlib>=3.9.0  # 3.10.6 might not be available in conda
+  
+  # Jupyter ecosystem
+  - jupyter
+  - jupyter_client
+  - jupyter_core
+  
+  # Development dependencies (optional)
+  - pytest>=7.3.1
+  - pytest-cov
+  - mypy
+  - ruff
+  
+  # Documentation dependencies (optional)
+  - sphinx>=8.0.0
+  - myst-parser>=4.0.1
+  - pygments>=2.19.1
+  
+  # Additional useful packages
+  - pip
+  
+  # pip dependencies (for packages not available in conda)
+  - pip:
+    - quarto>=0.1.0  # quarto is not readily available in conda
+    - poethepoet>=0.33.0  # if needed
