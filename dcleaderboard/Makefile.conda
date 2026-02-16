@@ -1,85 +1,72 @@
 # Variables
 ENV_NAME=dcleaderboard
-CONDA_ACTIVATE=bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME)"
-INPUT_QMD=leaderboard.qmd
-ABOUT_QMD=about.qmd
-OUTPUT_HTML=leaderboard.html
-ABOUT_HTML=about.html
+# Détecter le chemin de conda automatiquement
+CONDA_BASE := $(shell if [ -d "$$HOME/anaconda3" ]; then echo "$$HOME/anaconda3"; elif [ -d "$$HOME/miniconda3" ]; then echo "$$HOME/miniconda3"; elif [ -d "/opt/conda" ]; then echo "/opt/conda"; else conda info --base 2>/dev/null || echo ""; fi)
+CONDA_ACTIVATE=bash -c "source $(CONDA_BASE)/etc/profile.d/conda.sh && conda activate $(ENV_NAME)"
 
 .PHONY: all clean html install check-env update-env remove-env
 
 # Vérifier que Conda est installé
 check-conda:
-	@command -v conda >/dev/null 2>&1 || { echo "❌ Conda n'est pas installé. Installez Anaconda ou Miniconda."; exit 1; }
+@if [ -z "$(CONDA_BASE)" ] || [ ! -f "$(CONDA_BASE)/etc/profile.d/conda.sh" ]; then \
+echo "❌ Conda n'est pas installé ou introuvable."; \
+echo "🔍 Chemins vérifiés: ~/anaconda3, ~/miniconda3, /opt/conda"; \
+echo "💡 Installez Anaconda ou Miniconda, ou assurez-vous que conda est dans le PATH."; \
+exit 1; \
+else \
+echo "✅ Conda trouvé dans: $(CONDA_BASE)"; \
+fi
 
 # Créer l'environnement conda
 create-env: check-conda
-	@echo "📦 Création de l'environnement conda $(ENV_NAME)..."
-	conda env create -f environment.yml
-	@echo "✅ Environnement $(ENV_NAME) créé avec succès!"
+@echo "📦 Création de l'environnement conda $(ENV_NAME)..."
+$(CONDA_BASE)/bin/conda env create -f environment.yml
+@echo "✅ Environnement $(ENV_NAME) créé avec succès!"
 
 # Mettre à jour l'environnement existant
 update-env: check-conda
-	@echo "🔄 Mise à jour de l'environnement conda $(ENV_NAME)..."
-	conda env update -f environment.yml --prune
-	@echo "✅ Environnement $(ENV_NAME) mis à jour!"
+@echo "🔄 Mise à jour de l'environnement conda $(ENV_NAME)..."
+$(CONDA_BASE)/bin/conda env update -f environment.yml --prune
+@echo "✅ Environnement $(ENV_NAME) mis à jour!"
 
 # Installer/mettre à jour l'environnement
 install: check-conda
-	@if conda env list | grep -q "^$(ENV_NAME) "; then \
-		echo "🔄 L'environnement $(ENV_NAME) existe déjà, mise à jour..."; \
-		$(MAKE) -f Makefile.conda update-env; \
-	else \
-		echo "📦 Création de l'environnement $(ENV_NAME)..."; \
-		$(MAKE) -f Makefile.conda create-env; \
-	fi
+@if $(CONDA_BASE)/bin/conda env list | grep -q "^$(ENV_NAME) "; then \
+echo "🔄 L'environnement $(ENV_NAME) existe déjà, mise à jour..."; \
+$(MAKE) -f Makefile.conda update-env; \
+else \
+echo "📦 Création de l'environnement $(ENV_NAME)..."; \
+$(MAKE) -f Makefile.conda create-env; \
+fi
 
 # Vérifier que l'environnement est prêt
 check-env: install
-	@echo "🔍 Vérification de l'environnement..."
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python -c 'import pandas, numpy, json, matplotlib; print(\"✅ Dépendances Python OK\")'"
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python -c 'import jupyter, nbformat, IPython; print(\"✅ Jupyter OK\")'"
+@echo "🔍 Vérification de l'environnement..."
+@bash -c "source $(CONDA_BASE)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python -c 'import pandas, numpy, json, matplotlib; print(\"✅ Dépendances Python OK\")'"
 
 # Compiler le leaderboard
 html:
-	@echo "🛠️ Compilation Quarto..."
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && quarto render $(INPUT_QMD) --to html"
-	@echo "🛠️ Compilation de la page About..."
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && quarto render $(ABOUT_QMD) --to html"
-	@echo "✅ Compilation terminée! Fichiers générés:"
-	@echo "   - $(OUTPUT_HTML)"
-	@echo "   - $(ABOUT_HTML)"
+@echo "🛠️ Génération du site..."
+@bash -c "source $(CONDA_BASE)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && export PYTHONPATH=$$(pwd)/.. && python -m dcleaderboard.build --results-dir results --output-dir _site"
+@echo "✅ Compilation terminée! Fichiers générés dans _site/"
 
 # Cible principale
 all: html
 
 # Test de l'environnement
 test-env: check-env
-	@echo "🧪 Test de l'environnement conda..."
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python --version"
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && which python"
-	@bash -c "source $$(conda info --base)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && pip list | grep -E '(pandas|numpy|jupyter|quarto)'"
+@echo "🧪 Test de l'environnement conda..."
+@bash -c "source $(CONDA_BASE)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && python --version"
+@bash -c "source $(CONDA_BASE)/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && pip list | grep -E '(pandas|numpy)'"
 
 # Supprimer l'environnement
 remove-env: check-conda
-	@echo "🗑️ Suppression de l'environnement $(ENV_NAME)..."
-	conda env remove -n $(ENV_NAME) -y
-	@echo "✅ Environnement supprimé!"
+@echo "🗑️ Suppression de l'environnement $(ENV_NAME)..."
+$(CONDA_BASE)/bin/conda env remove -n $(ENV_NAME) -y
+@echo "✅ Environnement supprimé!"
 
 # Nettoyer les fichiers générés
 clean:
-	@echo "🧹 Nettoyage des fichiers générés..."
-	rm -f $(OUTPUT_HTML) $(ABOUT_HTML)
-	rm -rf _site/
-	@echo "✅ Nettoyage terminé!"
-
-# Aide
-help:
-	@echo "📋 Commandes disponibles:"
-	@echo "  make install     - Créer/mettre à jour l'environnement conda"
-	@echo "  make all         - Compiler le leaderboard (cible par défaut)"
-	@echo "  make html        - Compiler uniquement le HTML"
-	@echo "  make test-env    - Tester l'environnement"
-	@echo "  make clean       - Nettoyer les fichiers générés"
-	@echo "  make remove-env  - Supprimer complètement l'environnement"
-	@echo "  make help        - Afficher cette aide"
+@echo "🧹 Nettoyage des fichiers générés..."
+rm -rf _site/
+@echo "✅ Nettoyage terminé!"

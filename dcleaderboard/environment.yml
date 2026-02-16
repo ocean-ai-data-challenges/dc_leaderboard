@@ -37,5 +37,4 @@ dependencies:
   
   # pip dependencies (for packages not available in conda)
   - pip:
-    - quarto>=0.1.0  # quarto is not readily available in conda
     - poethepoet>=0.33.0  # if needed
