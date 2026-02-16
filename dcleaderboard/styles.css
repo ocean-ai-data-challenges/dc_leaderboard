@@ -1,97 +1,148 @@
 /* css styles */
-
-/* Centrer le titre principal */
 /* styles.css */
-/* Encadré stylé et relief pour le titre principal */
-h1.title, h1 {
-  font-family: 'Georgia', serif;
-  border: 2px solid #90caf9;
-  text-align: center;
-}
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-/* Importer la police Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* --- Global Styles --- */
+
 body {
-  font-family: 'Roboto', Arial, sans-serif;
-  background: rgb(243, 247, 248);
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa; /* Light gray background */
+  color: #202124;
+  line-height: 1.6;
 }
-/*body {
-  font-family: 'Georgia', serif;
-}*/
-/*tbody tr:nth-child(even) {
-  background: #f7fafd;
+
+/* --- Container & Layout --- */
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
-tbody tr:hover {
-  background: #e3f2fd;
-}*/
 
+h1.title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  font-size: 2.2rem;
+  color: #202124;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #dadce0;
+  margin-top: 2rem;
+}
 
-/* Adapter la largeur du tableau à son contenu et le centrer */
+/* --- Cards --- */
+
+.leaderboard-card {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.leaderboard-card h2 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #202124;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.leaderboard-card h3 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #5f6368;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.leaderboard-card h4 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: #70757a;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+/* --- Tables --- */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
 table {
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: 95vw;
-  margin-left: auto;
-  margin-right: auto;
-  table-layout: auto !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
 }
 
-/* Limiter la largeur des cellules pour éviter qu'elles ne s'étalent trop */
-table th, table td {
-  max-width: 160px;
-  min-width: 60px;
-  width: auto;
-  white-space: normal;
-  word-break: break-word;
-  text-align: center;
-}
-
-
-/* Bordures blanches entre toutes les cases des tableaux Pandas */
 table.dataframe {
-  border-collapse: separate !important;
-  border-spacing: 6px !important; /* essaie 6px pour voir l'effet */
-  background: none !important;
+  width: 100%;
+  margin: 0;
+  font-size: 0.9rem;
+  border: none;
 }
 
-table.dataframe th, table.dataframe td {
-  border: 2px solid #fff !important;
-  background: #f7fafd !important; /* ou une autre couleur claire */
-  border-radius: 4px !important;
-  padding: 3px 5px !important;
+/* Headers */
+table.dataframe thead th {
+  background-color: #fff;
+  color: #444746;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 2px solid #dadce0 !important;
+  vertical-align: bottom;
+  padding: 12px 8px !important;
 }
 
-table, th, td {
-  border-collapse: separate !important;
-  border-spacing: 3px !important;
-  min-width: 50px !important;
+table.dataframe th.col_heading.level0 {
+  color: #1a73e8;
+  text-transform: uppercase;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.03em;
+  padding-bottom: 4px !important;
 }
 
-/* Largeur minimale spécifique pour la première colonne (noms des modèles) */
-table td.row_heading, 
-table th.row_heading {
-  min-width: 160px !important;
-  max-width: 220px !important;
-  white-space: normal !important;
-  word-break: break-word !important;
+table.dataframe th.col_heading.level1 {
+  color: #5f6368;
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  padding-top: 4px !important;
+}
+
+/* Cells */
+table.dataframe td {
+  padding: 12px 8px !important;
+  border-bottom: 1px solid #f1f3f4;
+  color: #3c4043;
+  vertical-align: middle;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Row Headings (Models) */
+table td.row_heading, table th.row_heading {
   text-align: left !important;
-  font-weight: bold;
+  font-weight: 500;
+  color: #202124;
+  background-color: #fff !important; /* Keeps it readable if scrolled, but sticky implementation is complex */
+  border-right: 1px solid #dadce0 !important;
+  min-width: 160px;
 }
 
-
-/* Cible toutes les cellules d'en-tête de niveau 1 (lead days) */
-th.col_heading.level1,
-th.level1 {
-  font-size: 0.8em !important;
-  font-weight: normal !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-}
-/* Augmenter la taille de police de la première ligne d'en-tête (nom de la variable) */
-table.dataframe th.col_heading.level0, th.level0 {
-  font-size: 1.25em !important;
-  font-weight: bold !important;
-  color: #011425;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
+/* --- Legend --- */
+.legend-container {
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #dadce0;
+    display: inline-block;
 }

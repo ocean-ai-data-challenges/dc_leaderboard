@@ -3,562 +3,376 @@
   "results": {
     "challenger_model_1": [
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.81060029
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.36565286
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16495502
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10373358
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.84949434
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.1033204
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.96444676
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.56710441
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12359856
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.1177103
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10071697
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08773278
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.13434575
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.09777711
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.09534305
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09084227
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07316581
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65625862
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 6,
-        "valid_time": "2024-01-09T00:00:00",
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-18T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.7996227
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.33850834
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.13821991
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10205195
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.76720042
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.0936557
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.75509714
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.50462316
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12668166
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.0999717
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10722466
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08659758
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12488004
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.10732607
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.12604296
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09479779
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.0701891
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.62125362
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
+        "forecast_reference_time": "2024-02-14T00:00:00",
         "lead_time": 5,
-        "valid_time": "2024-01-08T00:00:00",
+        "valid_time": "2024-02-19T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.83922515
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.32315915
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.15747762
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.07564704
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.61315426
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.01205128
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.89355707
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.52122221
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12172714
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.10374619
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09122682
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.0859686
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12150238
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.1174832
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11190173
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.08146604
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07462967
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69009188
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 9,
-        "valid_time": "2024-01-12T00:00:00",
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-20T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.75137124
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.35123858
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16559952
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10031233
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.92162166
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.10113649
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.84741756
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.55252887
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.14098248
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11192809
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10416995
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.0834778
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12098913
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.12620817
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.12368854
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09509167
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08722604
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69142779
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
+        "forecast_reference_time": "2024-02-14T00:00:00",
         "lead_time": 7,
-        "valid_time": "2024-01-10T00:00:00",
+        "valid_time": "2024-02-21T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.79882201
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.35631102
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16357793
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10542937
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.93277473
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.35973017
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.69395259
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.5822856
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.13773585
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11491034
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10705923
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.07719353
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.13446903
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.12458534
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.12517095
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09191012
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07829028
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59999376
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
+        "forecast_reference_time": "2024-02-14T00:00:00",
         "lead_time": 8,
-        "valid_time": "2024-01-11T00:00:00",
+        "valid_time": "2024-02-22T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "saral",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.74845771
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60612008
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.37610245
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68795756
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.15806638
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64310961
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.08673247
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59449083
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.66960016
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65328359
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 0.97029415
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59465335
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.89870297
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60134398
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.50057469
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64161187
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-27T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12015128
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.51984128
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.10544359
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.53701464
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09362566
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.5872198
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-03-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09568092
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.55704073
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12585285
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.62966005
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.1094759
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.57021291
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-03-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10854639
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.55659197
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-03-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.08593768
-          },
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68693013
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-03-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.06952805
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60485453
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-03-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63229403
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-03-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.5519841
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-03-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60111063
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-03-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66161091
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-03-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61219103
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -567,186 +381,12 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "swot",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.7697224
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.3350476
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.15229462
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.0934771
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.80509013
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.01295166
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.85787025
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.51914154
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.10374648
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.10729103
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10461602
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.10962243
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12240887
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11225059
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.1087714
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.08621209
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.0784293
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-05T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.83381859
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.37203484
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.14309429
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10073605
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.58002937
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.02175762
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.98460381
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.49053308
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.11646582
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.10981676
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10179006
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08198567
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12382826
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.10026125
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.1145798
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.08973933
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08184908
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6998821
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -755,186 +395,26 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "swot",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.73684416
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.35449158
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16517295
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.08229303
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.79284325
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.16078829
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.73508643
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.53266671
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12775106
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.1149383
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09325206
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08123006
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.13310081
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11338479
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11147063
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09740086
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07147857
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.56762682
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-07T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "glorys",
+        "ref_alias": "swot",
         "result": [
           {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.80614745
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.36727335
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.1458862
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.1039668
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.73139416
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 0.9179058
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.89032018
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.4834219
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.13138221
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11812491
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09736823
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09848813
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.1277085
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11734984
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.125639
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.0931886
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.06738877
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.74994152
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -943,310 +423,12 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "argo_profiles",
+        "ref_alias": "swot",
         "result": [
           {
             "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 1.06889968
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.11893018
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.14802553
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.51336043
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 2.53871515
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.39665788
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 0,
-        "valid_time": "2024-01-03T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 0.86354088
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.82057795
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.67397602
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.78068778
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.7927495
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.70493513
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 1,
-        "valid_time": "2024-01-04T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 1.17452785
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 1.11757751
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 1.12273206
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.80567662
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.7046422
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.48747627
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 8,
-        "valid_time": "2024-01-11T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 0.87892132
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.78575333
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.82368592
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.75503024
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.68205933
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.74267793
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 9,
-        "valid_time": "2024-01-12T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 0.97074076
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.96758757
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.85429487
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.69481366
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.62769951
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.394436
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-05T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 0.79283193
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.80891212
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.71245535
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.88015112
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.58458018
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.55633261
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 7,
-        "valid_time": "2024-01-10T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 1.48953158
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 1.35511896
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 1.26522991
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 1.00393212
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.68107831
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.47233438
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 6,
-        "valid_time": "2024-01-09T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 0.90353163
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 0.75824132
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 0.70762954
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.76423419
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.60830645
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.43221642
+            "Variable": "Surface ssh",
+            "Value": 0.69858317
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1255,37 +437,12 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "argo_profiles",
+        "ref_alias": "swot",
         "result": [
           {
             "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 1.12999876
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 1.13974215
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 1.30407262
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.56651031
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.6162055
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.34878466
+            "Variable": "Surface ssh",
+            "Value": 0.68434076
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1294,163 +451,12 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "argo_profiles",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface salinity",
-            "Value": 1.14603349
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m salinity",
-            "Value": 1.26556812
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m salinity",
-            "Value": 1.186492
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "Surface temperature",
-            "Value": 0.58435655
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "200m temperature",
-            "Value": 0.55804336
-          },
-          {
-            "Metric": "rmse",
-            "Variable": "550m temperature",
-            "Value": 0.46241733
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-06T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
+        "ref_alias": "swot",
         "result": [
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 5.14379888
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 8,
-        "valid_time": "2024-01-11T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 3.20135979
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 7,
-        "valid_time": "2024-01-10T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 3.29801865
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 1,
-        "valid_time": "2024-01-04T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 1.60715771
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 5,
-        "valid_time": "2024-01-08T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 5.03425824
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 0,
-        "valid_time": "2024-01-03T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 3.17314818
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-05T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 1.65455016
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-07T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 3.26108984
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 9,
-        "valid_time": "2024-01-12T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "saral",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 2.8416231
+            "Value": 0.70133862
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1459,17 +465,31 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "saral",
+        "ref_alias": "swot",
         "result": [
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 4.56445829
+            "Value": 0.60697399
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-06T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65816811
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
         "model": "challenger_model_1"
       },
       {
@@ -1486,11 +506,11 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.62497866
+            "Value": 0.59451561
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 7,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
         "valid_time": "2024-01-10T00:00:00",
         "model": "challenger_model_1"
       },
@@ -1500,91 +520,1103 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.59686941
+            "Value": 0.61733844
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-05T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "swot",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.76737019
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-07T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "swot",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.63963109
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 5,
-        "valid_time": "2024-01-08T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "swot",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.69718307
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-06T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "swot",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.69429906
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 6,
-        "valid_time": "2024-01-09T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "swot",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.60680126
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 8,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
         "valid_time": "2024-01-11T00:00:00",
         "model": "challenger_model_1"
       },
       {
         "ref_alias": "swot",
+        "result": [],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
         "result": [
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.65124356
+            "Value": 0.85286119
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67140871
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.77575669
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69212289
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.76210738
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.74450241
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63777291
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.44505878
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73000752
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.86705365
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72669614
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67907207
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.62427468
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71302145
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65137484
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67055192
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72901164
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73869814
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-27T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.74273964
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64139281
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66725424
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-30T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7007217
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73736155
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6638837
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66758434
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61599716
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.62428359
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73559376
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.76867984
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68315784
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73457349
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70852383
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65726293
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71582121
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.77296226
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68879516
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.78278987
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.53816219
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73122935
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69162251
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67887358
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70640774
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59052957
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68107195
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71070607
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.77162124
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66451156
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64833223
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65133698
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73238974
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70782095
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-20T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65285237
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70612746
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68982939
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73095487
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63811569
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66657019
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6613107
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59453885
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71566048
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70165552
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-27T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67792452
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68273386
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60528049
+          }
+        ],
+        "forecast_reference_time": "2024-02-21T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-03-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64864967
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6666602
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6387587
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-03-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66647839
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-03-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.70021905
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-03-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.78721284
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-03-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68732516
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-03-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69961007
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-03-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68455832
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-03-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.56647367
+          }
+        ],
+        "forecast_reference_time": "2024-02-28T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-03-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.02312113
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.10707558
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1593,12 +1625,880 @@
         "model": "challenger_model_1"
       },
       {
-        "ref_alias": "swot",
+        "ref_alias": "saral",
         "result": [
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.77978025
+            "Value": 3.31697537
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.83769594
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 1.99308115
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 1.66581935
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.51085248
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.31547477
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.38101542
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.15133752
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.81401986
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.64095094
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.63139938
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.3574464
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.9829301
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.05532565
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.54546325
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.94343372
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.75558321
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.43534252
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.92365868
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.61726517
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.0704506
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.53680403
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.02020078
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.80670912
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.27490481
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.23012852
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.31821008
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.0355904
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.34336148
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.1665918
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.02201121
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.97095082
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-27T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.25753791
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.28447094
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.89878046
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-30T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.05210609
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64944521
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72303851
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.98283595
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59494978
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72200423
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61795013
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.58053285
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71101209
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63366403
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59268137
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66270961
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.58251593
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69705808
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68811722
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59029941
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6929346
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66960422
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67088148
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72841347
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.62643403
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.58943458
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.57245217
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59138241
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61339791
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63312988
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65220584
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68862861
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1612,7 +2512,77 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.69574672
+            "Value": 0.65192078
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72891043
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63253363
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.80341955
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69555415
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61105598
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1626,7 +2596,35 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.60566784
+            "Value": 0.61088463
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69729483
+          }
+        ],
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64352037
           }
         ],
         "forecast_reference_time": "2024-01-03T00:00:00",
@@ -1640,67 +2638,11 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.71841782
+            "Value": 0.70254844
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-05T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.79331224
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-07T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.72044903
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-06T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.5991046
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 5,
-        "valid_time": "2024-01-08T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.66008691
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 7,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
         "valid_time": "2024-01-10T00:00:00",
         "model": "challenger_model_1"
       },
@@ -1710,25 +2652,11 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.73274164
+            "Value": 0.68710165
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 0,
-        "valid_time": "2024-01-03T00:00:00",
-        "model": "challenger_model_1"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface ssh",
-            "Value": 0.65132482
-          }
-        ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
-        "lead_time": 8,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
         "valid_time": "2024-01-11T00:00:00",
         "model": "challenger_model_1"
       },
@@ -1738,22 +2666,736 @@
           {
             "Metric": "rmse",
             "Variable": "Surface ssh",
-            "Value": 0.69193978
+            "Value": 0.65141641
           }
         ],
-        "forecast_reference_time": "2024-01-03T00:00:00",
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61917966
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.5874499
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64098885
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72088309
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68445818
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6073175
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66248623
+          }
+        ],
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68125488
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61001578
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
         "lead_time": 1,
-        "valid_time": "2024-01-04T00:00:00",
+        "valid_time": "2024-01-18T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66146919
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66341208
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60786768
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67427843
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69277504
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72108031
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72183119
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.59074031
+          }
+        ],
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.60822174
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-24T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68216118
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-25T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69120117
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-26T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69874754
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-27T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.87132352
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-28T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6846111
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-29T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.73197065
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-30T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.72677316
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69549715
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64837106
+          }
+        ],
+        "forecast_reference_time": "2024-01-24T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71352237
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-31T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61625633
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-01T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65254556
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-02T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63773882
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-03T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.67670242
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-04T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.78809856
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-05T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.57910338
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-06T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71054985
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.58031524
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.65133373
+          }
+        ],
+        "forecast_reference_time": "2024-01-31T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7300464
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-07T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.66699382
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-08T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.61852827
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-09T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63861026
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-10T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71047952
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-02-11T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63165182
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-02-12T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69424854
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-02-13T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.68940395
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.64366888
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.80201365
+          }
+        ],
+        "forecast_reference_time": "2024-02-07T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.71330571
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-02-14T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.55921333
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-02-15T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.69480664
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-02-16T00:00:00",
+        "model": "challenger_model_1"
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.63934854
+          }
+        ],
+        "forecast_reference_time": "2024-02-14T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-02-17T00:00:00",
         "model": "challenger_model_1"
       }
     ]
   },
   "metadata": {
-    "evaluation_date": "2025-10-06T18:31:24.437025",
-    "total_entries": 50,
+    "evaluation_date": "2025-11-03T03:12:33.681629",
+    "total_entries": 244,
     "config": {
       "start_time": "2024-01-03",
-      "end_time": "2024-01-13",
+      "end_time": "2024-03-13",
       "n_days_forecast": 10,
       "n_days_interval": 7
     }
