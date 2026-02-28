@@ -209,7 +209,13 @@ def generate_report_items(
 
     metrics_map = config.get("metrics_names", METRICS_NAMES)
     variables_map = config.get("variables_names", {})
+    models_map = config.get("models_names", {})
     texts = config.get("texts", {})
+
+    # Apply model aliasing if provided
+    if models_map:
+        df["dataset"] = df["dataset"].map(lambda x: models_map.get(x, x))
+        df["model"] = df["model"].map(lambda x: models_map.get(x, x))
 
     yield ("markdown", '<div style="height: 90px;"></div>')
 
@@ -234,8 +240,9 @@ def generate_report_items(
 
         # Determine reference model for this dataset
         datasets_in_ref = ref_df["dataset"].unique()
-        if "glonet" in datasets_in_ref:
-            reference_model = "glonet"
+        glonet_alias = models_map.get("glonet", "glonet")
+        if glonet_alias in datasets_in_ref:
+            reference_model = glonet_alias
         else:
             # Take first dataset as reference
             reference_model = datasets_in_ref[0]

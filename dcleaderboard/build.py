@@ -26,6 +26,7 @@ def render_site_from_results(
     output_site_dir: str | Path,
     template_dir: str | Path | None = None,
     include_benchmarks: bool = False,
+    custom_config: dict | None = None,
 ) -> RenderedSite:
     """Render the website using pure Python.
 
@@ -80,7 +81,7 @@ def render_site_from_results(
         for src in results_paths:
             shutil.copy2(src, tmp_results_dir / src.name)
             
-        build_site(output_site_dir, tmp_results_dir, styles_css)
+        build_site(output_site_dir, tmp_results_dir, styles_css, custom_config)
 
     leaderboard_html = output_site_dir / "leaderboard.html"
     about_html = output_site_dir / "about.html"
@@ -97,6 +98,7 @@ def render_site_from_results_dir(
     output_site_dir: str | Path,
     template_dir: str | Path | None = None,
     include_benchmarks: bool = False,
+    custom_config: dict | None = None,
 ) -> RenderedSite:
     """Render the website from a directory of JSON results."""
     results_dir = Path(results_dir).expanduser().resolve()
@@ -118,6 +120,7 @@ def render_site_from_results_dir(
         output_site_dir=output_site_dir,
         template_dir=template_dir,
         include_benchmarks=include_benchmarks,
+        custom_config=custom_config,
     )
 
 
