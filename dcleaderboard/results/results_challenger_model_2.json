@@ -91,8 +91,8 @@
             "Value": 0.0668495
           }
         ],
-        "duration_s": 24.208309727000596,
-        "preprocess_s": 17.026188602998445,
+        "duration_s": 12.668565848998696,
+        "preprocess_s": 15.287942007998936,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 2,
@@ -189,8 +189,8 @@
             "Value": 0.06856076
           }
         ],
-        "duration_s": 24.908489546000055,
-        "preprocess_s": 17.28129143499973,
+        "duration_s": 13.238060306000989,
+        "preprocess_s": 14.504929144000926,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 3,
@@ -287,8 +287,8 @@
             "Value": 0.0814264
           }
         ],
-        "duration_s": 24.426012176998483,
-        "preprocess_s": 18.282829216997925,
+        "duration_s": 13.137462458002119,
+        "preprocess_s": 14.73390270299933,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 4,
@@ -385,8 +385,8 @@
             "Value": 0.08775581
           }
         ],
-        "duration_s": 24.346683957002824,
-        "preprocess_s": 17.439492432000407,
+        "duration_s": 12.988583040001686,
+        "preprocess_s": 15.005856807001692,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 5,
@@ -483,8 +483,8 @@
             "Value": 0.0788891
           }
         ],
-        "duration_s": 25.02361431999816,
-        "preprocess_s": 16.70056485099849,
+        "duration_s": 13.028171185000247,
+        "preprocess_s": 14.53256815200075,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 6,
@@ -581,8 +581,8 @@
             "Value": 0.083164
           }
         ],
-        "duration_s": 24.642466126999352,
-        "preprocess_s": 17.64046900700123,
+        "duration_s": 13.366049724998447,
+        "preprocess_s": 14.451463003999379,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 7,
@@ -679,8 +679,8 @@
             "Value": 0.09770979
           }
         ],
-        "duration_s": 23.892995583999436,
-        "preprocess_s": 19.00604693599962,
+        "duration_s": 10.784505420997448,
+        "preprocess_s": 7.432062754000071,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 8,
@@ -777,8 +777,8 @@
             "Value": 0.08578415
           }
         ],
-        "duration_s": 24.221261211998353,
-        "preprocess_s": 17.024976716998935,
+        "duration_s": 10.297707616002299,
+        "preprocess_s": 9.986116063999361,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 9,
@@ -792,483 +792,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.73512883
+            "Value": 0.7308978
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.33979611
+            "Value": 0.34141
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.165703
+            "Value": 0.16403931
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.08070991
+            "Value": 0.0816525
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.65561111
+            "Value": 0.65489388
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.0731806
+            "Value": 1.06349983
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.73179183
+            "Value": 0.72680935
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.52901909
+            "Value": 0.5381959
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.12481901
+            "Value": 0.12595085
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.11468713
+            "Value": 0.11566697
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.09450844
+            "Value": 0.09554767
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08279407
+            "Value": 0.08359323
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.12952127
+            "Value": 0.12842578
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.1124521
+            "Value": 0.11203109
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11213884
+            "Value": 0.11283925
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.09910323
+            "Value": 0.09959683
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.06970347
+            "Value": 0.06803508
           }
         ],
-        "duration_s": 24.333993899002962,
-        "preprocess_s": 17.79271360400162,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 0,
-        "valid_time": "2024-01-17T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.79865909
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.35589573
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.14694694
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.10282702
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.68575234
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 0.89056187
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.88999824
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.48307632
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12919042
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11790018
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09776219
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09957449
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12776844
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11698991
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.1264672
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09440515
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07014581
-          }
-        ],
-        "duration_s": 24.20767167699887,
-        "preprocess_s": 18.249774711999635,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 1,
-        "valid_time": "2024-01-18T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.73378241
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.33275178
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.1550557
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.09207877
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.70450947
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.08337118
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.85062682
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.57417251
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.11920863
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.13025283
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10765518
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08425094
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.11379811
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11303277
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10654816
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09991038
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07921021
-          }
-        ],
-        "duration_s": 24.718852857000456,
-        "preprocess_s": 15.967970177000097,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-19T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.78543493
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.3322821
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.13759928
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.08636623
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.7492106
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.05529307
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.7713062
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.52384948
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.1245522
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.09961908
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10388538
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09088475
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.11313479
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11279581
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11345214
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.10255976
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08461198
-          }
-        ],
-        "duration_s": 24.59412505599903,
-        "preprocess_s": 17.532049338002253,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-20T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.69381777
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.324147
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16036164
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.09429367
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.66969176
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.25957466
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.87216257
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.57854295
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.13280239
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11453108
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10336655
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.0991418
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.11565645
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.10735791
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10632707
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09754563
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.0852723
-          }
-        ],
-        "duration_s": 24.186481969998567,
-        "preprocess_s": 19.578574433999165,
+        "duration_s": 12.438117116002104,
+        "preprocess_s": 16.992136988999846,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 0,
@@ -1282,91 +890,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.66901726
+            "Value": 0.8011201
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.36910213
+            "Value": 0.35809624
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.13441121
+            "Value": 0.14550215
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.08715228
+            "Value": 0.10409069
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.71020766
+            "Value": 0.67805939
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 0.98095736
+            "Value": 0.88292756
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.76555801
+            "Value": 0.88179653
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.50226349
+            "Value": 0.49120881
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.12862502
+            "Value": 0.12967403
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.10258244
+            "Value": 0.11904637
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.10789868
+            "Value": 0.09909858
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.09393785
+            "Value": 0.10081012
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.11673306
+            "Value": 0.12721958
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.12836677
+            "Value": 0.11677932
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11599576
+            "Value": 0.12714918
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.08117098
+            "Value": 0.09496252
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.07390601
+            "Value": 0.06842885
           }
         ],
-        "duration_s": 24.64397237799858,
-        "preprocess_s": 19.399863088998245,
+        "duration_s": 13.161220358000719,
+        "preprocess_s": 17.25633028000084,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 1,
@@ -1380,91 +988,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.74952078
+            "Value": 0.73510249
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.38244202
+            "Value": 0.33465998
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.1445034
+            "Value": 0.15333369
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.089719
+            "Value": 0.09302147
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.7277945
+            "Value": 0.7150184
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.06819053
+            "Value": 1.06510786
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.75983863
+            "Value": 0.8414258
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.50827639
+            "Value": 0.58298077
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.11790286
+            "Value": 0.11996469
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.10189946
+            "Value": 0.13091669
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.11881908
+            "Value": 0.10932563
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.09454338
+            "Value": 0.0852968
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.1117816
+            "Value": 0.11367121
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.11765475
+            "Value": 0.11383703
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.12759211
+            "Value": 0.10712437
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.10295905
+            "Value": 0.10053607
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.06312499
+            "Value": 0.07458001
           }
         ],
-        "duration_s": 24.84479150399784,
-        "preprocess_s": 19.839879416998883,
+        "duration_s": 12.978026877997763,
+        "preprocess_s": 18.214011362000747,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 2,
@@ -1478,91 +1086,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.76078275
+            "Value": 0.78683102
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.39523106
+            "Value": 0.3345492
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.14596891
+            "Value": 0.13597743
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.09367595
+            "Value": 0.08723249
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.7483517
+            "Value": 0.75296115
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 0.93936447
+            "Value": 1.03197928
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.84186223
+            "Value": 0.76158971
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.38835145
+            "Value": 0.53156824
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.11347044
+            "Value": 0.12740955
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.10592061
+            "Value": 0.10046097
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.09380757
+            "Value": 0.10549168
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.1033823
+            "Value": 0.09186659
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.10948184
+            "Value": 0.11232199
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.10623235
+            "Value": 0.1132602
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11022688
+            "Value": 0.11397982
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.10601459
+            "Value": 0.10329054
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.06347539
+            "Value": 0.07775869
           }
         ],
-        "duration_s": 24.638924094000686,
-        "preprocess_s": 19.51430187400183,
+        "duration_s": 13.092319243001839,
+        "preprocess_s": 17.808684694002295,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 3,
@@ -1576,91 +1184,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.85925066
+            "Value": 0.69946245
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.36416445
+            "Value": 0.33656712
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.14290312
+            "Value": 0.16146986
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.09465596
+            "Value": 0.09503337
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.79107409
+            "Value": 0.81075822
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.00043356
+            "Value": 1.37479996
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.84827879
+            "Value": 0.88209497
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.50873287
+            "Value": 0.57259925
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.12628566
+            "Value": 0.13470053
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.11390251
+            "Value": 0.11380957
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.11662472
+            "Value": 0.10088309
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08183053
+            "Value": 0.09633908
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.14956822
+            "Value": 0.11986664
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.09345739
+            "Value": 0.10865514
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.10795373
+            "Value": 0.10503743
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.09923469
+            "Value": 0.09539488
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.0772901
+            "Value": 0.08958823
           }
         ],
-        "duration_s": 24.790797713998472,
-        "preprocess_s": 19.281388171999424,
+        "duration_s": 13.362647287998698,
+        "preprocess_s": 16.064441170001373,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 4,
@@ -1674,91 +1282,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.74115622
+            "Value": 0.66349399
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.35894683
+            "Value": 0.38506455
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.14967999
+            "Value": 0.13572156
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.08703524
+            "Value": 0.08789337
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.83441695
+            "Value": 0.84937743
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.11884756
+            "Value": 1.09337304
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.804993
+            "Value": 0.77875541
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.56557083
+            "Value": 0.49740892
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.12865435
+            "Value": 0.13239423
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.11727101
+            "Value": 0.10367694
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.10933931
+            "Value": 0.10589856
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08493571
+            "Value": 0.09130037
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.12213366
+            "Value": 0.12119852
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.11949444
+            "Value": 0.13209263
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11513642
+            "Value": 0.11534323
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.09474158
+            "Value": 0.07952534
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.077397
+            "Value": 0.07782103
           }
         ],
-        "duration_s": 24.769903727999917,
-        "preprocess_s": 17.902509113002452,
+        "duration_s": 12.916438973999902,
+        "preprocess_s": 18.215620372000558,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 5,
@@ -1772,679 +1380,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.87414062
+            "Value": 0.73834504
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.34471309
+            "Value": 0.39495711
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.16421373
+            "Value": 0.1468857
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.08902474
+            "Value": 0.09161842
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.74170019
+            "Value": 0.90068492
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.17136547
+            "Value": 1.20225624
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.91424271
+            "Value": 0.77404629
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.55097067
+            "Value": 0.52000316
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.13779348
+            "Value": 0.12354236
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.10866856
+            "Value": 0.10691729
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.10777082
+            "Value": 0.11936722
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08761499
+            "Value": 0.09408048
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.13137761
+            "Value": 0.11850038
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.10972709
+            "Value": 0.12392505
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.10926817
+            "Value": 0.12938379
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.09845197
+            "Value": 0.10297784
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.07575855
+            "Value": 0.06993949
           }
         ],
-        "duration_s": 24.568938317002903,
-        "preprocess_s": 15.928399345997605,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-21T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.92225512
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.33293112
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.1428822
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.09888516
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.80346029
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.17680544
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.91193314
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.51990055
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.11630112
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.1113568
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09726761
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09703652
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12733644
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.10522898
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10641145
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09749023
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07887026
-          }
-        ],
-        "duration_s": 24.474703079999017,
-        "preprocess_s": 14.924879261998285,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 5,
-        "valid_time": "2024-01-22T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.74242809
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.37466313
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16268239
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.08805353
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.78311593
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.17994956
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.77361141
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.46690741
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12371764
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11152992
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10596319
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.10077476
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.14162379
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11339402
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10967321
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.08696833
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08490007
-          }
-        ],
-        "duration_s": 24.265164090000326,
-        "preprocess_s": 15.52494802000001,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 6,
-        "valid_time": "2024-01-23T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.77449817
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.37797257
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.15002663
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.09574602
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.91866301
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.20858124
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.91819422
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.56048584
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.12856011
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11928808
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.10463773
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09128937
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12630977
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.11847629
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11488433
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.10581213
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.09311802
-          }
-        ],
-        "duration_s": 25.303901703999145,
-        "preprocess_s": 14.900681543997052,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 7,
-        "valid_time": "2024-01-24T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.93667149
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.35157415
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.17299887
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.094389
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 1.02879692
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.17491712
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.83616944
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.51268367
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.11269517
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11494354
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09849337
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09169592
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.14463469
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.13957762
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11922748
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.09061196
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08287782
-          }
-        ],
-        "duration_s": 24.904588385998068,
-        "preprocess_s": 14.94371757999761,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 8,
-        "valid_time": "2024-01-25T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.82147281
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.31835632
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.17982305
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.09780909
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.66117126
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 0.87812857
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.94204809
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.50687083
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.13423232
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.09189846
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.09704253
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.08969646
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.12386812
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.10421228
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.11299815
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.0860055
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.07467252
-          }
-        ],
-        "duration_s": 23.788851417000842,
-        "preprocess_s": 17.621262623000803,
-        "n_points": 20321280,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 9,
-        "valid_time": "2024-01-26T00:00:00",
-        "ref_is_observation": false,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "glorys",
-        "result": [
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface salinity",
-            "Value": 0.78712321
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m salinity",
-            "Value": 0.38495944
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m salinity",
-            "Value": 0.16575706
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m salinity",
-            "Value": 0.08414777
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface temperature",
-            "Value": 0.75946311
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m temperature",
-            "Value": 1.23930879
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m temperature",
-            "Value": 0.87903236
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m temperature",
-            "Value": 0.50230774
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface northward velocity",
-            "Value": 0.14435797
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m northward velocity",
-            "Value": 0.11385762
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m northward velocity",
-            "Value": 0.1144625
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m northward velocity",
-            "Value": 0.09162029
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface eastward velocity",
-            "Value": 0.15352224
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "50m eastward velocity",
-            "Value": 0.13165986
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "200m eastward velocity",
-            "Value": 0.10840299
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "550m eastward velocity",
-            "Value": 0.10251446
-          },
-          {
-            "Metric": "rmsd",
-            "Variable": "Surface height",
-            "Value": 0.08372752
-          }
-        ],
-        "duration_s": 24.808035817000928,
-        "preprocess_s": 18.172645031001593,
+        "duration_s": 12.622345383999345,
+        "preprocess_s": 16.540875830000004,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 6,
@@ -2458,91 +1478,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.86013716
+            "Value": 0.74522182
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.34268266
+            "Value": 0.40898574
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.16653887
+            "Value": 0.14893628
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.10051565
+            "Value": 0.09595927
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.73703908
+            "Value": 0.91087299
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.06864844
+            "Value": 1.09285369
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.72715879
+            "Value": 0.86477404
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.52666332
+            "Value": 0.39869161
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.13828322
+            "Value": 0.12005898
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.13037849
+            "Value": 0.11403806
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.10636727
+            "Value": 0.09518519
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.10351592
+            "Value": 0.10354373
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.11902083
+            "Value": 0.11848523
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.10235633
+            "Value": 0.11433329
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11108613
+            "Value": 0.11274905
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.0985813
+            "Value": 0.10667043
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.08053253
+            "Value": 0.07146878
           }
         ],
-        "duration_s": 24.92720787899816,
-        "preprocess_s": 18.519065761000093,
+        "duration_s": 13.01872721500331,
+        "preprocess_s": 16.53632087999722,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 7,
@@ -2556,91 +1576,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.64795465
+            "Value": 0.84860401
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.37302218
+            "Value": 0.37600835
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.14239059
+            "Value": 0.14649817
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.09890774
+            "Value": 0.09734884
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.96289074
+            "Value": 0.95035274
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 1.11759989
+            "Value": 1.15043754
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.8418617
+            "Value": 0.88285645
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.5000641
+            "Value": 0.52951952
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.13609745
+            "Value": 0.13802551
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.12672207
+            "Value": 0.12396245
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.09789809
+            "Value": 0.11976388
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.09548965
+            "Value": 0.08269903
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.13106813
+            "Value": 0.16023104
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.11344199
+            "Value": 0.1022092
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11097808
+            "Value": 0.1105773
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.0879445
+            "Value": 0.10039859
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.07999681
+            "Value": 0.08558585
           }
         ],
-        "duration_s": 24.21840791700015,
-        "preprocess_s": 17.86320942800012,
+        "duration_s": 14.216192969000986,
+        "preprocess_s": 13.550916524000058,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 8,
@@ -2654,91 +1674,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.71195295
+            "Value": 0.74818508
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.41442889
+            "Value": 0.35217463
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.15532652
+            "Value": 0.1487807
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.08468956
+            "Value": 0.08548161
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.69779455
+            "Value": 0.73268006
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 0.98740618
+            "Value": 1.02481698
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.82879798
+            "Value": 0.79694344
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.53943622
+            "Value": 0.55117718
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.13030949
+            "Value": 0.12588434
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.10179526
+            "Value": 0.11321997
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.09869867
+            "Value": 0.10867638
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08921459
+            "Value": 0.08517205
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.10291999
+            "Value": 0.12049779
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.09519207
+            "Value": 0.11479829
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.12081698
+            "Value": 0.11422584
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.1073241
+            "Value": 0.09468442
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.0712944
+            "Value": 0.07342645
           }
         ],
-        "duration_s": 24.123839394000242,
-        "preprocess_s": 19.953696852000576,
+        "duration_s": 13.254140650002228,
+        "preprocess_s": 16.602883931998804,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 9,
@@ -2752,91 +1772,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.83245542
+            "Value": 0.87708804
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.36016606
+            "Value": 0.3347848
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.19211806
+            "Value": 0.16089622
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.09790636
+            "Value": 0.08840464
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.62785866
+            "Value": 0.62330334
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 0.8877946
+            "Value": 1.04577616
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.72456235
+            "Value": 0.8863127
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.53349075
+            "Value": 0.55911005
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.11662259
+            "Value": 0.13709799
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.09578112
+            "Value": 0.10825991
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.09977038
+            "Value": 0.11095259
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08498182
+            "Value": 0.09072208
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.14237829
+            "Value": 0.12869984
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.11791696
+            "Value": 0.10900128
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.11093785
+            "Value": 0.11187004
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.10840108
+            "Value": 0.1015404
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.07067761
+            "Value": 0.06564491
           }
         ],
-        "duration_s": 25.198018196999328,
-        "preprocess_s": 18.14913044199784,
+        "duration_s": 12.905732775001525,
+        "preprocess_s": 16.626964746999874,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 0,
@@ -2850,91 +1870,91 @@
           {
             "Metric": "rmsd",
             "Variable": "Surface salinity",
-            "Value": 0.73529255
+            "Value": 0.92189498
           },
           {
             "Metric": "rmsd",
             "Variable": "50m salinity",
-            "Value": 0.39289983
+            "Value": 0.32203836
           },
           {
             "Metric": "rmsd",
             "Variable": "200m salinity",
-            "Value": 0.1612517
+            "Value": 0.1395712
           },
           {
             "Metric": "rmsd",
             "Variable": "550m salinity",
-            "Value": 0.082311
+            "Value": 0.09807527
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface temperature",
-            "Value": 0.64276479
+            "Value": 0.69404125
           },
           {
             "Metric": "rmsd",
             "Variable": "50m temperature",
-            "Value": 0.90562439
+            "Value": 1.02246496
           },
           {
             "Metric": "rmsd",
             "Variable": "200m temperature",
-            "Value": 0.74561624
+            "Value": 0.88050115
           },
           {
             "Metric": "rmsd",
             "Variable": "550m temperature",
-            "Value": 0.56551097
+            "Value": 0.52598451
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface northward velocity",
-            "Value": 0.13995994
+            "Value": 0.1126985
           },
           {
             "Metric": "rmsd",
             "Variable": "50m northward velocity",
-            "Value": 0.09563845
+            "Value": 0.10834012
           },
           {
             "Metric": "rmsd",
             "Variable": "200m northward velocity",
-            "Value": 0.10997919
+            "Value": 0.09953833
           },
           {
             "Metric": "rmsd",
             "Variable": "550m northward velocity",
-            "Value": 0.08814943
+            "Value": 0.10024375
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface eastward velocity",
-            "Value": 0.11947002
+            "Value": 0.12285205
           },
           {
             "Metric": "rmsd",
             "Variable": "50m eastward velocity",
-            "Value": 0.10398829
+            "Value": 0.10195261
           },
           {
             "Metric": "rmsd",
             "Variable": "200m eastward velocity",
-            "Value": 0.10303653
+            "Value": 0.10784128
           },
           {
             "Metric": "rmsd",
             "Variable": "550m eastward velocity",
-            "Value": 0.09716841
+            "Value": 0.09999018
           },
           {
             "Metric": "rmsd",
             "Variable": "Surface height",
-            "Value": 0.06699079
+            "Value": 0.0685249
           }
         ],
-        "duration_s": 24.66206032899936,
-        "preprocess_s": 18.671989836999273,
+        "duration_s": 12.41969151000012,
+        "preprocess_s": 16.558597466999345,
         "n_points": 20321280,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 1,
@@ -2948,36 +1968,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.67157023
+            "Value": 0.61410874
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.73186151
+            "Value": 0.74913996
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.64151896
+            "Value": 0.66683819
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.3565175
+            "Value": -0.34586469
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34772147
+            "Value": -0.34490995
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.73522117
+            "Value": 11.27189831
           }
         ],
-        "duration_s": 5.939683477998187,
-        "preprocess_s": 17.843042672000593,
+        "duration_s": 5.558925063000061,
+        "preprocess_s": 16.016884464999748,
         "n_points": 54970,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 0,
@@ -2991,36 +2011,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.65993284
+            "Value": 0.56100058
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.64089221
+            "Value": 0.61698018
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.63565212
+            "Value": 0.59439427
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.28688704
+            "Value": -0.31044713
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34599989
+            "Value": -0.29764302
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.63753405
+            "Value": 12.46907863
           }
         ],
-        "duration_s": 5.596253601001081,
-        "preprocess_s": 18.38035760099956,
+        "duration_s": 4.737143324000499,
+        "preprocess_s": 11.126886674999696,
         "n_points": 54955,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 1,
@@ -3034,36 +2054,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.62305374
+            "Value": 0.70307301
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.78712884
+            "Value": 0.74313491
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.61511355
+            "Value": 0.65411875
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.37762855
+            "Value": -0.35644758
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.37294704
+            "Value": -0.33047095
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.06584241
+            "Value": 10.76887666
           }
         ],
-        "duration_s": 5.113706544998422,
-        "preprocess_s": 16.56034066900247,
+        "duration_s": 4.720205535002606,
+        "preprocess_s": 15.747777430999122,
         "n_points": 55795,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 2,
@@ -3077,36 +2097,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.65814274
+            "Value": 0.66139206
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.67637061
+            "Value": 0.68086698
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.67365386
+            "Value": 0.66753977
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.37958406
+            "Value": -0.29396544
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.33682003
+            "Value": -0.33796403
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.02533469
+            "Value": 11.45753953
           }
         ],
-        "duration_s": 5.712505805000546,
-        "preprocess_s": 17.82367469300152,
+        "duration_s": 4.839239884000563,
+        "preprocess_s": 13.097964393997245,
         "n_points": 55115,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 3,
@@ -3120,36 +2140,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.62460232
+            "Value": 0.69534779
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.74949686
+            "Value": 0.72269939
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.61076787
+            "Value": 0.6676755
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.33653478
+            "Value": -0.32616158
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.30020688
+            "Value": -0.32393925
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.5669004
+            "Value": 10.39309014
           }
         ],
-        "duration_s": 4.2329576189986255,
-        "preprocess_s": 21.372612568000477,
+        "duration_s": 5.465007170001627,
+        "preprocess_s": 11.447329145998083,
         "n_points": 55292,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 4,
@@ -3163,36 +2183,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.71371686
+            "Value": 0.67030297
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.6902657
+            "Value": 0.78908013
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.6936742
+            "Value": 0.74272401
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.29920569
+            "Value": -0.31225513
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.40508469
+            "Value": -0.27995171
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.32867395
+            "Value": 10.35475152
           }
         ],
-        "duration_s": 5.112077833000512,
-        "preprocess_s": 19.80029646299954,
+        "duration_s": 4.656373140001961,
+        "preprocess_s": 15.712174230000528,
         "n_points": 55053,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 5,
@@ -3206,36 +2226,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.67457384
+            "Value": 0.68980408
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.71073327
+            "Value": 0.7330655
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.66051163
+            "Value": 0.75384008
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.33678457
+            "Value": -0.3420356
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.31903615
+            "Value": -0.34284322
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.02420137
+            "Value": 10.62793759
           }
         ],
-        "duration_s": 4.5919657810009085,
-        "preprocess_s": 19.42945112000234,
+        "duration_s": 5.065924069000175,
+        "preprocess_s": 12.477727788002085,
         "n_points": 56849,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 6,
@@ -3249,36 +2269,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.7293258
+            "Value": 0.55367875
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.77824534
+            "Value": 0.73064081
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.68079817
+            "Value": 0.62263658
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.35049737
+            "Value": -0.33523433
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.35255307
+            "Value": -0.33003974
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.59421273
+            "Value": 12.62108527
           }
         ],
-        "duration_s": 4.413810104000731,
-        "preprocess_s": 19.22893430499971,
+        "duration_s": 4.6415797820009175,
+        "preprocess_s": 16.0348698730013,
         "n_points": 54935,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 7,
@@ -3292,36 +2312,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.69220168
+            "Value": 0.72204743
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.74198635
+            "Value": 0.73240859
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.68202154
+            "Value": 0.6186607
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.27974144
+            "Value": -0.32223376
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.31205788
+            "Value": -0.3708624
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.68037154
+            "Value": 12.57315592
           }
         ],
-        "duration_s": 4.756761348002328,
-        "preprocess_s": 18.77792959100043,
+        "duration_s": 4.560283773000265,
+        "preprocess_s": 15.974534111002868,
         "n_points": 54990,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 8,
@@ -3335,36 +2355,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.71853641
+            "Value": 0.71739452
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.72401643
+            "Value": 0.72035799
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.54573681
+            "Value": 0.5626897
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.35974206
+            "Value": -0.2968393
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.3827173
+            "Value": -0.33594548
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.8216964
+            "Value": 12.23744843
           }
         ],
-        "duration_s": 4.4586668480005756,
-        "preprocess_s": 21.677912460003427,
+        "duration_s": 3.9887350470016827,
+        "preprocess_s": 12.863420588000736,
         "n_points": 57392,
         "forecast_reference_time": "2024-01-03T00:00:00",
         "lead_time": 9,
@@ -3378,36 +2398,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.66307944
+            "Value": 0.57764971
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.85268581
+            "Value": 0.71580001
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.67536232
+            "Value": 0.65842506
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.34498438
+            "Value": -0.33776737
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.3165454
+            "Value": -0.35124892
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 9.03276958
+            "Value": 11.5207735
           }
         ],
-        "duration_s": 4.2771879009997065,
-        "preprocess_s": 19.015464689997316,
+        "duration_s": 5.427480852998997,
+        "preprocess_s": 16.121335176001594,
         "n_points": 54935,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 0,
@@ -3421,36 +2441,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.67474888
+            "Value": 0.60570185
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.79590399
+            "Value": 0.74113325
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.58017595
+            "Value": 0.66434235
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.30311006
+            "Value": -0.31990714
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.32460322
+            "Value": -0.3146443
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.60205885
+            "Value": 9.97973416
           }
         ],
-        "duration_s": 5.724491871998907,
-        "preprocess_s": 17.43270655699962,
+        "duration_s": 4.171452460999717,
+        "preprocess_s": 18.159175433997007,
         "n_points": 54990,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 1,
@@ -3464,36 +2484,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.68872598
+            "Value": 0.57508687
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.88441044
+            "Value": 0.82495258
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.66154116
+            "Value": 0.66938917
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.32628459
+            "Value": -0.3528285
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34512862
+            "Value": -0.29158543
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.37779044
+            "Value": 11.23786083
           }
         ],
-        "duration_s": 4.548325741001463,
-        "preprocess_s": 20.62836078500186,
+        "duration_s": 4.545334742000705,
+        "preprocess_s": 9.666437949999818,
         "n_points": 57392,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 2,
@@ -3507,36 +2527,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.71338314
+            "Value": 0.73205808
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.71265553
+            "Value": 0.76918379
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.66965451
+            "Value": 0.77561303
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.35906265
+            "Value": -0.2972806
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.33259464
+            "Value": -0.35273522
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.32336257
+            "Value": 11.8862006
           }
         ],
-        "duration_s": 4.531434733002243,
-        "preprocess_s": 20.08245325199823,
+        "duration_s": 4.4339474929984135,
+        "preprocess_s": 15.32461988200157,
         "n_points": 56083,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 3,
@@ -3550,36 +2570,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.72066702
+            "Value": 0.69979028
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.73524297
+            "Value": 0.85044436
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.64782791
+            "Value": 0.61101129
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.36141683
+            "Value": -0.31677682
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34708565
+            "Value": -0.30679208
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.3709375
+            "Value": 9.48476756
           }
         ],
-        "duration_s": 4.2189123919997655,
-        "preprocess_s": 20.563610967998102,
+        "duration_s": 4.325426368999615,
+        "preprocess_s": 10.400698006000312,
         "n_points": 55510,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 4,
@@ -3593,36 +2613,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.69688687
+            "Value": 0.59489291
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.69243471
+            "Value": 0.62562637
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.69948853
+            "Value": 0.63989618
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.29393788
+            "Value": -0.31076796
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.31878894
+            "Value": -0.2900681
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 12.74602688
+            "Value": 11.14780735
           }
         ],
-        "duration_s": 4.777399187998526,
-        "preprocess_s": 16.282333552000637,
+        "duration_s": 5.063376752001204,
+        "preprocess_s": 10.79243495099945,
         "n_points": 55896,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 5,
@@ -3636,36 +2656,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.63262708
+            "Value": 0.76223641
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.70418346
+            "Value": 0.69570932
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.57490989
+            "Value": 0.57894975
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.3084485
+            "Value": -0.35194069
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.33204133
+            "Value": -0.33961803
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 10.99922551
+            "Value": 11.01945719
           }
         ],
-        "duration_s": 5.137862020998,
-        "preprocess_s": 13.140459095997358,
+        "duration_s": 4.103141660998517,
+        "preprocess_s": 10.758227941001678,
         "n_points": 55178,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 6,
@@ -3679,36 +2699,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.6887581
+            "Value": 0.56224776
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.71336771
+            "Value": 0.77836498
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.80198168
+            "Value": 0.60074664
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.3425788
+            "Value": -0.32761231
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34312785
+            "Value": -0.33600522
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 11.7240316
+            "Value": 10.24751295
           }
         ],
-        "duration_s": 4.715177259000484,
-        "preprocess_s": 12.096771577002073,
+        "duration_s": 4.040641382998729,
+        "preprocess_s": 10.199601647000236,
         "n_points": 56520,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 7,
@@ -3722,36 +2742,36 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.70905832
+            "Value": 0.65471546
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.81147287
+            "Value": 0.72964261
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.63680996
+            "Value": 0.67639033
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.34439994
+            "Value": -0.33055142
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.30401301
+            "Value": -0.38612221
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 12.24137379
+            "Value": 11.49747668
           }
         ],
-        "duration_s": 4.574226008000551,
-        "preprocess_s": 15.499597226000333,
+        "duration_s": 4.345107928998914,
+        "preprocess_s": 11.32488377700065,
         "n_points": 55607,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 8,
@@ -3765,481 +2785,51 @@
           {
             "Metric": "rmse",
             "Variable": "Surface height",
-            "Value": 0.74256508
+            "Value": 0.63068154
           },
           {
             "Metric": "mse",
             "Variable": "Surface height",
-            "Value": 0.72384321
+            "Value": 0.70683768
           },
           {
             "Metric": "mae",
             "Variable": "Surface height",
-            "Value": 0.60373021
+            "Value": 0.65002201
           },
           {
             "Metric": "bias",
             "Variable": "Surface height",
-            "Value": -0.35457803
+            "Value": -0.38011885
           },
           {
             "Metric": "me",
             "Variable": "Surface height",
-            "Value": -0.34948052
+            "Value": -0.36659397
           },
           {
             "Metric": "count",
             "Variable": "Surface height",
-            "Value": 12.11115702
+            "Value": 10.0691369
           }
         ],
-        "duration_s": 4.450068101999932,
-        "preprocess_s": 18.229291422998358,
+        "duration_s": 4.2793232330004685,
+        "preprocess_s": 15.811404141000821,
         "n_points": 57127,
         "forecast_reference_time": "2024-01-10T00:00:00",
         "lead_time": 9,
         "valid_time": "2024-01-19T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.57173652
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.84094117
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.65014965
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.35360934
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.36961788
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 9.61371894
-          }
-        ],
-        "duration_s": 4.044679213002382,
-        "preprocess_s": 14.834522728000593,
-        "n_points": 56520,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 0,
-        "valid_time": "2024-01-17T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.70803098
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.75960891
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.59319254
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.38636537
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.35949796
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 12.52748477
-          }
-        ],
-        "duration_s": 4.118655383001169,
-        "preprocess_s": 16.93478857300215,
-        "n_points": 55607,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 1,
-        "valid_time": "2024-01-18T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.64494286
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.66395392
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.64274641
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.35870455
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.42678387
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 11.08796274
-          }
-        ],
-        "duration_s": 5.116624921000039,
-        "preprocess_s": 13.638038998997217,
-        "n_points": 57127,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 2,
-        "valid_time": "2024-01-19T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.63957942
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.77933946
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.74485365
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.30427835
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.34161152
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 10.1169664
-          }
-        ],
-        "duration_s": 3.4073714619989914,
-        "preprocess_s": 16.041011314999196,
-        "n_points": 56087,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 3,
-        "valid_time": "2024-01-20T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.8025322
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.7690009
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.66366679
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.35158279
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.34534481
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 10.9013086
-          }
-        ],
-        "duration_s": 4.234386952000932,
-        "preprocess_s": 16.740766835002432,
-        "n_points": 55895,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 4,
-        "valid_time": "2024-01-21T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.62628541
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.72302377
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.65192247
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.35695188
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.36158833
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 11.26178012
-          }
-        ],
-        "duration_s": 3.852696820998972,
-        "preprocess_s": 14.441281831001106,
-        "n_points": 57474,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 5,
-        "valid_time": "2024-01-22T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.65940946
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.87385455
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.52814722
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.32248568
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.31811619
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 9.25266738
-          }
-        ],
-        "duration_s": 4.206650821000949,
-        "preprocess_s": 17.11819391699828,
-        "n_points": 56719,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 6,
-        "valid_time": "2024-01-23T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.65510025
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.75733329
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.59433005
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.38043998
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.38997429
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 12.5605416
-          }
-        ],
-        "duration_s": 3.7463816950003093,
-        "preprocess_s": 17.107570919000864,
-        "n_points": 55246,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 7,
-        "valid_time": "2024-01-24T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.69979311
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.81758592
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.68495522
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.34943893
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.33393919
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 11.61158715
-          }
-        ],
-        "duration_s": 3.4021669549983926,
-        "preprocess_s": 14.342393807997723,
-        "n_points": 56407,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 8,
-        "valid_time": "2024-01-25T00:00:00",
-        "ref_is_observation": true,
-        "model": "challenger_model_2"
-      },
-      {
-        "ref_alias": "jason3",
-        "result": [
-          {
-            "Metric": "rmse",
-            "Variable": "Surface height",
-            "Value": 0.59221475
-          },
-          {
-            "Metric": "mse",
-            "Variable": "Surface height",
-            "Value": 0.79441564
-          },
-          {
-            "Metric": "mae",
-            "Variable": "Surface height",
-            "Value": 0.64037677
-          },
-          {
-            "Metric": "bias",
-            "Variable": "Surface height",
-            "Value": -0.34995805
-          },
-          {
-            "Metric": "me",
-            "Variable": "Surface height",
-            "Value": -0.32044481
-          },
-          {
-            "Metric": "count",
-            "Variable": "Surface height",
-            "Value": 11.4995901
-          }
-        ],
-        "duration_s": 5.489940164003201,
-        "preprocess_s": 20.33512598699963,
-        "n_points": 58343,
-        "forecast_reference_time": "2024-01-17T00:00:00",
-        "lead_time": 9,
-        "valid_time": "2024-01-26T00:00:00",
         "ref_is_observation": true,
         "model": "challenger_model_2"
       }
     ]
   },
   "metadata": {
-    "evaluation_date": "2026-03-02T01:35:14.310741",
-    "total_entries": 60,
+    "evaluation_date": "2026-03-02T02:09:48.057742",
+    "total_entries": 40,
     "config": {
       "start_time": "2024-01-01",
-      "end_time": "2024-02-01",
+      "end_time": "2024-01-20",
       "n_days_forecast": 10,
       "n_days_interval": 7
     }
