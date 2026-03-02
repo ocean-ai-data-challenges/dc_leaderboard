@@ -91,6 +91,7 @@ def build_navbar(active_page: str = "", config: Dict[str, Any] = None) -> str:
     github_url = config.get("texts", {}).get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
     
     active_home = "active" if active_page == "leaderboard" else ""
+    active_maps = "active" if active_page == "maps" else ""
     active_about = "active" if active_page == "about" else ""
     
     return f"""
@@ -103,6 +104,7 @@ def build_navbar(active_page: str = "", config: Dict[str, Any] = None) -> str:
     </a>
     <ul class="navbar-links">
       <li><a class="{active_home}" href="leaderboard.html">Leaderboard</a></li>
+      <li><a class="{active_maps}" href="maps.html">Maps</a></li>
       <li><a class="{active_about}" href="about.html">About</a></li>
       <li>
         <a class="nav-icon" href="{github_url}" target="_blank" rel="noopener" title="GitHub">
@@ -201,6 +203,7 @@ def build_footer(config: Dict[str, Any] = None) -> str:
       <div class="footer-links-col">
         <h4>Resources</h4>
         <a href="leaderboard.html">Leaderboard</a>
+        <a href="maps.html">Spatial Maps</a>
         <a href="about.html">About</a>
       </div>
       <div class="footer-links-col">
@@ -305,7 +308,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
         f'<div class="legend-section">\n'
         f'<div class="legend-container">\n'
         f'<span class="legend-title">Color Scale</span>\n'
-        f'<img src="data:image/png;base64,{img_str}" style="max-width: 100%; height: auto;" />\n'
+        f'<img src="data:image/png;base64,{img_str}" style="max-width: 520px; height: auto;" />\n'
         f'</div></div>'
     )
     return "\n".join(html_parts)
@@ -341,7 +344,8 @@ def build_site(
     output_dir: Path, 
     results_dir: Path, 
     styles_css: Path,
-    custom_config: Optional[Dict[str, Any]] = None
+    custom_config: Optional[Dict[str, Any]] = None,
+    site_base_url: str = "",
 ) -> None:
     """Build the complete static site."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -374,6 +378,31 @@ def build_site(
     )
     with open(output_dir / "leaderboard.html", "w", encoding="utf-8") as f:
         f.write(leaderboard_html)
+
+    # Build Maps page (if per_bins data exists)
+    print("Generating maps.html")
+    try:
+        from dcleaderboard.map_processing import preprocess_per_bins
+        from dcleaderboard.map_builder import build_map_page
+
+        map_metadata = preprocess_per_bins(results_dir, output_dir)
+        if map_metadata:
+            maps_html = build_map_page(
+                metadata=map_metadata,
+                config=config,
+                build_head_fn=build_head,
+                build_navbar_fn=build_navbar,
+                build_footer_fn=build_footer,
+                site_base_url=site_base_url,
+            )
+            with open(output_dir / "maps.html", "w", encoding="utf-8") as f:
+                f.write(maps_html)
+        else:
+            print("  Skipping maps.html (no per-bins data)")
+    except Exception as e:
+        import traceback
+        print(f"  Warning: Could not generate maps page: {e}")
+        traceback.print_exc()
 
     # Build About
     print("Generating about.html")

@@ -40,7 +40,8 @@ body {
   font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.55;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
@@ -201,7 +202,6 @@ body {
   font-size: 2.75rem;
   line-height: 1.2;
   margin: 0 0 16px 0;
-  max-width: 800px;
   letter-spacing: -0.02em;
 }
 
@@ -211,7 +211,6 @@ body {
   font-size: 1.15rem;
   line-height: 1.6;
   color: rgba(255,255,255,0.85);
-  max-width: 650px;
   margin: 0 0 32px 0;
 }
 
@@ -339,8 +338,8 @@ h1.title {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  padding: 32px 36px;
-  margin-bottom: 28px;
+  padding: 24px 28px;
+  margin-bottom: 64px;
   transition: box-shadow var(--transition);
 }
 
@@ -351,12 +350,13 @@ h1.title {
 .leaderboard-card h2 {
   font-family: 'Google Sans', 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--color-text);
   margin-top: 0;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -377,18 +377,18 @@ h1.title {
 .leaderboard-card h3 {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   color: var(--color-text-secondary);
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .leaderboard-card h4 {
   font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 0.95rem;
   color: var(--color-text-tertiary);
   margin-top: 0;
   margin-bottom: 20px;
@@ -424,7 +424,7 @@ table {
 table.dataframe {
   width: 100%;
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   border: none;
   font-family: 'Roboto', sans-serif;
 }
@@ -437,15 +437,15 @@ table.dataframe thead th {
   text-align: center;
   border-bottom: 2px solid var(--color-border) !important;
   vertical-align: bottom;
-  padding: 14px 12px !important;
+  padding: 10px 8px !important;
   white-space: nowrap;
-  font-size: 0.825rem;
+  font-size: 0.75rem;
 }
 
 table.dataframe th.col_heading.level0 {
   color: var(--color-primary);
   text-transform: uppercase;
-  font-size: 0.8rem !important;
+  font-size: 0.72rem !important;
   letter-spacing: 0.04em;
   padding-bottom: 6px !important;
   font-weight: 600;
@@ -454,7 +454,7 @@ table.dataframe th.col_heading.level0 {
 
 table.dataframe th.col_heading.level1 {
   color: var(--color-text-secondary);
-  font-size: 0.775rem !important;
+  font-size: 0.7rem !important;
   font-weight: 500 !important;
   padding-top: 6px !important;
   background-color: #fafbfc;
@@ -462,7 +462,7 @@ table.dataframe th.col_heading.level1 {
 
 /* Index name headers */
 table.dataframe .index_name {
-  font-size: 0.75rem !important;
+  font-size: 0.68rem !important;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-text-tertiary);
@@ -472,7 +472,7 @@ table.dataframe .index_name {
 
 /* Cells */
 table.dataframe td {
-  padding: 12px 12px !important;
+  padding: 8px 8px !important;
   border-bottom: 1px solid var(--color-border-light);
   color: var(--color-text);
   vertical-align: middle;
@@ -481,7 +481,7 @@ table.dataframe td {
   border-right: none !important;
   text-align: center;
   font-family: 'Roboto Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 400;
   transition: background-color 0.15s ease;
 }
@@ -497,10 +497,10 @@ table td.row_heading, table th.row_heading {
   color: var(--color-text);
   background-color: #fafbfc !important;
   border-right: 2px solid var(--color-border) !important;
-  min-width: 180px;
+  min-width: 150px;
   font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
-  padding: 12px 16px !important;
+  font-size: 0.8rem;
+  padding: 8px 12px !important;
   position: sticky;
   left: 0;
   z-index: 1;
@@ -520,28 +520,31 @@ table.dataframe tbody tr:first-child th.row_heading {
 .legend-section {
   display: flex;
   justify-content: center;
-  margin: 48px 0;
+  margin: 120px 0 32px;
+  padding-top: 48px;
+  border-top: 1px solid var(--color-border);
 }
 
 .legend-container {
-  padding: 20px 28px;
+  padding: 16px 28px;
   background: var(--color-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  max-width: 560px;
 }
 
 .legend-container .legend-title {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-tertiary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 /* --- Footer --- */
@@ -684,5 +687,155 @@ table.dataframe tbody tr:first-child th.row_heading {
   .quick-links a {
     text-align: center;
     justify-content: center;
+  }
+}
+
+/* ========================================
+   Map Page Styles
+   ======================================== */
+
+.map-title {
+  font-family: 'Google Sans', 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--color-text);
+  margin: 32px 0 8px 0;
+}
+
+.map-description {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 24px 0;
+  max-width: 800px;
+}
+
+.map-page {
+  margin-bottom: 48px;
+}
+
+.map-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  padding: 16px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+
+.map-controls .control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 120px;
+  min-width: 100px;
+}
+
+.map-controls label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.map-controls select {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.map-controls select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(66,133,244,0.15);
+}
+
+.map-status {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  padding: 8px 0;
+}
+
+#map-container {
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 600px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  background: #0e1a2b;
+  z-index: 1;
+}
+
+#map-colorbar {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px auto 0;
+  max-width: 500px;
+}
+
+#colorbar-gradient {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+#colorbar-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+#colorbar-labels span {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+#cb-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.grid-tooltip {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .map-controls {
+    flex-direction: column;
+  }
+  .map-controls .control-group {
+    flex: 1 1 100%;
+  }
+  #map {
+    height: 400px;
   }
 }

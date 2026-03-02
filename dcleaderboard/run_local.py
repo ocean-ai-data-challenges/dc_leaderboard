@@ -17,6 +17,11 @@ def main():
     base_dir = current_file.parent
     results_dir = base_dir / "results"
     site_dir = base_dir / "_site"
+
+    # Use empty base URL so map pages load grid data via relative paths.
+    # XMLHttpRequest supports file:// with relative paths (unlike fetch()),
+    # so no absolute file:// URL is needed.
+    site_base_url = ""
     
     print(f"Starting local build...")
     print(f"Input: {results_dir}")
@@ -26,7 +31,8 @@ def main():
         render_site_from_results_dir(
             results_dir=results_dir, 
             output_site_dir=site_dir,
-            template_dir=base_dir
+            template_dir=base_dir,
+            site_base_url=site_base_url,
         )
         print(f"Build successful! Open {site_dir}/leaderboard.html to view.")
     except Exception as e:

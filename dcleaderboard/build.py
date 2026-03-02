@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,6 +12,28 @@ from dcleaderboard.html_builder import build_site
 
 class BuildError(RuntimeError):
     pass
+
+
+def clean_output_dir(output_dir: Path) -> None:
+    """Remove all generated files from a previous build.
+
+    This ensures every run starts from a clean state so that stale
+    artefacts (map JS files, HTML pages, figures, etc.) from earlier
+    runs never leak into the new build.
+    """
+    if not output_dir.exists():
+        return
+
+    removed: list[str] = []
+    for child in list(output_dir.iterdir()):
+        if child.is_dir():
+            shutil.rmtree(child)
+        else:
+            child.unlink()
+        removed.append(child.name)
+
+    if removed:
+        print(f"Cleaned {len(removed)} items from {output_dir}")
 
 
 @dataclass(frozen=True)
@@ -27,15 +50,18 @@ def render_site_from_results(
     template_dir: str | Path | None = None,
     include_benchmarks: bool = False,
     custom_config: dict | None = None,
+    site_base_url: str = "",
 ) -> RenderedSite:
     """Render the website using pure Python.
 
     This uses dcleaderboard.html_builder to generate the site.
     """
-    import shutil
     import tempfile
 
     output_site_dir = Path(output_site_dir).expanduser().resolve()
+
+    # Always start from a clean output directory
+    clean_output_dir(output_site_dir)
     
     # Locate styles.css
     # Priority: 1. template_dir/styles.css 2. package_dir/styles.css
@@ -81,7 +107,7 @@ def render_site_from_results(
         for src in results_paths:
             shutil.copy2(src, tmp_results_dir / src.name)
             
-        build_site(output_site_dir, tmp_results_dir, styles_css, custom_config)
+        build_site(output_site_dir, tmp_results_dir, styles_css, custom_config, site_base_url=site_base_url)
 
     leaderboard_html = output_site_dir / "leaderboard.html"
     about_html = output_site_dir / "about.html"
@@ -99,6 +125,7 @@ def render_site_from_results_dir(
     template_dir: str | Path | None = None,
     include_benchmarks: bool = False,
     custom_config: dict | None = None,
+    site_base_url: str = "",
 ) -> RenderedSite:
     """Render the website from a directory of JSON results."""
     results_dir = Path(results_dir).expanduser().resolve()
@@ -121,6 +148,7 @@ def render_site_from_results_dir(
         template_dir=template_dir,
         include_benchmarks=include_benchmarks,
         custom_config=custom_config,
+        site_base_url=site_base_url,
     )
 
 

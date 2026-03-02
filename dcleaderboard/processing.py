@@ -70,7 +70,7 @@ def sort_variables_by_type_and_depth(variables: List[str]) -> List[str]:
     return sorted(variables, key=sort_key)
 
 
-def get_lead_days_for_display(all_lead_days: List[str], max_count: int = 4) -> List[str]:
+def get_lead_days_for_display(all_lead_days: List[str], max_count: int = 5) -> List[str]:
     """
     Select lead days for display.
 
@@ -226,7 +226,7 @@ def generate_report_items(
     # Check for lead days
     if "lead_day" in df.columns:
         all_unique_lead_days = df["lead_day"].unique()
-        lead_days = get_lead_days_for_display(list(all_unique_lead_days), max_count=4)
+        lead_days = get_lead_days_for_display(list(all_unique_lead_days), max_count=5)
     else:
         lead_days = []
 
@@ -247,36 +247,37 @@ def generate_report_items(
             # Take first dataset as reference
             reference_model = datasets_in_ref[0]
 
-        # Loop over metrics for this reference dataset
-        for metric in sorted(ref_df.metric.unique()):
-            metric_complete_name = metrics_map.get(metric, metric)
-            header = texts.get("metric_header", "### Metric: {metric_name}")
-            yield ("markdown", header.format(metric_name=metric_complete_name))
+        # Sort all variables by type and depth
+        all_variables = sort_variables_by_type_and_depth(
+            list(ref_df["variable"].unique())
+        )
 
-            # Filter on ref_alias AND metric
-            ref_metric_df = ref_df[ref_df.metric == metric]
+        # Group variables by type
+        variables_by_type: Dict[str, List[str]] = {}
+        for var in all_variables:
+            var_type = get_variable_type(var)
+            if var_type not in variables_by_type:
+                variables_by_type[var_type] = []
+            variables_by_type[var_type].append(var)
 
-            # Sort variables by type and depth
-            metric_variables = sort_variables_by_type_and_depth(
-                list(ref_metric_df["variable"].unique())
-            )
+        # Loop: variable group first, then metric
+        for var_type, var_group in variables_by_type.items():
+            header = texts.get("variable_group_header", "#### {var_type} Variables")
+            yield ("markdown", header.format(var_type=var_type.title()))
 
-            # Group variables by type
-            variables_by_type: Dict[str, List[str]] = {}
-            for var in metric_variables:
-                var_type = get_variable_type(var)
-                if var_type not in variables_by_type:
-                    variables_by_type[var_type] = []
-                variables_by_type[var_type].append(var)
+            for metric in sorted(ref_df.metric.unique()):
+                metric_complete_name = metrics_map.get(metric, metric)
+                header = texts.get("metric_header", "### Metric: {metric_name}")
+                yield ("markdown", header.format(metric_name=metric_complete_name))
 
-            # Process each variable group
-            for var_type, var_group in variables_by_type.items():
-                header = texts.get("variable_group_header", "#### {var_type} Variables")
-                yield ("markdown", header.format(var_type=var_type.title()))
+                # Filter on ref_alias, metric AND variable group
+                ref_metric_df = ref_df[
+                    (ref_df.metric == metric) & ref_df.variable.isin(var_group)
+                ]
 
-                # Filter on group variables and odd lead days
+                # Filter on odd lead days
                 sub = ref_metric_df[
-                    ref_metric_df.variable.isin(var_group) & ref_metric_df.lead_day.isin(lead_days)
+                    ref_metric_df.lead_day.isin(lead_days)
                 ]
 
                 if len(sub) == 0:
@@ -380,11 +381,24 @@ def generate_report_items(
                     col_idx = 0
                     for var, _ in pivot.columns:
                         if var != prev_var and prev_var is not None:
-                            # Add border at start of each new variable
+                            # Add border at start of each new variable group
+                            # Use col_heading and data col classes that Pandas generates
                             styles.append(
                                 {
-                                    "selector": f"th.col{col_idx}, td.col{col_idx}",
-                                    "props": [("border-left", "3px solid #333")],
+                                    "selector": f"th.col_heading.level0.col{col_idx}",
+                                    "props": [("border-left", "3px solid #dadce0")],
+                                }
+                            )
+                            styles.append(
+                                {
+                                    "selector": f"th.col_heading.level1.col{col_idx}",
+                                    "props": [("border-left", "3px solid #dadce0")],
+                                }
+                            )
+                            styles.append(
+                                {
+                                    "selector": f"td.col{col_idx}",
+                                    "props": [("border-left", "3px solid #dadce0")],
                                 }
                             )
                         prev_var = var
@@ -409,16 +423,15 @@ def generate_report_items(
                 ])
 
                 styled = pivot.style.apply(style_func, axis=None).format("{:.3f}")
-                # Add class="dataframe" and Quarto generic classes for correct styling
-                # Matches: class="caption-top table table-sm table-striped small"
-                styled = styled.set_table_attributes(
-                    'class="caption-top table table-sm table-striped small" data-quarto-postprocess="true"'
-                )
+
+                # Apply the variable-separator border styles
+                if styles:
+                    styled = styled.set_table_styles(styles)
+
                 pivot.columns.names = ["Variable", "Lead Day"]
                 pivot.index.name = None
 
                 # Set table attributes to match expected styles
-                # Removed table-striped to avoid conflict with custom row styling
                 styled = styled.set_table_attributes('class="dataframe table"')
                 
                 # Use default value in lambda for loop variable reference_model
@@ -435,15 +448,13 @@ def create_legend_plot(cmap_code: str = "coolwarm") -> plt.Figure:
     cmap = plt.get_cmap(cmap_code)
     norm = plt.Normalize(-100, 100)
 
-    # Significantly reduced height for a thinner, more standard colorbar look
-    # Was (8, 1.2), now (6, 0.35)
-    fig, ax = plt.subplots(figsize=(6, 0.35))
+    # Colorbar
+    fig, ax = plt.subplots(figsize=(6.5, 0.4))
 
     # Colorbar
     cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, orientation="horizontal")
     
-    # Adjust font sizes for better proportions with the smaller bar
-    cb.set_label("Deviation from Reference (%)", fontsize=10, labelpad=5)
-    cb.ax.tick_params(labelsize=8)
+    cb.set_label("Deviation from Reference (%)", fontsize=9.5, labelpad=5)
+    cb.ax.tick_params(labelsize=8.5)
 
     return fig
