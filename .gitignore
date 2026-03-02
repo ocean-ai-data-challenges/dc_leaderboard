@@ -177,3 +177,7 @@ cython_debug/
 # Large per-bins result files (exceed GitHub's 100 MB limit)
 dcleaderboard/results/*_per_bins.json
 dcleaderboard/results/*_per_bins.json.gz
+# Large per-bins result files (exceed GitHub's 100 MB limit)
+dcleaderboard/results/*_per_bins.json
+dcleaderboard/results/**/*_per_bins.json
+dcleaderboard/results/*_per_bins.json.gz
