@@ -352,10 +352,15 @@ def aggregate_grid_data(
         by_ref_lt: Dict[tuple, List[Dict]] = defaultdict(list)
         for entry in ds["per_bins_by_time"]:
             rt = entry.get("ref_type") or "gridded"
-            by_ref_lt[(rt, entry["lead_time"])].append(entry)
+            # Use ref_alias as key so each reference dataset (saral, jason3,
+            # swot, glorys, argo_profiles …) gets its own data file.
+            # Fall back to ref_type when ref_alias is absent (old format).
+            ra = entry.get("ref_alias") or rt
+            by_ref_lt[(ra, rt, entry["lead_time"])].append(entry)
 
-        for (ref_type, lt), entries in sorted(by_ref_lt.items()):
-            ref_prefix = f"{ref_type}|"
+        for (ref_alias, ref_type, lt), entries in sorted(by_ref_lt.items()):
+            # Key prefix is the ref alias so every dataset writes a distinct file.
+            ref_prefix = f"{ref_alias}|"
             if lat_band_mode:
                 eff_grid_type = "lat_band_obs" if ref_type == "observation" else "lat_band"
             elif ref_type == "observation":
@@ -555,11 +560,11 @@ def aggregate_grid_data(
 
 def _apply_global_color_scales(grids: Dict[str, Dict[str, Any]]) -> None:
     """Normalise vmin/vmax so that every grid sharing the same
-    (ref_type, variable, metric[, depth_label]) uses identical color
+    (ref_alias, variable, metric[, depth_label]) uses identical color
     scale limits across all models and lead times.
 
     Key format (pipe-separated):
-        ``{model}|{ref_type}|{var_name}|{metric}|{lead_time}[|{depth_label}]``
+        ``{model}|{ref_alias}|{var_name}|{metric}|{lead_time}[|{depth_label}]``
     """
     # 1. Collect global (vmin, vmax) per scale group.
     group_min: Dict[tuple, float] = {}
@@ -567,11 +572,11 @@ def _apply_global_color_scales(grids: Dict[str, Dict[str, Any]]) -> None:
 
     for key, grid_info in grids.items():
         parts = key.split("|")
-        # parts: [model, ref_type, var_name, metric, lead_time (, depth_label)]
+        # parts: [model, ref_alias, var_name, metric, lead_time (, depth_label)]
         if len(parts) < 5:
             continue
         # Group key: everything that should share the same colour scale
-        # (ref_type, var_name, metric) – depth_label when present.
+        # (ref_alias, var_name, metric) – depth_label when present.
         depth_label = parts[5] if len(parts) >= 6 else ""
         group = (parts[1], parts[2], parts[3], depth_label)
 

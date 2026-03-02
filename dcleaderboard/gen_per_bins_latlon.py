@@ -251,6 +251,7 @@ def generate_per_bins_data(
                     "forecast_reference_time": ref_time.isoformat(),
                     "lead_time": lt,
                     "ref_alias": ref_alias,
+                    "ref_type": "observation" if is_track else "gridded",
                     "per_bins": per_bins,
                 }
                 entries.append(entry)

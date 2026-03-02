@@ -390,39 +390,43 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
   }}
 
   // --- Build data key ---
-  // Build the primary data key including the reference dataset.
-  // The Python aggregation writes per-ref keys when per_bins entries carry
-  // a ref_alias field.  getDataKeyFallback() returns the same key WITHOUT
-  // the ref prefix for backward-compat data that lacks ref_alias.
-  function getDataKey() {{
-    const model = document.getElementById('select-model').value;
-    const ref   = document.getElementById('select-ref').value;
-    // Map the selected reference dataset name to its ref_type (gridded/observation)
-    // so the key matches what Python wrote: model|refType|variable|metric|lead
-    const refType = REF_TYPE_MAP[ref] || ref;
+  // The lookup tries three key formats in order:
+  //   1. model|ref_alias|variable|metric|lead   (current format, one file per ref)
+  //   2. model|ref_type|variable|metric|lead    (legacy format, shared gridded/observation)
+  //   3. model|variable|metric|lead             (oldest format, no ref at all)
+  function _buildKey(refSegment, depth) {{
+    const model    = document.getElementById('select-model').value;
     const variable = document.getElementById('select-variable').value;
-    const metric = document.getElementById('select-metric').value;
-    const lead = document.getElementById('select-lead').value;
-    const hasDepth = DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0;
-    const depth = hasDepth ? document.getElementById('select-depth').value : null;
-
-    let key = model + '|' + refType + '|' + variable + '|' + metric + '|' + lead;
+    const metric   = document.getElementById('select-metric').value;
+    const lead     = document.getElementById('select-lead').value;
+    let key = refSegment ? model + '|' + refSegment + '|' + variable + '|' + metric + '|' + lead
+                         : model + '|' + variable + '|' + metric + '|' + lead;
     if (depth) key += '|' + depth;
     return key;
   }}
 
-  // Fallback: same key without ref prefix (data generated without ref_alias).
-  function getDataKeyFallback() {{
-    const model = document.getElementById('select-model').value;
+  function _currentDepth() {{
     const variable = document.getElementById('select-variable').value;
-    const metric = document.getElementById('select-metric').value;
-    const lead = document.getElementById('select-lead').value;
     const hasDepth = DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0;
-    const depth = hasDepth ? document.getElementById('select-depth').value : null;
+    return hasDepth ? document.getElementById('select-depth').value : null;
+  }}
 
-    let key = model + '|' + variable + '|' + metric + '|' + lead;
-    if (depth) key += '|' + depth;
-    return key;
+  function getDataKey() {{
+    const ref = document.getElementById('select-ref').value;
+    return _buildKey(ref, _currentDepth());
+  }}
+
+  // Fallback 1: use ref_type (gridded / observation) – matches map_data files
+  // generated before per-ref splitting was introduced.
+  function getDataKeyRefType() {{
+    const ref     = document.getElementById('select-ref').value;
+    const refType = REF_TYPE_MAP[ref] || 'gridded';
+    return _buildKey(refType, _currentDepth());
+  }}
+
+  // Fallback 2: no ref segment at all (oldest data format).
+  function getDataKeyFallback() {{
+    return _buildKey(null, _currentDepth());
   }}
 
   const SITE_BASE_URL = '{site_base_url}';
@@ -657,14 +661,37 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
   }};
 
   function loadData() {{
-    const primaryKey  = getDataKey();
-    const fallbackKey = getDataKeyFallback();
-    // Try the ref-specific key first; fall back to the ref-agnostic key for
-    // datasets whose per_bins entries do not carry a ref_alias field.
-    _loadKey(primaryKey, primaryKey !== fallbackKey ? fallbackKey : null);
+    // Build the ordered list of keys to try:
+    //  1. model|ref_alias     → current format, one file per reference
+    //  2. model|ref_type      → legacy format (gridded / observation)
+    //  3. model|model         → when per_bins ref_alias equals the model name
+    //  4. model               → oldest format, no ref segment at all
+    const model   = document.getElementById('select-model').value;
+    const k1 = getDataKey();
+    const k2 = getDataKeyRefType();
+    const k3 = _buildKey(model, _currentDepth());   // ref_alias == model name
+    const k4 = getDataKeyFallback();
+    // Deduplicate: skip a fallback if it happens to equal a previous key.
+    const seen = {{}};
+    const chain = [];
+    [k1, k2, k3, k4].forEach(function(k) {{
+      if (!seen[k]) {{ seen[k] = true; chain.push(k); }}
+    }});
+    _loadKeyChain(chain);
   }}
 
-  function _loadKey(key, fallbackKey) {{
+  function _loadKeyChain(keys) {{
+    if (!keys || keys.length === 0) {{
+      const status = document.getElementById('map-status');
+      status.textContent = 'No data available for this combination.';
+      gridLayer.clearLayers();
+      document.getElementById('map-colorbar').style.display = 'none';
+      return;
+    }}
+    _loadKey(keys[0], keys.slice(1));
+  }}
+
+  function _loadKey(key, remainingKeys) {{
     const filename = getFilename(key);
     const status = document.getElementById('map-status');
 
@@ -692,9 +719,9 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
     }};
     script.onerror = function() {{
       _pendingLoadResolve = null;
-      if (fallbackKey) {{
-        // File with ref prefix not found – retry without ref prefix.
-        _loadKey(fallbackKey, null);
+      if (remainingKeys && remainingKeys.length > 0) {{
+        // Current key not found – try next fallback in chain.
+        _loadKey(remainingKeys[0], remainingKeys.slice(1));
       }} else {{
         status.textContent = 'No data available for this combination.';
         gridLayer.clearLayers();
