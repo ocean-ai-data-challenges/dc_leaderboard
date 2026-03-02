@@ -1,13 +1,50 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
+import yaml
+
 from dcleaderboard.html_builder import build_site
+
+
+def _load_config_file(config_path: Path) -> dict:
+    """Load a YAML or JSON leaderboard config file and return it as a dict."""
+    try:
+        if config_path.suffix.lower() in {".yaml", ".yml"}:
+            return yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+        else:
+            return json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"Warning: failed to load config file {config_path}: {exc}", file=sys.stderr)
+        return {}
+
+
+def _auto_detect_config(results_dir: Path) -> dict:
+    """Look for leaderboard_config.yaml / .json in results_dir and its parent.
+
+    Returns the merged config dict (empty dict if nothing found).
+    File names checked (in order of preference):
+      leaderboard_config.yaml, leaderboard_config.yml, leaderboard_config.json
+    Search locations: results_dir itself, then results_dir.parent.
+    """
+    candidate_names = [
+        "leaderboard_config.yaml",
+        "leaderboard_config.yml",
+        "leaderboard_config.json",
+    ]
+    for search_dir in (results_dir, results_dir.parent):
+        for name in candidate_names:
+            candidate = search_dir / name
+            if candidate.is_file():
+                print(f"  Auto-detected leaderboard config: {candidate}")
+                return _load_config_file(candidate)
+    return {}
 
 
 class BuildError(RuntimeError):
@@ -125,20 +162,46 @@ def render_site_from_results_dir(
     template_dir: str | Path | None = None,
     include_benchmarks: bool = False,
     custom_config: dict | None = None,
+    config_file: str | Path | None = None,
     site_base_url: str = "",
 ) -> RenderedSite:
-    """Render the website from a directory of JSON results."""
+    """Render the website from a directory of JSON results.
+
+    Configuration priority (highest wins):
+    1. ``custom_config`` dict passed directly.
+    2. ``config_file`` path (YAML or JSON).
+    3. Auto-detected ``leaderboard_config.yaml`` / ``.json`` in *results_dir*
+       or its parent directory.
+    """
     results_dir = Path(results_dir).expanduser().resolve()
     if not results_dir.exists():
         raise BuildError(f"Results directory not found: {results_dir}")
 
+    # --- Build the effective config ---
+    # Start from file: explicit config_file > auto-detected file
+    file_config: dict = {}
+    if config_file is not None:
+        file_config = _load_config_file(Path(config_file).expanduser().resolve())
+    else:
+        file_config = _auto_detect_config(results_dir)
+
+    # Merge: file_config as base, custom_config overrides
+    if file_config or custom_config:
+        from dcleaderboard.html_builder import _merge_configs
+        effective_config: dict | None = file_config
+        if custom_config:
+            effective_config = _merge_configs(file_config, custom_config)
+    else:
+        effective_config = None
+
     # Pass all json files in the directory that look like results
     result_files = list(results_dir.glob("results_*.json"))
     if not result_files:
-         # Fallback to all json if strict naming isn't found
-         result_files = list(results_dir.glob("*.json"))
-    
-    # If include_benchmarks is True, acceptable to have no files in users dir, 
+        # Fallback to all json if strict naming isn't found
+        result_files = [f for f in results_dir.glob("*.json")
+                        if f.name != "leaderboard_config.json"]
+
+    # If include_benchmarks is True, acceptable to have no files in users dir,
     # as long as benchmarks exist. But normally user wants to compare SOMETHING.
     # We defer the empty check to render_site_from_results which handles the merge.
 
@@ -147,7 +210,7 @@ def render_site_from_results_dir(
         output_site_dir=output_site_dir,
         template_dir=template_dir,
         include_benchmarks=include_benchmarks,
-        custom_config=custom_config,
+        custom_config=effective_config,
         site_base_url=site_base_url,
     )
 
@@ -157,6 +220,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--results-dir", required=True, help="Directory containing results JSON files")
     parser.add_argument("--output-dir", required=True, help="Output directory for the website")
     parser.add_argument("--template-dir", help="Directory containing styles.css (optional)")
+    parser.add_argument(
+        "--config",
+        metavar="FILE",
+        help="Path to a YAML or JSON leaderboard config file (overrides auto-detection)",
+    )
+    parser.add_argument(
+        "--site-base-url",
+        default="",
+        help="Base URL for the generated site (default: empty = relative paths)",
+    )
 
     args = parser.parse_args(list(argv) if argv is not None else None)
 
@@ -165,6 +238,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             results_dir=args.results_dir,
             output_site_dir=args.output_dir,
             template_dir=args.template_dir,
+            config_file=args.config,
+            site_base_url=args.site_base_url,
         )
         print("Site generated successfully.")
         print(f"  Leaderboard: {outputs.leaderboard_html}")

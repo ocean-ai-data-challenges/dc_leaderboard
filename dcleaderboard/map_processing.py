@@ -553,6 +553,52 @@ def aggregate_grid_data(
     return grids
 
 
+def _apply_global_color_scales(grids: Dict[str, Dict[str, Any]]) -> None:
+    """Normalise vmin/vmax so that every grid sharing the same
+    (ref_type, variable, metric[, depth_label]) uses identical color
+    scale limits across all models and lead times.
+
+    Key format (pipe-separated):
+        ``{model}|{ref_type}|{var_name}|{metric}|{lead_time}[|{depth_label}]``
+    """
+    # 1. Collect global (vmin, vmax) per scale group.
+    group_min: Dict[tuple, float] = {}
+    group_max: Dict[tuple, float] = {}
+
+    for key, grid_info in grids.items():
+        parts = key.split("|")
+        # parts: [model, ref_type, var_name, metric, lead_time (, depth_label)]
+        if len(parts) < 5:
+            continue
+        # Group key: everything that should share the same colour scale
+        # (ref_type, var_name, metric) – depth_label when present.
+        depth_label = parts[5] if len(parts) >= 6 else ""
+        group = (parts[1], parts[2], parts[3], depth_label)
+
+        vmin = grid_info.get("vmin")
+        vmax = grid_info.get("vmax")
+        if vmin is None or vmax is None:
+            continue
+
+        if group not in group_min:
+            group_min[group] = vmin
+            group_max[group] = vmax
+        else:
+            group_min[group] = min(group_min[group], vmin)
+            group_max[group] = max(group_max[group], vmax)
+
+    # 2. Apply global limits back to every grid entry.
+    for key, grid_info in grids.items():
+        parts = key.split("|")
+        if len(parts) < 5:
+            continue
+        depth_label = parts[5] if len(parts) >= 6 else ""
+        group = (parts[1], parts[2], parts[3], depth_label)
+        if group in group_min:
+            grid_info["vmin"] = group_min[group]
+            grid_info["vmax"] = group_max[group]
+
+
 def write_map_data(
     grids: Dict[str, Dict[str, Any]],
     metadata: Dict[str, Any],
@@ -623,6 +669,9 @@ def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[st
     print("  Aggregating grid data...")
     grids = aggregate_grid_data(datasets, metadata)
     print(f"    Generated {len(grids)} grid combinations")
+
+    print("  Normalising colour scales (global min/max per variable+metric)...")
+    _apply_global_color_scales(grids)
 
     write_map_data(grids, metadata, output_dir)
     return metadata
