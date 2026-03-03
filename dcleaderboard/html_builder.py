@@ -18,6 +18,7 @@ from dcleaderboard.processing import (
     load_data,
 )
 from typing import Dict
+from loguru import logger
 
 def _merge_configs(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
     """Merge two configuration dictionaries."""
@@ -246,7 +247,7 @@ def build_page(title: str, content: str, active_page: str = "", config: Dict[str
 
 def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> str:
     """Generate the HTML content for the leaderboard page."""
-    print("Loading data for leaderboard...")
+    logger.info("Loading data for leaderboard...")
     df = load_data(results_dir)
     html_parts = []
     
@@ -296,7 +297,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
         html_parts.append('</div>')
             
     # Legend Plot
-    print("Generating legend plot...")
+    logger.info("Generating legend plot...")
     fig = create_legend_plot()
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)
@@ -356,17 +357,17 @@ def build_site(
     else:
         config = CUSTOM_CONFIG
 
-    print(f"Building site in {output_dir}")
+    logger.info("Building site in {}", output_dir)
     
     # Copy CSS
     if styles_css.exists():
         shutil.copy(styles_css, output_dir / "styles.css")
-        print("checkmark CSS copied")
+        logger.debug("styles.css copied")
     else:
-        print(f"Warning: {styles_css} not found")
+        logger.warning("{} not found", styles_css)
 
     # Build Leaderboard
-    print("Generating leaderboard.html")
+    logger.info("Generating leaderboard.html")
     leaderboard_content = generate_leaderboard_content(results_dir, config)
     page_title = config.get("texts", {}).get("page_title", "Data Challenge 2 Leaderboard")
     leaderboard_html = build_page(
@@ -380,7 +381,7 @@ def build_site(
         f.write(leaderboard_html)
 
     # Build Maps page (if per_bins data exists)
-    print("Generating maps.html")
+    logger.info("Generating maps.html")
     try:
         from dcleaderboard.map_processing import preprocess_per_bins
         from dcleaderboard.map_builder import build_map_page
@@ -398,14 +399,14 @@ def build_site(
             with open(output_dir / "maps.html", "w", encoding="utf-8") as f:
                 f.write(maps_html)
         else:
-            print("  Skipping maps.html (no per-bins data)")
+            logger.info("Skipping maps.html (no per-bins data)")
     except Exception as e:
         import traceback
-        print(f"  Warning: Could not generate maps page: {e}")
+        logger.warning("Could not generate maps page: {}", e)
         traceback.print_exc()
 
     # Build About
-    print("Generating about.html")
+    logger.info("Generating about.html")
     about_content = generate_about_content(config)
     about_html = build_page(
         "About", 
@@ -417,4 +418,4 @@ def build_site(
     with open(output_dir / "about.html", "w", encoding="utf-8") as f:
         f.write(about_html)
         
-    print("Site build complete!")
+    logger.success("Site build complete!")

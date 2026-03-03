@@ -19,6 +19,7 @@ if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
 from dcleaderboard.build import render_site_from_results_dir
+from loguru import logger
 
 # Default config bundled with the package (can be overridden via --config).
 _DEFAULT_CONFIG = current_file.parent / "config" / "leaderboard_texts.yaml"
@@ -57,11 +58,11 @@ def main():
     # so no absolute file:// URL is needed.
     site_base_url = ""
 
-    print(f"Starting local build...")
-    print(f"Input:  {results_dir}")
-    print(f"Output: {site_dir}")
+    logger.info("Starting local build...")
+    logger.info("Input:  {}", results_dir)
+    logger.info("Output: {}", site_dir)
     if config_file:
-        print(f"Config: {config_file}")
+        logger.info("Config: {}", config_file)
 
     try:
         render_site_from_results_dir(
@@ -71,9 +72,9 @@ def main():
             config_file=config_file,
             site_base_url=site_base_url,
         )
-        print(f"Build successful! Open {site_dir}/leaderboard.html to view.")
+        logger.success("Build successful! Open {}/leaderboard.html to view.", site_dir)
     except Exception as e:
-        print(f"Build failed: {e}")
+        logger.error("Build failed: {}", e)
         sys.exit(1)
 
 

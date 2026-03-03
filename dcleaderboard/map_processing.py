@@ -13,6 +13,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+from loguru import logger
 
 # Known aliases: base variable names used in regular results that
 # differ from the canonical per_bins names.
@@ -96,14 +97,46 @@ def _parse_bin_value(raw: Any) -> Tuple[float, float]:
 
 
 def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
-    """Load all *_per_bins.json files from the results directory."""
-    files = sorted(results_dir.glob("*_per_bins.json"))
+    """Load all *_per_bins.json/.jsonl files from the results directory.
+
+    Supports two formats:
+    - Legacy ``.json``: a single JSON object with a ``per_bins_by_time`` list.
+    - New ``.jsonl``: one compact JSON object per line (no wrapper dict).
+      Each line is a per-bins entry.  The file is read into the same
+      in-memory structure as the legacy format so the rest of the
+      pipeline is unchanged.
+    """
+    # Collect all per-bins files; JSONL takes precedence over JSON when both
+    # exist for the same stem (e.g. after a format migration).
+    jsonl_files = sorted(results_dir.glob("*_per_bins.jsonl"))
+    json_files = sorted(results_dir.glob("*_per_bins.json"))
+
+    # Filter out any legacy .json files that have a .jsonl counterpart.
+    jsonl_stems = {f.stem for f in jsonl_files}
+    json_files = [f for f in json_files if f.stem not in jsonl_stems]
+
+    files = jsonl_files + json_files
+
     datasets = []
     for f in files:
-        print(f"  Loading per-bins file: {f.name} ...", end=" ", flush=True)
-        with open(f) as fh:
-            data = json.load(fh)
-        print(f"OK ({len(data.get('per_bins_by_time', []))} entries)")
+        logger.info("Loading per-bins file: {} ...", f.name)
+        if f.suffix == ".jsonl":
+            entries: List[Dict[str, Any]] = []
+            with open(f, encoding="utf-8") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if line:
+                        entries.append(json.loads(line))
+            # Re-wrap in the legacy dict structure expected downstream.
+            dataset_name = f.stem.replace("_per_bins", "").lstrip("results_")
+            data: Dict[str, Any] = {
+                "dataset": dataset_name,
+                "per_bins_by_time": entries,
+            }
+        else:
+            with open(f, encoding="utf-8") as fh:
+                data = json.load(fh)
+        logger.info("  -> {} entries loaded", len(data.get('per_bins_by_time', [])))
         datasets.append(data)
     return datasets
 
@@ -318,28 +351,22 @@ def _is_lat_band_only_from_sets(
     return _is_lat_band_only(datasets)
 
 
-def aggregate_grid_data(
+def _iter_grid_data(
     datasets: List[Dict[str, Any]],
     metadata: Dict[str, Any],
-) -> Dict[str, Dict[str, Any]]:
-    """
-    Aggregate per-bins data into grids for each combination.
+):
+    """Generator: yield ``(key, grid_info)`` pairs one at a time.
 
-    Supports two bin formats:
-    * **Full spatial grid** – bins have ``lat_bin`` / ``lon_bin`` dicts.
-    * **Latitude-band** – bins have a string ``lat_bin`` (e.g. ``"80S-70S"``).
-      In this mode each band value is replicated across all longitudes.
+    This avoids accumulating the entire grid dictionary in memory, which
+    can be prohibitively large for big datasets.  Callers should consume
+    each ``(key, grid_info)`` immediately (e.g. write it to disk or update
+    running statistics) rather than collecting all results in a list.
 
-    For variables with depth information, per-depth and depth-averaged
-    (``all_depths``) grids are produced.
-
-    Returns a dict keyed by ``"model|variable|metric|lead_time[|depth_label]"``
-    with value ``{"data": [[lat, lon, value], ...], "vmin": float, "vmax": float}``.
+    The key format is the same as before:
+    ``"{model}|{ref_prefix}{var_name}|{metric}|{lead_time}[|{depth_label}]"``
     """
     all_metrics = metadata["metrics"]
-    grids: Dict[str, Dict[str, Any]] = {}
     lat_band_mode = _is_lat_band_only(datasets)
-    grid_type = "lat_band" if lat_band_mode else "spatial"
 
     for ds in datasets:
         model = ds["dataset"]
@@ -414,7 +441,7 @@ def aggregate_grid_data(
                                 depth_label = f"{dl:.1f}-{dr:.1f}"
                                 key = f"{model}|{ref_prefix}{var_name}|{metric}|{lt}|{depth_label}"
                                 values = [r[2] for r in band_data]
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": sorted(band_data, key=lambda r: r[0]),
                                     "vmin": round(min(values), 6),
@@ -429,7 +456,7 @@ def aggregate_grid_data(
                             if avg_bands:
                                 key = f"{model}|{ref_prefix}{var_name}|{metric}|{lt}|all_depths"
                                 values = [r[2] for r in avg_bands]
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": sorted(avg_bands, key=lambda r: r[0]),
                                     "vmin": round(min(values), 6),
@@ -447,7 +474,7 @@ def aggregate_grid_data(
                             if band_data_list:
                                 key = f"{model}|{ref_prefix}{var_name}|{metric}|{lt}"
                                 values = [r[2] for r in band_data_list]
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": sorted(band_data_list, key=lambda r: r[0]),
                                     "vmin": round(min(values), 6),
@@ -507,7 +534,7 @@ def aggregate_grid_data(
                                     ]
                                 else:
                                     out_data = raw_data
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": out_data,
                                     "vmin": round(min(values), 6),
@@ -526,7 +553,7 @@ def aggregate_grid_data(
                                     out_avg = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg_grid]
                                 else:
                                     out_avg = avg_grid
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": out_avg,
                                     "vmin": round(min(values), 6),
@@ -548,14 +575,63 @@ def aggregate_grid_data(
                                     out_pts = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid_data]
                                 else:
                                     out_pts = grid_data
-                                grids[key] = {
+                                yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": out_pts,
                                     "vmin": round(min(values), 6),
                                     "vmax": round(max(values), 6),
                                 }
 
-    return grids
+
+def _compute_color_scale_stats(
+    datasets: List[Dict[str, Any]],
+    metadata: Dict[str, Any],
+) -> Tuple[Dict[tuple, float], Dict[tuple, float]]:
+    """First pass: compute global (vmin, vmax) per scale group without storing grid data.
+
+    Returns two dicts: ``group_min`` and ``group_max`` keyed by
+    ``(ref_alias, var_name, metric, depth_label)`` – the same grouping used by
+    :func:`_apply_global_color_scales`.
+
+    This is O(n_combinations) memory instead of O(n_cells × n_combinations).
+    """
+    group_min: Dict[tuple, float] = {}
+    group_max: Dict[tuple, float] = {}
+
+    for key, grid_info in _iter_grid_data(datasets, metadata):
+        parts = key.split("|")
+        if len(parts) < 5:
+            continue
+        depth_label = parts[5] if len(parts) >= 6 else ""
+        group = (parts[1], parts[2], parts[3], depth_label)
+
+        vmin = grid_info.get("vmin")
+        vmax = grid_info.get("vmax")
+        if vmin is None or vmax is None:
+            continue
+
+        if group not in group_min:
+            group_min[group] = vmin
+            group_max[group] = vmax
+        else:
+            group_min[group] = min(group_min[group], vmin)
+            group_max[group] = max(group_max[group], vmax)
+
+    return group_min, group_max
+
+
+def aggregate_grid_data(
+    datasets: List[Dict[str, Any]],
+    metadata: Dict[str, Any],
+) -> Dict[str, Dict[str, Any]]:
+    """Aggregate per-bins data into grids for each combination.
+
+    .. deprecated::
+        Kept for backward compatibility only.  For large datasets use
+        :func:`preprocess_per_bins` which streams results to disk without
+        accumulating the entire grid dict in memory.
+    """
+    return dict(_iter_grid_data(datasets, metadata))
 
 
 def _apply_global_color_scales(grids: Dict[str, Dict[str, Any]]) -> None:
@@ -565,6 +641,12 @@ def _apply_global_color_scales(grids: Dict[str, Dict[str, Any]]) -> None:
 
     Key format (pipe-separated):
         ``{model}|{ref_alias}|{var_name}|{metric}|{lead_time}[|{depth_label}]``
+
+    .. note::
+        Only used when ``grids`` is already in memory (small datasets or
+        backward-compatibility path).  The streaming path in
+        :func:`preprocess_per_bins` uses :func:`_compute_color_scale_stats`
+        instead.
     """
     # 1. Collect global (vmin, vmax) per scale group.
     group_min: Dict[tuple, float] = {}
@@ -617,13 +699,22 @@ def write_map_data(
     with the ``file://`` protocol in all modern browsers (both
     ``fetch()`` and ``XMLHttpRequest`` are blocked by CORS for local
     files).
+
+    .. note::
+        This function accepts either a plain ``dict`` or any iterable of
+        ``(key, grid_info)`` pairs so it can be driven by the streaming
+        generator :func:`_iter_grid_data` directly (no full in-memory
+        accumulation required).
     """
     map_dir = output_dir / "map_data"
     map_dir.mkdir(parents=True, exist_ok=True)
 
+    # Normalise input: accept both a dict and any (key, grid_info) iterable.
+    items = grids.items() if isinstance(grids, dict) else grids
+
     # Write individual grid files as JSONP .js
     manifest = {}
-    for key, grid_info in grids.items():
+    for key, grid_info in items:
         # Create safe filename
         safe_name = key.replace("|", "_").replace(" ", "_")
         filename = f"{safe_name}.js"
@@ -645,7 +736,7 @@ def write_map_data(
             default=str,
         )
 
-    print(f"  Wrote {len(manifest)} grid files + manifest to {map_dir}")
+    logger.info("Wrote {} grid files + manifest to {}", len(manifest), map_dir)
 
 
 def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[str, Any]]:
@@ -656,27 +747,37 @@ def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[st
     """
     datasets = load_per_bins_files(results_dir)
     if not datasets:
-        print("  No *_per_bins.json files found, skipping map page.")
+        logger.info("No *_per_bins.json/.jsonl files found, skipping map page.")
         return None
 
-    print("  Discovering metadata...")
+    logger.info("Discovering metadata...")
     metadata = discover_metadata(datasets, results_dir=results_dir)
-    print(f"    Models: {metadata['models']}")
-    print(f"    Variables: {metadata['variables']}")
-    print(f"    Metrics: {metadata['metrics']}")
-    print(f"    Lead times: {metadata['lead_times']}")
+    logger.info("  Models: {}", metadata['models'])
+    logger.info("  Variables: {}", metadata['variables'])
+    logger.info("  Metrics: {}", metadata['metrics'])
+    logger.info("  Lead times: {}", metadata['lead_times'])
     if metadata["depth_bins"]:
         for var, dbs in metadata["depth_bins"].items():
-            print(f"    Depth bins for {var}: {len(dbs)} levels")
+            logger.info("  Depth bins for {}: {} levels", var, len(dbs))
     if metadata["ref_variables"]:
-        print(f"    Reference datasets: {list(metadata['ref_variables'].keys())}")
+        logger.info("  Reference datasets: {}", list(metadata['ref_variables'].keys()))
 
-    print("  Aggregating grid data...")
-    grids = aggregate_grid_data(datasets, metadata)
-    print(f"    Generated {len(grids)} grid combinations")
+    logger.info("Computing global colour scales (pass 1/2 - lightweight)...")
+    group_min, group_max = _compute_color_scale_stats(datasets, metadata)
+    logger.info("  Found {} colour-scale groups", len(group_min))
 
-    print("  Normalising colour scales (global min/max per variable+metric)...")
-    _apply_global_color_scales(grids)
+    def _streaming_grids_with_global_scales():
+        """Generate (key, grid_info) pairs with global vmin/vmax applied on the fly."""
+        for key, grid_info in _iter_grid_data(datasets, metadata):
+            parts = key.split("|")
+            if len(parts) >= 5:
+                depth_label = parts[5] if len(parts) >= 6 else ""
+                group = (parts[1], parts[2], parts[3], depth_label)
+                if group in group_min:
+                    grid_info["vmin"] = group_min[group]
+                    grid_info["vmax"] = group_max[group]
+            yield key, grid_info
 
-    write_map_data(grids, metadata, output_dir)
+    logger.info("Writing grid files (pass 2/2 - streaming to disk)...")
+    write_map_data(_streaming_grids_with_global_scales(), metadata, output_dir)
     return metadata

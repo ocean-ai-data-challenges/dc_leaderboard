@@ -28,6 +28,7 @@ import math
 import random
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Set, Tuple
+from loguru import logger
 
 
 # Reference datasets used in the data challenge.
@@ -212,9 +213,9 @@ def generate_per_bins_data(
 
     n_lat = len(lat_edges) - 1
     n_lon = len(lon_edges) - 1
-    print(f"Grid: {n_lat} lat × {n_lon} lon = {n_lat * n_lon} cells "
-          f"at {resolution}° resolution")
-    print(f"Reference datasets: {ref_aliases}")
+    logger.info("Grid: {} lat × {} lon = {} cells at {}° resolution",
+                 n_lat, n_lon, n_lat * n_lon, resolution)
+    logger.info("Reference datasets: {}", ref_aliases)
 
     base_rmse: Dict[str, float] = {
         "Surface salinity": 0.35,
@@ -286,10 +287,10 @@ def main():
         seed=args.seed,
     )
 
-    print(f"Writing {len(data['per_bins_by_time'])} entries to {args.output}...")
+    logger.info("Writing {} entries to {} ...", len(data['per_bins_by_time']), args.output)
     with open(args.output, "w") as f:
         json.dump(data, f, indent=2)
-    print("Done.")
+    logger.success("Done.")
 
 
 if __name__ == "__main__":

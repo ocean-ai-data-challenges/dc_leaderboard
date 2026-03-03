@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Sequence
 
 import yaml
+from loguru import logger
 
 from dcleaderboard.html_builder import build_site
 
@@ -21,7 +22,7 @@ def _load_config_file(config_path: Path) -> dict:
         else:
             return json.loads(config_path.read_text(encoding="utf-8"))
     except Exception as exc:
-        print(f"Warning: failed to load config file {config_path}: {exc}", file=sys.stderr)
+        logger.warning("Failed to load config file {}: {}", config_path, exc)
         return {}
 
 
@@ -42,7 +43,7 @@ def _auto_detect_config(results_dir: Path) -> dict:
         for name in candidate_names:
             candidate = search_dir / name
             if candidate.is_file():
-                print(f"  Auto-detected leaderboard config: {candidate}")
+                logger.info("Auto-detected leaderboard config: {}", candidate)
                 return _load_config_file(candidate)
     return {}
 
@@ -70,7 +71,7 @@ def clean_output_dir(output_dir: Path) -> None:
         removed.append(child.name)
 
     if removed:
-        print(f"Cleaned {len(removed)} items from {output_dir}")
+        logger.info("Cleaned {} items from {}", len(removed), output_dir)
 
 
 @dataclass(frozen=True)
@@ -113,8 +114,7 @@ def render_site_from_results(
         styles_css = Path(__file__).parent / "styles.css"
 
     if not styles_css.exists():
-        # warning or error? Let's warn but continue if possible (though html_builder needs it)
-        print(f"Warning: styles.css not found at {styles_css}", file=sys.stderr)
+        logger.warning("styles.css not found at {}", styles_css)
 
     results_paths = [Path(p).expanduser().resolve() for p in results_files]
     
@@ -128,7 +128,7 @@ def render_site_from_results(
                 if bf.name not in existing_names:
                     results_paths.append(bf)
         else:
-            print(f"Warning: include_benchmarks=True but {package_results_dir} not found", file=sys.stderr)
+            logger.warning("include_benchmarks=True but {} not found", package_results_dir)
 
     if not results_paths:
         raise BuildError("No results files provided")
@@ -143,6 +143,18 @@ def render_site_from_results(
         
         for src in results_paths:
             shutil.copy2(src, tmp_results_dir / src.name)
+
+        # Also copy per-bins files (.jsonl and legacy .json) from the same
+        # source directories so that map_processing.py can find them.
+        source_dirs = {src.parent for src in results_paths}
+        for src_dir in source_dirs:
+            for pb_file in (
+                list(src_dir.glob("*_per_bins.jsonl"))
+                + list(src_dir.glob("*_per_bins.json"))
+            ):
+                dst = tmp_results_dir / pb_file.name
+                if not dst.exists():
+                    shutil.copy2(pb_file, dst)
             
         build_site(output_site_dir, tmp_results_dir, styles_css, custom_config, site_base_url=site_base_url)
 
@@ -241,12 +253,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             config_file=args.config,
             site_base_url=args.site_base_url,
         )
-        print("Site generated successfully.")
-        print(f"  Leaderboard: {outputs.leaderboard_html}")
+        logger.success("Site generated successfully.")
+        logger.info("Leaderboard: {}", outputs.leaderboard_html)
         if outputs.about_html:
-            print(f"  About: {outputs.about_html}")
+            logger.info("About: {}", outputs.about_html)
     except Exception as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+        logger.error("Build failed: {}", e)
         return 1
     return 0
 

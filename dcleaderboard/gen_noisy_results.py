@@ -11,6 +11,7 @@ import sys
 from typing import Any, Dict, List
 
 import numpy as np
+from loguru import logger
 
 
 def add_noise(obj: Any, std_rel: float) -> Any:
@@ -56,7 +57,7 @@ def process_file(src_path: str, dst_path: str, new_model: str, std_rel: float = 
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
-        print("Usage: python gen_noisy_results.py <src.json> <dst.json> <new_model> [std_rel]")
+        logger.error("Usage: python gen_noisy_results.py <src.json> <dst.json> <new_model> [std_rel]")
         sys.exit(1)
 
     src, dst, new_model_arg = sys.argv[1:4]
@@ -67,4 +68,4 @@ if __name__ == "__main__":
 
     # Example usage:
     # python gen_noisy_results.py results/results_glonet.json \
-    #      results/results_challenger_model_1.json challenger_model_1 0.08
+    #      results/results_model_1.json model_1 0.08
