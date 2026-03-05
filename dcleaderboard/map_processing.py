@@ -119,7 +119,7 @@ def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
 
     datasets = []
     for f in files:
-        logger.info("Loading per-bins file: {} ...", f.name)
+        logger.debug("Loading per-bins file: {} ...", f.name)
         if f.suffix == ".jsonl":
             entries: List[Dict[str, Any]] = []
             with open(f, encoding="utf-8") as fh:
@@ -136,7 +136,7 @@ def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
         else:
             with open(f, encoding="utf-8") as fh:
                 data = json.load(fh)
-        logger.info("  -> {} entries loaded", len(data.get('per_bins_by_time', [])))
+        logger.debug("  {} entries loaded from {}", len(data.get('per_bins_by_time', [])), f.name)
         datasets.append(data)
     return datasets
 
@@ -736,7 +736,7 @@ def write_map_data(
             default=str,
         )
 
-    logger.info("Wrote {} grid files + manifest to {}", len(manifest), map_dir)
+    logger.debug("Wrote {} grid files + manifest to {}", len(manifest), map_dir)
 
 
 def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[str, Any]]:
@@ -750,21 +750,21 @@ def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[st
         logger.info("No *_per_bins.json/.jsonl files found, skipping map page.")
         return None
 
-    logger.info("Discovering metadata...")
+    logger.debug("Discovering metadata...")
     metadata = discover_metadata(datasets, results_dir=results_dir)
-    logger.info("  Models: {}", metadata['models'])
-    logger.info("  Variables: {}", metadata['variables'])
-    logger.info("  Metrics: {}", metadata['metrics'])
-    logger.info("  Lead times: {}", metadata['lead_times'])
+    logger.debug("  Models: {}", metadata['models'])
+    logger.debug("  Variables: {}", metadata['variables'])
+    logger.debug("  Metrics: {}", metadata['metrics'])
+    logger.debug("  Lead times: {}", metadata['lead_times'])
     if metadata["depth_bins"]:
         for var, dbs in metadata["depth_bins"].items():
-            logger.info("  Depth bins for {}: {} levels", var, len(dbs))
+            logger.debug("  Depth bins for {}: {} levels", var, len(dbs))
     if metadata["ref_variables"]:
-        logger.info("  Reference datasets: {}", list(metadata['ref_variables'].keys()))
+        logger.debug("  Reference datasets: {}", list(metadata['ref_variables'].keys()))
 
-    logger.info("Computing global colour scales (pass 1/2 - lightweight)...")
+    logger.debug("Computing global colour scales (pass 1/2 - lightweight)...")
     group_min, group_max = _compute_color_scale_stats(datasets, metadata)
-    logger.info("  Found {} colour-scale groups", len(group_min))
+    logger.debug("  Found {} colour-scale groups", len(group_min))
 
     def _streaming_grids_with_global_scales():
         """Generate (key, grid_info) pairs with global vmin/vmax applied on the fly."""
@@ -778,6 +778,6 @@ def preprocess_per_bins(results_dir: Path, output_dir: Path) -> Optional[Dict[st
                     grid_info["vmax"] = group_max[group]
             yield key, grid_info
 
-    logger.info("Writing grid files (pass 2/2 - streaming to disk)...")
+    logger.debug("Writing grid files (pass 2/2 - streaming to disk)...")
     write_map_data(_streaming_grids_with_global_scales(), metadata, output_dir)
     return metadata

@@ -43,7 +43,7 @@ def _auto_detect_config(results_dir: Path) -> dict:
         for name in candidate_names:
             candidate = search_dir / name
             if candidate.is_file():
-                logger.info("Auto-detected leaderboard config: {}", candidate)
+                logger.debug("Auto-detected leaderboard config: {}", candidate)
                 return _load_config_file(candidate)
     return {}
 
@@ -71,7 +71,7 @@ def clean_output_dir(output_dir: Path) -> None:
         removed.append(child.name)
 
     if removed:
-        logger.info("Cleaned {} items from {}", len(removed), output_dir)
+        logger.debug("Cleaned {} items from {}", len(removed), output_dir)
 
 
 @dataclass(frozen=True)
@@ -254,9 +254,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             site_base_url=args.site_base_url,
         )
         logger.success("Site generated successfully.")
-        logger.info("Leaderboard: {}", outputs.leaderboard_html)
+        logger.success("Leaderboard  →  {}", outputs.leaderboard_html)
         if outputs.about_html:
-            logger.info("About: {}", outputs.about_html)
+            logger.debug("About        →  {}", outputs.about_html)
     except Exception as e:
         logger.error("Build failed: {}", e)
         return 1

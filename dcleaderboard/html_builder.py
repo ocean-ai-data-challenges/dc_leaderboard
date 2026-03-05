@@ -247,7 +247,7 @@ def build_page(title: str, content: str, active_page: str = "", config: Dict[str
 
 def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> str:
     """Generate the HTML content for the leaderboard page."""
-    logger.info("Loading data for leaderboard...")
+    logger.debug("Loading data for leaderboard...")
     df = load_data(results_dir)
     html_parts = []
     
@@ -297,7 +297,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
         html_parts.append('</div>')
             
     # Legend Plot
-    logger.info("Generating legend plot...")
+    logger.debug("Generating legend plot...")
     fig = create_legend_plot()
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)
@@ -357,7 +357,7 @@ def build_site(
     else:
         config = CUSTOM_CONFIG
 
-    logger.info("Building site in {}", output_dir)
+    logger.debug("Building site in {}", output_dir)
     
     # Copy CSS
     if styles_css.exists():
@@ -367,7 +367,7 @@ def build_site(
         logger.warning("{} not found", styles_css)
 
     # Build Leaderboard
-    logger.info("Generating leaderboard.html")
+    logger.debug("Generating leaderboard.html")
     leaderboard_content = generate_leaderboard_content(results_dir, config)
     page_title = config.get("texts", {}).get("page_title", "Data Challenge 2 Leaderboard")
     leaderboard_html = build_page(
@@ -379,9 +379,10 @@ def build_site(
     )
     with open(output_dir / "leaderboard.html", "w", encoding="utf-8") as f:
         f.write(leaderboard_html)
+    logger.info("leaderboard.html generated")
 
     # Build Maps page (if per_bins data exists)
-    logger.info("Generating maps.html")
+    logger.debug("Generating maps.html")
     try:
         from dcleaderboard.map_processing import preprocess_per_bins
         from dcleaderboard.map_builder import build_map_page
@@ -398,6 +399,7 @@ def build_site(
             )
             with open(output_dir / "maps.html", "w", encoding="utf-8") as f:
                 f.write(maps_html)
+            logger.info("maps.html generated")
         else:
             logger.info("Skipping maps.html (no per-bins data)")
     except Exception as e:
@@ -406,7 +408,7 @@ def build_site(
         traceback.print_exc()
 
     # Build About
-    logger.info("Generating about.html")
+    logger.debug("Generating about.html")
     about_content = generate_about_content(config)
     about_html = build_page(
         "About", 
@@ -417,5 +419,6 @@ def build_site(
     )
     with open(output_dir / "about.html", "w", encoding="utf-8") as f:
         f.write(about_html)
-        
+    logger.info("about.html generated")
+
     logger.success("Site build complete!")
