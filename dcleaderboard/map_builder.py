@@ -44,9 +44,13 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
     metric_options = "\n".join(
         f'<option value="{m}">{m.upper()}</option>' for m in metrics
     )
-    lead_options = "\n".join(
-        f'<option value="{lt}">Day {lt + 1}</option>' for lt in lead_times
-    )
+    lead_option_parts = []
+    for lt in lead_times:
+        if lt == "all":
+            lead_option_parts.append('<option value="all">All days (composite)</option>')
+        else:
+            lead_option_parts.append(f'<option value="{lt}">Day {lt + 1}</option>')
+    lead_options = "\n".join(lead_option_parts)
 
     # Depth bins as JS object
     depth_bins_js = "{"

@@ -285,11 +285,14 @@ def discover_metadata(
         )
         ref_type_map = _extract_ref_type_map(results_dir)
 
+    # Include a special "all" lead-time for the composite across all days.
+    all_lead_times = sorted(lead_times) + ["all"]
+
     return {
         "models": sorted(models),
         "variables": sorted(variables),
         "metrics": sorted(metrics),
-        "lead_times": sorted(lead_times),
+        "lead_times": all_lead_times,
         "depth_bins": sorted_depths,
         "ref_variables": ref_variables,
         "ref_type_map": ref_type_map,
@@ -364,6 +367,12 @@ def _iter_grid_data(
 
     The key format is the same as before:
     ``"{model}|{ref_prefix}{var_name}|{metric}|{lead_time}[|{depth_label}]"``
+
+    In addition, a composite ``"all"`` lead-time entry is emitted for each
+    ``(model, ref_alias)`` by aggregating across **all** lead-times.  This
+    gives a much denser spatial coverage for observation data (satellite
+    altimetry, Argo profiles) where each individual lead-time only covers
+    a few satellite passes.
     """
     all_metrics = metadata["metrics"]
     lat_band_mode = _is_lat_band_only(datasets)
@@ -578,6 +587,209 @@ def _iter_grid_data(
                                 yield key, {
                                     "grid_type": eff_grid_type,
                                     "data": out_pts,
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+
+        # -----------------------------------------------------------------
+        # Composite "all" lead-time: aggregate across ALL lead-times for
+        # each (ref_alias, ref_type) to give denser spatial coverage,
+        # especially for sparse observation data (satellite / Argo).
+        # -----------------------------------------------------------------
+        by_ref: Dict[tuple, List[Dict]] = defaultdict(list)
+        for (ra, rt, _lt), entries in by_ref_lt.items():
+            by_ref[(ra, rt)].extend(entries)
+
+        for (ref_alias, ref_type), entries in sorted(by_ref.items()):
+            ref_prefix = f"{ref_alias}|"
+            if lat_band_mode:
+                eff_grid_type = "lat_band_obs" if ref_type == "observation" else "lat_band"
+            elif ref_type == "observation":
+                eff_grid_type = "points"
+            else:
+                eff_grid_type = "spatial"
+
+            for var_name in metadata["variables"]:
+                has_depth = var_name in metadata["depth_bins"]
+
+                if lat_band_mode:
+                    accum_band_all: Dict[tuple, Dict[str, List[float]]] = defaultdict(
+                        lambda: defaultdict(list)
+                    )
+                    for entry in entries:
+                        if var_name not in entry["per_bins"]:
+                            continue
+                        for b in entry["per_bins"][var_name]:
+                            south, north = _parse_bin_value(b["lat_bin"])
+                            if has_depth and "depth_bin" in b:
+                                db = b["depth_bin"]
+                                if isinstance(db, dict):
+                                    dk = (db["left"], db["right"])
+                                else:
+                                    dk = (float(db), float(db))
+                                cell_key = (south, north, dk[0], dk[1])
+                            else:
+                                cell_key = (south, north)
+                            for metric in all_metrics:
+                                if metric in b and b[metric] is not None:
+                                    accum_band_all[cell_key][metric].append(b[metric])
+
+                    if not accum_band_all:
+                        continue
+
+                    for metric in all_metrics:
+                        if has_depth:
+                            depth_bands_a: Dict[Tuple[float, float], List[List[float]]] = defaultdict(list)
+                            all_depth_accum_ba: Dict[Tuple[float, float], List[float]] = defaultdict(list)
+                            for cell_key, mvals in accum_band_all.items():
+                                if metric not in mvals:
+                                    continue
+                                s, n, dl, dr = cell_key
+                                val = _mean(mvals[metric])
+                                if math.isnan(val):
+                                    continue
+                                depth_bands_a[(dl, dr)].append([s, n, round(val, 6)])
+                                all_depth_accum_ba[(s, n)].append(val)
+
+                            for (dl, dr), band_data in depth_bands_a.items():
+                                depth_label = f"{dl:.1f}-{dr:.1f}"
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all|{depth_label}"
+                                values = [r[2] for r in band_data]
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": sorted(band_data, key=lambda r: r[0]),
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+
+                            avg_bands_a: List[List[float]] = []
+                            for (s, n), vals in all_depth_accum_ba.items():
+                                avg_val = _mean(vals)
+                                if not math.isnan(avg_val):
+                                    avg_bands_a.append([s, n, round(avg_val, 6)])
+                            if avg_bands_a:
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all|all_depths"
+                                values = [r[2] for r in avg_bands_a]
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": sorted(avg_bands_a, key=lambda r: r[0]),
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+                        else:
+                            band_data_list_a: List[List[float]] = []
+                            for cell_key, mvals in accum_band_all.items():
+                                if metric not in mvals:
+                                    continue
+                                s, n = cell_key
+                                val = _mean(mvals[metric])
+                                if not math.isnan(val):
+                                    band_data_list_a.append([s, n, round(val, 6)])
+                            if band_data_list_a:
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all"
+                                values = [r[2] for r in band_data_list_a]
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": sorted(band_data_list_a, key=lambda r: r[0]),
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+                else:
+                    # --- Spatial composite across all lead-times ---
+                    accum_all: Dict[tuple, Dict[str, List[float]]] = defaultdict(
+                        lambda: defaultdict(list)
+                    )
+                    for entry in entries:
+                        if var_name not in entry["per_bins"]:
+                            continue
+                        for b in entry["per_bins"][var_name]:
+                            lat_l, lat_r, lon_l, lon_r = _extract_lat_lon_bounds(b)
+                            if has_depth and "depth_bin" in b:
+                                db = b["depth_bin"]
+                                if isinstance(db, dict):
+                                    depth_key = (db["left"], db["right"])
+                                else:
+                                    dl, dr = _parse_bin_value(db)
+                                    depth_key = (dl, dr)
+                                cell_key = (lat_l, lat_r, lon_l, lon_r, depth_key[0], depth_key[1])
+                            else:
+                                cell_key = (lat_l, lat_r, lon_l, lon_r)
+                            for metric in all_metrics:
+                                if metric in b and b[metric] is not None:
+                                    accum_all[cell_key][metric].append(b[metric])
+
+                    if not accum_all:
+                        continue
+
+                    for metric in all_metrics:
+                        if has_depth:
+                            depth_grids_a: Dict[Tuple[float, float], List[List[float]]] = defaultdict(list)
+                            all_depth_accum_a: Dict[Tuple[float, float, float, float], List[float]] = defaultdict(list)
+                            for cell_key, metric_vals in accum_all.items():
+                                if metric not in metric_vals:
+                                    continue
+                                lat_l, lat_r, lon_l, lon_r, dl, dr = cell_key
+                                val = _mean(metric_vals[metric])
+                                if math.isnan(val):
+                                    continue
+                                depth_grids_a[(dl, dr)].append([lat_l, lat_r, lon_l, lon_r, round(val, 6)])
+                                all_depth_accum_a[(lat_l, lat_r, lon_l, lon_r)].append(val)
+
+                            for (dl, dr), raw_data in depth_grids_a.items():
+                                depth_label = f"{dl:.1f}-{dr:.1f}"
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all|{depth_label}"
+                                values = [row[4] for row in raw_data]
+                                if eff_grid_type == "points":
+                                    out_data = [
+                                        [(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]]
+                                        for r in raw_data
+                                    ]
+                                else:
+                                    out_data = raw_data
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": out_data,
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+
+                            avg_grid_a: List[List[float]] = []
+                            for (lat_l, lat_r, lon_l, lon_r), vals in all_depth_accum_a.items():
+                                avg_val = _mean(vals)
+                                if not math.isnan(avg_val):
+                                    avg_grid_a.append([lat_l, lat_r, lon_l, lon_r, round(avg_val, 6)])
+                            if avg_grid_a:
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all|all_depths"
+                                values = [row[4] for row in avg_grid_a]
+                                if eff_grid_type == "points":
+                                    out_avg_a = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg_grid_a]
+                                else:
+                                    out_avg_a = avg_grid_a
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": out_avg_a,
+                                    "vmin": round(min(values), 6),
+                                    "vmax": round(max(values), 6),
+                                }
+                        else:
+                            grid_data_a: List[List[float]] = []
+                            for cell_key, metric_vals in accum_all.items():
+                                if metric not in metric_vals:
+                                    continue
+                                lat_l, lat_r, lon_l, lon_r = cell_key
+                                val = _mean(metric_vals[metric])
+                                if not math.isnan(val):
+                                    grid_data_a.append([lat_l, lat_r, lon_l, lon_r, round(val, 6)])
+                            if grid_data_a:
+                                key = f"{model}|{ref_prefix}{var_name}|{metric}|all"
+                                values = [row[4] for row in grid_data_a]
+                                if eff_grid_type == "points":
+                                    out_pts_a = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid_data_a]
+                                else:
+                                    out_pts_a = grid_data_a
+                                yield key, {
+                                    "grid_type": eff_grid_type,
+                                    "data": out_pts_a,
                                     "vmin": round(min(values), 6),
                                     "vmax": round(max(values), 6),
                                 }
