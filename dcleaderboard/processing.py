@@ -140,6 +140,9 @@ def load_data(results_dir: Path) -> pd.DataFrame:
                                     variable = item.get("Variable", "unknown")
                                     value = item.get("Value", 0)
 
+                                    if not isinstance(value, (int, float)):
+                                        continue
+
                                     data.append(
                                         {
                                             "model": model,
