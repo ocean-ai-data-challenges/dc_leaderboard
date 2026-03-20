@@ -144,12 +144,13 @@ def render_site_from_results(
         for src in results_paths:
             shutil.copy2(src, tmp_results_dir / src.name)
 
-        # Also copy per-bins files (.jsonl and legacy .json) from the same
-        # source directories so that map_processing.py can find them.
+        # Also copy per-bins files (.jsonl.gz, .jsonl and legacy .json) from
+        # the same source directories so that map_processing.py can find them.
         source_dirs = {src.parent for src in results_paths}
         for src_dir in source_dirs:
             for pb_file in (
-                list(src_dir.glob("*_per_bins.jsonl"))
+                list(src_dir.glob("*_per_bins.jsonl.gz"))
+                + list(src_dir.glob("*_per_bins.jsonl"))
                 + list(src_dir.glob("*_per_bins.json"))
             ):
                 dst = tmp_results_dir / pb_file.name

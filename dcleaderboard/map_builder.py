@@ -656,12 +656,26 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
   // those are blocked by CORS for file:// URLs in all modern
   // browsers.  <script src="..."> is the only method that works
   // reliably with local files.
+  //
+  // Race-condition guard: a removed-from-DOM script may still execute if
+  // its HTTP response was already received (browser behaviour).  We track
+  // the *expected* script element so that any stale callback from a
+  // previously-loaded or in-flight script is silently discarded.
   var _pendingLoadResolve = null;
+  var _pendingScriptRef   = null;   // element we are currently waiting for
   window._mapDataCallback = function(json) {{
+    // document.currentScript is the <script> element being evaluated right
+    // now.  If it differs from the element we registered most recently, the
+    // call is stale (from a removed / superseded script) and must be ignored.
+    var caller = document.currentScript;
+    if (caller && caller !== _pendingScriptRef) {{
+      return;  // stale callback – discard
+    }}
     if (_pendingLoadResolve) {{
       _pendingLoadResolve(json);
       _pendingLoadResolve = null;
     }}
+    _pendingScriptRef = null;
   }};
 
   function loadData() {{
@@ -704,25 +718,34 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
     const old = document.getElementById('map-data-script');
     if (old) old.parentNode.removeChild(old);
 
+    // Create promise BEFORE registering _pendingScriptRef so that
+    // _mapDataCallback can safely resolve it.
     var promise = new Promise(function(resolve) {{ _pendingLoadResolve = resolve; }});
 
     var script = document.createElement('script');
     script.id = 'map-data-script';
     script.src = filename;
-    script.onload = function() {{
-      promise.then(function(json) {{
-        if (json && json.data) {{
-          currentData = json;
-          renderGrid(json);
-        }} else {{
-          status.textContent = 'No data available for this combination.';
-          gridLayer.clearLayers();
-          document.getElementById('map-colorbar').style.display = 'none';
-        }}
-      }});
-    }};
+    // Register the new script as the expected recipient BEFORE appending.
+    _pendingScriptRef = script;
+
+    // Render is driven by the Promise (resolved inside _mapDataCallback).
+    // The onload handler merely acts as a fallback signal: if the script
+    // loaded but _mapDataCallback was somehow not invoked (e.g. empty file),
+    // the promise will be pending and we silently show no-data.
+    promise.then(function(json) {{
+      if (json && json.data) {{
+        currentData = json;
+        renderGrid(json);
+      }} else {{
+        status.textContent = 'No data available for this combination.';
+        gridLayer.clearLayers();
+        document.getElementById('map-colorbar').style.display = 'none';
+      }}
+    }});
+
     script.onerror = function() {{
       _pendingLoadResolve = null;
+      _pendingScriptRef   = null;
       if (remainingKeys && remainingKeys.length > 0) {{
         // Current key not found – try next fallback in chain.
         _loadKey(remainingKeys[0], remainingKeys.slice(1));

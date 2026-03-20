@@ -1,12 +1,13 @@
 """
 Pre-processing module for per-bins results data.
 
-Reads *_per_bins.json files, aggregates spatial data by
+Reads *_per_bins.json/.jsonl/.jsonl.gz files, aggregates spatial data by
 (model, variable, metric, lead_time), and writes compact JSON
 files for the interactive map page.
 """
 from __future__ import annotations
 
+import gzip
 import json
 import math
 import re
@@ -96,46 +97,129 @@ def _parse_bin_value(raw: Any) -> Tuple[float, float]:
     return _parse_interval_string(str(raw))
 
 
-def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
-    """Load all *_per_bins.json/.jsonl files from the results directory.
+def _columnar_to_row_per_bins(per_bins_col: Dict[str, Any]) -> Dict[str, List[Dict]]:
+    """Convert a **columnar** per-bins dict (produced by the aggregation step)
+    back into the **row-per-bin** list format expected by :func:`_iter_grid_data`.
 
-    Supports two formats:
-    - Legacy ``.json``: a single JSON object with a ``per_bins_by_time`` list.
-    - New ``.jsonl``: one compact JSON object per line (no wrapper dict).
-      Each line is a per-bins entry.  The file is read into the same
-      in-memory structure as the legacy format so the rest of the
-      pipeline is unchanged.
+    Columnar format example::
+
+        {"ssh": {"lat_l": [...], "lat_r": [...], "lon_l": [...], "lon_r": [...],
+                 "rmse": [...]}}
+
+    Row format::
+
+        {"ssh": [{"lat_bin": {"left": .., "right": ..},
+                  "lon_bin": {"left": .., "right": ..}, "rmse": 0.042}, ...]}
     """
-    # Collect all per-bins files; JSONL takes precedence over JSON when both
-    # exist for the same stem (e.g. after a format migration).
+    _COORD_KEYS = frozenset({"lat_l", "lat_r", "lon_l", "lon_r", "depth_l", "depth_r"})
+    per_bins_row: Dict[str, List[Dict]] = {}
+    for var, col in per_bins_col.items():
+        n = len(col.get("lat_l", []))
+        has_depth = "depth_l" in col
+        metric_keys = [k for k in col if k not in _COORD_KEYS]
+        bins: List[Dict] = []
+        for i in range(n):
+            b: Dict[str, Any] = {
+                "lat_bin": {"left": col["lat_l"][i], "right": col["lat_r"][i]},
+                "lon_bin": {"left": col["lon_l"][i], "right": col["lon_r"][i]},
+            }
+            if has_depth:
+                b["depth_bin"] = {"left": col["depth_l"][i], "right": col["depth_r"][i]}
+            for m in metric_keys:
+                vals = col.get(m)
+                if vals is not None and i < len(vals) and vals[i] is not None:
+                    b[m] = vals[i]
+            bins.append(b)
+        per_bins_row[var] = bins
+    return per_bins_row
+
+
+def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
+    """Load all per-bins files from the results directory.
+
+    Supported formats (in order of preference; higher ones shadow lower):
+
+    - ``.jsonl.gz``: **compact pre-aggregated columnar** gzip JSONL produced by
+      ``_aggregate_per_bins_jsonl`` in ``dctools.processing.base``.  One line
+      per unique (ref_alias, lead_time).  Automatically decompressed and
+      converted to the row-per-bin format expected downstream.
+    - ``.jsonl``: one compact JSON object per line (raw, one per forecast step).
+    - Legacy ``.json``: a single JSON object with a ``per_bins_by_time`` list.
+    """
+    # Priority: .jsonl.gz > .jsonl > .json  (by stem identity)
+    gz_files   = sorted(results_dir.glob("*_per_bins.jsonl.gz"))
     jsonl_files = sorted(results_dir.glob("*_per_bins.jsonl"))
-    json_files = sorted(results_dir.glob("*_per_bins.json"))
+    json_files  = sorted(results_dir.glob("*_per_bins.json"))
 
-    # Filter out any legacy .json files that have a .jsonl counterpart.
-    jsonl_stems = {f.stem for f in jsonl_files}
-    json_files = [f for f in json_files if f.stem not in jsonl_stems]
-
-    files = jsonl_files + json_files
+    # Build a stem → file mapping keeping only the highest-priority format.
+    stem_to_file: Dict[str, Path] = {}
+    for f in json_files:
+        stem_to_file[f.stem] = f          # lowest priority
+    for f in jsonl_files:
+        stem_to_file[f.stem] = f          # overrides .json
+    for f in gz_files:
+        # .jsonl.gz stem is e.g. "results_glonet_per_bins.jsonl" → use that
+        stem = f.name[:-len(".gz")]        # drop the .gz suffix
+        stem_key = Path(stem).stem         # stem of the .jsonl part
+        stem_to_file[stem_key] = f         # overrides .jsonl
 
     datasets = []
-    for f in files:
+    for _stem, f in sorted(stem_to_file.items()):
         logger.debug("Loading per-bins file: {} ...", f.name)
-        if f.suffix == ".jsonl":
-            entries: List[Dict[str, Any]] = []
-            with open(f, encoding="utf-8") as fh:
-                for line in fh:
+        entries: List[Dict[str, Any]] = []
+
+        if f.suffix == ".gz":              # compressed JSONL
+            open_fn = lambda _f=f: gzip.open(_f, "rt", encoding="utf-8")
+        elif f.suffix == ".jsonl":
+            open_fn = lambda _f=f: open(_f, encoding="utf-8")
+        else:
+            open_fn = None
+
+        if open_fn is not None:            # JSONL or JSONL.gz
+            # v2 schema aliases (populated from the header line, if present).
+            _field_schema: Dict[str, str] = {}  # short → full entry-field name
+            _coord_schema: Dict[str, str] = {}  # short → full coord-column name
+            _is_v2 = False
+            with open_fn() as fh:
+                for _line_no, line in enumerate(fh):
                     line = line.strip()
-                    if line:
-                        entries.append(json.loads(line))
-            # Re-wrap in the legacy dict structure expected downstream.
-            dataset_name = f.stem.replace("_per_bins", "").lstrip("results_")
+                    if not line:
+                        continue
+                    entry = json.loads(line)
+                    # First line of v2 files: schema header – not a data entry.
+                    if _line_no == 0 and "_v" in entry:
+                        if entry["_v"] == 2:
+                            _is_v2 = True
+                            _field_schema = entry.get("f", {})
+                            _coord_schema = entry.get("c", {})
+                        continue  # schema line consumed; move on
+                    # v2: expand short aliases → full field names so the rest
+                    # of the pipeline sees the canonical key names.
+                    if _is_v2:
+                        entry = {_field_schema.get(k, k): v for k, v in entry.items()}
+                        if "per_bins" in entry:
+                            entry["per_bins"] = {
+                                var: {_coord_schema.get(ck, ck): cv
+                                      for ck, cv in col.items()}
+                                for var, col in entry["per_bins"].items()
+                            }
+                    # Columnar → row-per-bin conversion (v2 always columnar;
+                    # v1 signals this with pre_aggregated: True).
+                    if _is_v2 or entry.get("pre_aggregated"):
+                        entry = dict(entry)  # shallow copy before mutation
+                        entry["per_bins"] = _columnar_to_row_per_bins(
+                            entry.get("per_bins", {})
+                        )
+                    entries.append(entry)
+            dataset_name = _stem.replace("_per_bins", "").lstrip("results_")
             data: Dict[str, Any] = {
                 "dataset": dataset_name,
                 "per_bins_by_time": entries,
             }
-        else:
+        else:                              # legacy JSON
             with open(f, encoding="utf-8") as fh:
                 data = json.load(fh)
+
         logger.debug("  {} entries loaded from {}", len(data.get('per_bins_by_time', [])), f.name)
         datasets.append(data)
     return datasets
@@ -267,10 +351,19 @@ def discover_metadata(
                                 (db["left"], db["right"])
                             )
 
-    # Sort depth bins
+    # Sort depth bins and deduplicate by formatted label (different float
+    # precision for the same nominal depth level across datasets would
+    # otherwise produce duplicate entries in the JS DEPTH_BINS array).
     sorted_depths: Dict[str, List[Tuple[float, float]]] = {}
     for var, dbs in depth_bins_by_var.items():
-        sorted_depths[var] = sorted(dbs, key=lambda x: x[0])
+        seen_labels: set = set()
+        unique_dbs: List[Tuple[float, float]] = []
+        for db in sorted(dbs, key=lambda x: x[0]):
+            label = f"{db[0]:.1f}-{db[1]:.1f}"
+            if label not in seen_labels:
+                seen_labels.add(label)
+                unique_dbs.append(db)
+        sorted_depths[var] = unique_dbs
 
     # "Reference Dataset" dropdown and rendering style come from the
     # REGULAR results files (results_*.json), not from per_bins.
