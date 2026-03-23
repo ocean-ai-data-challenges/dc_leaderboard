@@ -140,7 +140,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
   const DEPTH_BINS = {depth_bins_js};
   const REF_VARIABLES = {ref_variables_js};
   const REF_TYPE_MAP = {ref_type_map_js};
-  let map, gridLayer, currentData = null;
+  let map, gridLayer, gridRenderer, currentData = null;
 
   // --- Color scale ({cmap_name_label}) ---
   // Generated at build time from matplotlib.  Low values → blue, high → red,
@@ -207,6 +207,12 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
       noWrap: true,
       bounds: BOUNDS
     }}).addTo(map);
+
+    // Shared canvas renderer for ALL data layers in the gridPane.
+    // Using a single renderer avoids conflicts between Leaflet's auto-
+    // created pane renderer (from circleMarkers) and per-call L.canvas()
+    // instances that would accumulate <canvas> elements in the DOM.
+    gridRenderer = L.canvas({{ pane: 'gridPane', padding: 0.5 }});
 
     // Layer 2 – data grid (rendered at ~0.75 opacity so the base-map
     // land/ocean shades remain visible underneath).
@@ -462,6 +468,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
       const bounds = [[south, -180], [north, 180]];
       const rect = L.rectangle(bounds, {{
         pane: 'gridPane',
+        renderer: gridRenderer,
         color: 'rgba(255,255,255,0.15)',
         weight: 0.5,
         fillColor: color,
@@ -493,7 +500,6 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
     }}
 
     const range = vmax - vmin || 1;
-    const canvasRenderer = L.canvas({{ pane: 'gridPane', padding: 0.5 }});
 
     data.forEach(function(cell) {{
       const latS = cell[0], latN = cell[1], lonW = cell[2], lonE = cell[3], val = cell[4];
@@ -503,7 +509,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
       const bounds = [[latS, lonW], [latN, lonE]];
       const rect = L.rectangle(bounds, {{
         pane: 'gridPane',
-        renderer: canvasRenderer,
+        renderer: gridRenderer,
         color: 'none',
         fillColor: color,
         fillOpacity: 0.75,
@@ -548,6 +554,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
 
       const marker = L.circleMarker([lat, lon], {{
         pane: 'gridPane',
+        renderer: gridRenderer,
         radius: radius,
         color: 'rgba(255,255,255,0.4)',
         weight: 0.8,
@@ -601,6 +608,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
       const bounds = [[south, -180], [north, 180]];
       const rect = L.rectangle(bounds, {{
         pane: 'gridPane',
+        renderer: gridRenderer,
         color: 'rgba(255,255,255,0.55)',
         weight: 0.8,
         fillColor: color,
@@ -619,9 +627,59 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
       data.length + ' observation latitude bands loaded.';
   }}
 
+  // --- Robust color bounds (Tukey's fences) ---
+  // Detects outliers using the IQR method and returns tighter [lo, hi]
+  // bounds so that the colour map covers the bulk of the data.  Without
+  // this, a single extreme cell (e.g. 30 PSU RMSE when 99 % of cells are
+  // < 1 PSU) compresses the colour scale and makes most cells invisible.
+  function computeRobustColorBounds(data) {{
+    var n = data.length;
+    if (n < 8) return null;
+    var lastIdx = data[0].length - 1;   // value is always last element
+    var vals = new Array(n);
+    for (var i = 0; i < n; i++) vals[i] = data[i][lastIdx];
+    vals.sort(function(a, b) {{ return a - b; }});
+    var q1 = vals[Math.floor(0.25 * n)];
+    var q3 = vals[Math.floor(0.75 * n)];
+    var iqr = q3 - q1;
+    if (iqr <= 0) return null;            // constant or near-constant data
+    var lo = Math.max(vals[0], q1 - 1.5 * iqr);
+    var hi = Math.min(vals[n - 1], q3 + 1.5 * iqr);
+    if (hi <= lo) return null;
+    return [lo, hi];
+  }}
+
   // --- Render: pick strategy based on grid_type ---
   function renderGrid(json) {{
-    const data = json.data, vmin = json.vmin, vmax = json.vmax;
+    // Clean up zoom handler from any previous renderPoints call.
+    if (renderPoints._zoomHandler) {{
+      map.off('zoomend', renderPoints._zoomHandler);
+      renderPoints._zoomHandler = null;
+    }}
+
+    // Destroy the old canvas renderer and layer group, then create fresh
+    // ones.  The Leaflet Canvas renderer uses incremental (partial) redraws
+    // based on an accumulated _redrawBounds rectangle.  When switching
+    // between very different layer types (circleMarkers ↔ rectangles),
+    // the partial redraw may fail to cover the full canvas, leaving stale
+    // pixels or clipping new layers.  Recreating the renderer guarantees a
+    // blank canvas with no carried-over state.
+    if (gridLayer) {{
+      gridLayer.clearLayers();
+      map.removeLayer(gridLayer);
+    }}
+    if (gridRenderer && gridRenderer._map) {{
+      gridRenderer.remove();
+    }}
+    gridRenderer = L.canvas({{ pane: 'gridPane', padding: 0.5 }});
+    gridLayer = L.layerGroup({{ pane: 'gridPane' }}).addTo(map);
+
+    const data = json.data;
+    // Use robust colour bounds when extreme outliers compress the scale.
+    var bounds = computeRobustColorBounds(data);
+    var vmin = bounds ? bounds[0] : json.vmin;
+    var vmax = bounds ? bounds[1] : json.vmax;
+
     if (json.grid_type === 'lat_band') {{
       renderLatBands(data, vmin, vmax);
     }} else if (json.grid_type === 'lat_band_obs') {{
