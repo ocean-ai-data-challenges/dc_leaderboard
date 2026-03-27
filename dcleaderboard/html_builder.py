@@ -89,7 +89,7 @@ def build_navbar(active_page: str = "", config: Dict[str, Any] = None) -> str:
     
     brand_name = config.get("texts", {}).get("brand_name", "Ocean & Climate")
     brand_sub = config.get("texts", {}).get("brand_sub", "Data Challenge")
-    github_url = config.get("texts", {}).get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
+    github_url = config.get("texts", {}).get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
     
     active_home = "active" if active_page == "leaderboard" else ""
     active_maps = "active" if active_page == "maps" else ""
@@ -130,7 +130,7 @@ def build_hero(config: Dict[str, Any]) -> str:
         "Probabilistic short-term forecasting of global ocean dynamics. "
         "An open benchmark for evaluating ML and physics-based ocean forecasting models."
     )
-    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
     paper_url = texts.get("paper_url", "")
     docs_url = texts.get("docs_url", "")
     
@@ -191,7 +191,7 @@ def build_footer(config: Dict[str, Any] = None) -> str:
     if config is None:
         config = {}
     texts = config.get("texts", {})
-    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
     
     return f"""
 <footer class="footer">
@@ -320,7 +320,7 @@ def generate_about_content(config: Dict[str, Any] = None) -> str:
     if config is None:
         config = {}
     texts = config.get("texts", {})
-    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
     
     return f"""
 <div class="leaderboard-card">

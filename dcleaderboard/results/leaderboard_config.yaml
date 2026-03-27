@@ -23,7 +23,7 @@ texts:
   brand_sub: "Data Challenge"
 
   # URL linked from the navbar GitHub icon and the About page
-  github_url: "https://github.com/ppr-ocean-ia/dc-tools"
+  github_url: "https://github.com/ocean-ai-data-challenges/dc-tools"
 
   # Section-header templates.
   # Available placeholders are shown between {}.
