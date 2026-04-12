@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Tuple
 
 
-def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "") -> str:
+def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "", config=None) -> str:
     """Generate the HTML content (inside the container) for the map page.
 
     Parameters
@@ -20,7 +20,15 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
         Base URL (or local path) to the _site directory.  Used to build the
         fetch URL for grid JSON files.  Should end with ``/`` when non-empty.
         An empty string means relative paths (works when served by HTTP).
+    config : dict, optional
+        Leaderboard config; used to apply ``models_names`` and
+        ``metrics_names`` display labels in the map dropdowns.
     """
+    if config is None:
+        config = {}
+    _models_labels = config.get("models_names", {})
+    _metrics_labels = config.get("metrics_names", {})
+
 
     models = metadata["models"]
     variables = metadata["variables"]
@@ -31,7 +39,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
 
     # Build option lists
     model_options = "\n".join(
-        f'<option value="{m}">{m}</option>' for m in models
+        f'<option value="{m}">{_models_labels.get(m, m)}</option>' for m in models
     )
     # Reference dataset options – sorted ref names
     ref_options = "\n".join(
@@ -41,13 +49,16 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "")
     variable_options = "\n".join(
         f'<option value="{v}">{v.replace("_", " ").title()}</option>' for v in variables
     )
+    # Prefer rmse as default; fall back to the first available metric.
+    _default_metric = "rmse" if "rmse" in metrics else (metrics[0] if metrics else "")
     metric_options = "\n".join(
-        f'<option value="{m}">{m.upper()}</option>' for m in metrics
+        f'<option value="{m}"{" selected" if m == _default_metric else ""}>{_metrics_labels.get(m, m.upper())}</option>'
+        for m in metrics
     )
     lead_option_parts = []
     for lt in lead_times:
         if lt == "all":
-            lead_option_parts.append('<option value="all">All days (composite)</option>')
+            lead_option_parts.append('<option value="all" selected>All days (composite)</option>')
         else:
             lead_option_parts.append(f'<option value="{lt}">Day {lt + 1}</option>')
     lead_options = "\n".join(lead_option_parts)
@@ -853,7 +864,7 @@ def build_map_page(
     site_base_url: str = "",
 ) -> str:
     """Build the complete map HTML page."""
-    content = generate_map_page_content(metadata, site_base_url=site_base_url)
+    content = generate_map_page_content(metadata, site_base_url=site_base_url, config=config)
 
     navbar = build_navbar_fn("maps", config)
     footer = build_footer_fn(config)

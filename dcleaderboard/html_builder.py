@@ -89,7 +89,7 @@ def build_navbar(active_page: str = "", config: Dict[str, Any] = None) -> str:
     
     brand_name = config.get("texts", {}).get("brand_name", "Ocean & Climate")
     brand_sub = config.get("texts", {}).get("brand_sub", "Data Challenge")
-    github_url = config.get("texts", {}).get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
+    github_url = config.get("texts", {}).get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
     
     active_home = "active" if active_page == "leaderboard" else ""
     active_maps = "active" if active_page == "maps" else ""
@@ -130,7 +130,7 @@ def build_hero(config: Dict[str, Any]) -> str:
         "Probabilistic short-term forecasting of global ocean dynamics. "
         "An open benchmark for evaluating ML and physics-based ocean forecasting models."
     )
-    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
     paper_url = texts.get("paper_url", "")
     docs_url = texts.get("docs_url", "")
     
@@ -191,14 +191,14 @@ def build_footer(config: Dict[str, Any] = None) -> str:
     if config is None:
         config = {}
     texts = config.get("texts", {})
-    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
     
     return f"""
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <h3>Ocean &amp; Climate Data Challenge</h3>
-      <p>An open benchmark for evaluating ocean forecasting models, maintained by the PPR Oc&eacute;an et Climat community.</p>
+      <p>An open benchmark for evaluating ocean forecasting models, maintained by IMT Atlantique.</p>
     </div>
     <div class="footer-links">
       <div class="footer-links-col">
@@ -320,7 +320,7 @@ def generate_about_content(config: Dict[str, Any] = None) -> str:
     if config is None:
         config = {}
     texts = config.get("texts", {})
-    github_url = texts.get("github_url", "https://github.com/ocean-ai-data-challenges/dc-tools")
+    github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
     
     return f"""
 <div class="leaderboard-card">
@@ -379,7 +379,7 @@ def build_site(
     )
     with open(output_dir / "leaderboard.html", "w", encoding="utf-8") as f:
         f.write(leaderboard_html)
-    logger.info("leaderboard.html generated")
+    logger.opt(colors=True).info("  <cyan>✓</cyan>  leaderboard.html generated")
 
     # Build Maps page (if per_bins data exists)
     logger.debug("Generating maps.html")
@@ -387,7 +387,7 @@ def build_site(
         from dcleaderboard.map_processing import preprocess_per_bins
         from dcleaderboard.map_builder import build_map_page
 
-        map_metadata = preprocess_per_bins(results_dir, output_dir)
+        map_metadata = preprocess_per_bins(results_dir, output_dir, config=custom_config)
         if map_metadata:
             maps_html = build_map_page(
                 metadata=map_metadata,
@@ -399,9 +399,9 @@ def build_site(
             )
             with open(output_dir / "maps.html", "w", encoding="utf-8") as f:
                 f.write(maps_html)
-            logger.info("maps.html generated")
+            logger.opt(colors=True).info("  <cyan>✓</cyan>  maps.html generated")
         else:
-            logger.info("Skipping maps.html (no per-bins data)")
+            logger.opt(colors=True).info("  <dim>◡</dim>  Skipping maps.html (no per-bins data)")
     except Exception as e:
         import traceback
         logger.warning("Could not generate maps page: {}", e)
@@ -419,6 +419,6 @@ def build_site(
     )
     with open(output_dir / "about.html", "w", encoding="utf-8") as f:
         f.write(about_html)
-    logger.info("about.html generated")
+    logger.opt(colors=True).info("  <cyan>✓</cyan>  about.html generated")
 
-    logger.success("Site build complete!")
+    logger.opt(colors=True).success("  <green>✓✓</green>  Site build complete!")

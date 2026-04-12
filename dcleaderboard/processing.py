@@ -268,7 +268,19 @@ def generate_report_items(
             header = texts.get("variable_group_header", "#### {var_type} Variables")
             yield ("markdown", header.format(var_type=var_type.title()))
 
-            for metric in sorted(ref_df.metric.unique()):
+            # When the pipeline provides an explicit allowed_metrics list
+            # (derived from the sources' metrics in the project YAML), use it
+            # as a whitelist.  This hides sub-statistics (me, mse, …) that
+            # metric classes may emit automatically.
+            # metrics_names is intentionally NOT used as a filter here: it is
+            # only a renaming map for display labels.
+            _available = sorted(ref_df.metric.unique())
+            _allowed = (config or {}).get("allowed_metrics")
+            if _allowed:
+                _filtered = [m for m in _available if m in _allowed]
+                _available = _filtered if _filtered else _available
+
+            for metric in _available:
                 metric_complete_name = metrics_map.get(metric, metric)
                 header = texts.get("metric_header", "### Metric: {metric_name}")
                 yield ("markdown", header.format(metric_name=metric_complete_name))

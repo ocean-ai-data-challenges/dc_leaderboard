@@ -254,8 +254,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             config_file=args.config,
             site_base_url=args.site_base_url,
         )
-        logger.success("Site generated successfully.")
-        logger.success("Leaderboard  →  {}", outputs.leaderboard_html)
+        logger.opt(colors=True).success("<green>✓</green>  Site generated successfully.")
+        logger.opt(colors=True).success("<green>✓</green>  Leaderboard  <dim>→</dim>  <cyan>{}</cyan>", outputs.leaderboard_html)
         if outputs.about_html:
             logger.debug("About        →  {}", outputs.about_html)
     except Exception as e:
