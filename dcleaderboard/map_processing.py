@@ -898,6 +898,7 @@ def _yield_grids_from_entries(
     key_suffix: str,
     metadata: Dict[str, Any],
     lat_band_mode: bool,
+    _precision: int = 6,
 ):
     """Yield ``(key, grid_info)`` pairs for a batch of per_bins entries.
 
@@ -963,7 +964,7 @@ def _yield_grids_from_entries(
                         val = _mean(mvals[metric])
                         if math.isnan(val):
                             continue
-                        depth_bands[(dl, dr)].append([s, n, round(val, 6)])
+                        depth_bands[(dl, dr)].append([s, n, round(val, _precision)])
                         all_depth_accum_b[(s, n)].append(val)
 
                     for (dl, dr), band_data in depth_bands.items():
@@ -973,23 +974,23 @@ def _yield_grids_from_entries(
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": sorted(band_data, key=lambda r: r[0]),
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
 
                     avg_bands: List[List[float]] = []
                     for (s, n), vals in all_depth_accum_b.items():
                         avg_val = _mean(vals)
                         if not math.isnan(avg_val):
-                            avg_bands.append([s, n, round(avg_val, 6)])
+                            avg_bands.append([s, n, round(avg_val, _precision)])
                     if avg_bands:
                         key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                         values = [r[2] for r in avg_bands]
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": sorted(avg_bands, key=lambda r: r[0]),
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
                 else:
                     band_data_list: List[List[float]] = []
@@ -999,15 +1000,15 @@ def _yield_grids_from_entries(
                         s, n = cell_key
                         val = _mean(mvals[metric])
                         if not math.isnan(val):
-                            band_data_list.append([s, n, round(val, 6)])
+                            band_data_list.append([s, n, round(val, _precision)])
                     if band_data_list:
                         key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                         values = [r[2] for r in band_data_list]
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": sorted(band_data_list, key=lambda r: r[0]),
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
         else:
             # --- Spatial mode (lat/lon grid) ---
@@ -1047,7 +1048,7 @@ def _yield_grids_from_entries(
                         val = _mean(metric_vals[metric])
                         if math.isnan(val):
                             continue
-                        depth_grids[(dl, dr)].append([lat_l, lat_r, lon_l, lon_r, round(val, 6)])
+                        depth_grids[(dl, dr)].append([lat_l, lat_r, lon_l, lon_r, round(val, _precision)])
                         all_depth_accum[(lat_l, lat_r, lon_l, lon_r)].append(val)
 
                     for (dl, dr), raw_data in depth_grids.items():
@@ -1064,15 +1065,15 @@ def _yield_grids_from_entries(
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": out_data,
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
 
                     avg_grid: List[List[float]] = []
                     for (lat_l, lat_r, lon_l, lon_r), vals in all_depth_accum.items():
                         avg_val = _mean(vals)
                         if not math.isnan(avg_val):
-                            avg_grid.append([lat_l, lat_r, lon_l, lon_r, round(avg_val, 6)])
+                            avg_grid.append([lat_l, lat_r, lon_l, lon_r, round(avg_val, _precision)])
                     if avg_grid:
                         key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                         values = [row[4] for row in avg_grid]
@@ -1083,8 +1084,8 @@ def _yield_grids_from_entries(
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": out_avg,
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
                 else:
                     grid_data: List[List[float]] = []
@@ -1094,7 +1095,7 @@ def _yield_grids_from_entries(
                         lat_l, lat_r, lon_l, lon_r = cell_key
                         val = _mean(metric_vals[metric])
                         if not math.isnan(val):
-                            grid_data.append([lat_l, lat_r, lon_l, lon_r, round(val, 6)])
+                            grid_data.append([lat_l, lat_r, lon_l, lon_r, round(val, _precision)])
                     if grid_data:
                         key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                         values = [row[4] for row in grid_data]
@@ -1105,14 +1106,17 @@ def _yield_grids_from_entries(
                         yield key, {
                             "grid_type": eff_grid_type,
                             "data": out_pts,
-                            "vmin": round(min(values), 6),
-                            "vmax": round(max(values), 6),
+                            "vmin": round(min(values), _precision),
+                            "vmax": round(max(values), _precision),
                         }
 
 
 def _iter_grid_data(
     datasets: List[Dict[str, Any]],
     metadata: Dict[str, Any],
+    *,
+    precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ):
     """Generator: yield ``(key, grid_info)`` pairs one at a time.
 
@@ -1139,9 +1143,9 @@ def _iter_grid_data(
         src = ds["per_bins_by_time"]
 
         if _HAS_NUMPY and _HAS_PANDAS and isinstance(src, _NpzBinStore):
-            yield from _iter_grid_data_npz(src, model, metadata, lat_band_mode, _grid_type)
+            yield from _iter_grid_data_npz(src, model, metadata, lat_band_mode, _grid_type, precision, skip_frt_snapshots)
         else:
-            yield from _iter_grid_data_legacy(src, model, metadata, lat_band_mode, _grid_type)
+            yield from _iter_grid_data_legacy(src, model, metadata, lat_band_mode, _grid_type, precision, skip_frt_snapshots)
 
 
 # ---------------------------------------------------------------------------
@@ -1154,6 +1158,8 @@ def _iter_grid_data_npz(
     metadata: Dict[str, Any],
     lat_band_mode: bool,
     grid_type_fn,
+    _precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ):
     """Vectorised aggregation using pandas groupby on the .npz arrays."""
     import numpy as _np
@@ -1257,27 +1263,27 @@ def _iter_grid_data_npz(
                                        dl_arr, dr_arr, m_vals):
                             s, n, dl_, dr_, v = row
                             if _np.isnan(v): continue
-                            depth_groups.setdefault((dl_, dr_), []).append([float(s), float(n), round(float(v), 6)])
+                            depth_groups.setdefault((dl_, dr_), []).append([float(s), float(n), round(float(v), _precision)])
                         all_depth: Dict[tuple, list] = {}
                         for (dl_, dr_), bdata in depth_groups.items():
                             depth_label = f"{dl_:.1f}-{dr_:.1f}"
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[2] for r in bdata]
-                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                             for r in bdata:
                                 all_depth.setdefault((r[0], r[1]), []).append(r[2])
-                        avg = [[s, n, round(sum(vs)/len(vs), 6)] for (s, n), vs in all_depth.items()]
+                        avg = [[s, n, round(sum(vs)/len(vs), _precision)] for (s, n), vs in all_depth.items()]
                         if avg:
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|all_depths"
                             vals = [r[2] for r in avg]
-                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                     else:
-                        band = [[float(r["yl"]), float(r["yr"]), round(float(r[metric]), 6)]
+                        band = [[float(r["yl"]), float(r["yr"]), round(float(r[metric]), _precision)]
                                 for _, r in grouped[valid].iterrows()]
                         if band:
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}"
                             vals = [r[2] for r in band]
-                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                 else:
                     xl_col = "xl" if has_lon else None
                     xr_col = "xr" if has_lon else None
@@ -1293,32 +1299,32 @@ def _iter_grid_data_npz(
                                        dl_arr, dr_arr, m_vals):
                             ll, lr, xll, xlr, dl_, dr_, v = row
                             if _np.isnan(v): continue
-                            depth_grids.setdefault((dl_, dr_), []).append([float(ll), float(lr), float(xll), float(xlr), round(float(v), 6)])
+                            depth_grids.setdefault((dl_, dr_), []).append([float(ll), float(lr), float(xll), float(xlr), round(float(v), _precision)])
                             all_depth2.setdefault((float(ll), float(lr), float(xll), float(xlr)), []).append(float(v))
                         for (dl_, dr_), raw in depth_grids.items():
                             depth_label = f"{dl_:.1f}-{dr_:.1f}"
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[4] for r in raw]
                             out = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in raw] if eff_gt == "points" else raw
-                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
-                        avg2 = [[ll, lr, xll, xlr, round(sum(vs)/len(vs), 6)] for (ll, lr, xll, xlr), vs in all_depth2.items()]
+                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                        avg2 = [[ll, lr, xll, xlr, round(sum(vs)/len(vs), _precision)] for (ll, lr, xll, xlr), vs in all_depth2.items()]
                         if avg2:
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|all_depths"
                             vals = [r[4] for r in avg2]
                             out2 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg2] if eff_gt == "points" else avg2
-                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                     else:
                         if has_lon:
-                            grid = [[float(r["yl"]), float(r["yr"]), float(r["xl"]), float(r["xr"]), round(float(r[metric]), 6)]
+                            grid = [[float(r["yl"]), float(r["yr"]), float(r["xl"]), float(r["xr"]), round(float(r[metric]), _precision)]
                                     for _, r in grouped.iterrows() if not _np.isnan(r[metric])]
                         else:
-                            grid = [[float(r["yl"]), float(r["yr"]), -180.0, 180.0, round(float(r[metric]), 6)]
+                            grid = [[float(r["yl"]), float(r["yr"]), -180.0, 180.0, round(float(r[metric]), _precision)]
                                     for _, r in grouped.iterrows() if not _np.isnan(r[metric])]
                         if grid:
                             key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}"
                             vals = [r[4] for r in grid]
                             out3 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid] if eff_gt == "points" else grid
-                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
 
         # Unique (rac, rtc) integer-coded pairs → decode to strings for key building
         rac_rtc_pairs = list(dict.fromkeys(zip(df["rac"].tolist(), df["rtc"].tolist())))
@@ -1338,14 +1344,15 @@ def _iter_grid_data_npz(
             yield from _emit_agg(df[mask], ra, rt, "|all")
 
         # Pass 3: per FRT
-        for rac, rtc in rac_rtc_pairs:
-            ra, rt = ra_vals[rac], rt_vals[rtc]
-            mask_rart = (df["rac"] == rac) & (df["rtc"] == rtc)
-            for lt in sorted(df.loc[mask_rart, "lt"].unique()):
-                for frtc in sorted(df.loc[mask_rart & (df["lt"] == lt), "frtc"].unique()):
-                    frt = frt_vals[frtc]
-                    mask = mask_rart & (df["lt"] == lt) & (df["frtc"] == frtc)
-                    yield from _emit_agg(df[mask], ra, rt, f"|{lt}|{frt}")
+        if not skip_frt_snapshots:
+            for rac, rtc in rac_rtc_pairs:
+                ra, rt = ra_vals[rac], rt_vals[rtc]
+                mask_rart = (df["rac"] == rac) & (df["rtc"] == rtc)
+                for lt in sorted(df.loc[mask_rart, "lt"].unique()):
+                    for frtc in sorted(df.loc[mask_rart & (df["lt"] == lt), "frtc"].unique()):
+                        frt = frt_vals[frtc]
+                        mask = mask_rart & (df["lt"] == lt) & (df["frtc"] == frtc)
+                        yield from _emit_agg(df[mask], ra, rt, f"|{lt}|{frt}")
 
         del df
 
@@ -1360,6 +1367,8 @@ def _iter_grid_data_legacy(
     metadata: Dict[str, Any],
     lat_band_mode: bool,
     grid_type_fn,
+    _precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ):
     """Dict-based accumulator path — used when per_bins_by_time is a plain
     list or stream (not a :class:`_NpzBinStore`)."""
@@ -1418,7 +1427,7 @@ def _iter_grid_data_legacy(
                             cnt = row[i2 + 1]
                             if cnt == 0:
                                 continue
-                            val = round(row[i2] / cnt, 6)
+                            val = round(row[i2] / cnt, _precision)
                             lat_l, lat_r, dl, dr = cell_key
                             depth_bands[(dl, dr)].append([lat_l, lat_r, val])
                             all_depth[(lat_l, lat_r)].append(val)
@@ -1426,12 +1435,12 @@ def _iter_grid_data_legacy(
                             depth_label = f"{dl:.1f}-{dr:.1f}"
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[2] for r in bdata]
-                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
-                        avg = [[s, n, round(_mean(vs), 6)] for (s, n), vs in all_depth.items() if not math.isnan(_mean(vs))]
+                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                        avg = [[s, n, round(_mean(vs), _precision)] for (s, n), vs in all_depth.items() if not math.isnan(_mean(vs))]
                         if avg:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                             vals = [r[2] for r in avg]
-                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                     else:
                         band = []
                         for cell_key, row in cell_accums.items():
@@ -1439,11 +1448,11 @@ def _iter_grid_data_legacy(
                             if cnt == 0:
                                 continue
                             s, n = cell_key
-                            band.append([s, n, round(row[i2] / cnt, 6)])
+                            band.append([s, n, round(row[i2] / cnt, _precision)])
                         if band:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                             vals = [r[2] for r in band]
-                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                 else:
                     if has_depth:
                         depth_grids: Dict[tuple, list] = defaultdict(list)
@@ -1452,7 +1461,7 @@ def _iter_grid_data_legacy(
                             cnt = row[i2 + 1]
                             if cnt == 0:
                                 continue
-                            val = round(row[i2] / cnt, 6)
+                            val = round(row[i2] / cnt, _precision)
                             lat_l, lat_r, lon_l, lon_r, dl, dr = cell_key
                             depth_grids[(dl, dr)].append([lat_l, lat_r, lon_l, lon_r, val])
                             all_depth2[(lat_l, lat_r, lon_l, lon_r)].append(val)
@@ -1461,13 +1470,13 @@ def _iter_grid_data_legacy(
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[4] for r in raw]
                             out = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in raw] if eff_gt == "points" else raw
-                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
-                        avg2 = [[ll, lr, xl, xr, round(_mean(vs), 6)] for (ll, lr, xl, xr), vs in all_depth2.items() if not math.isnan(_mean(vs))]
+                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                        avg2 = [[ll, lr, xl, xr, round(_mean(vs), _precision)] for (ll, lr, xl, xr), vs in all_depth2.items() if not math.isnan(_mean(vs))]
                         if avg2:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                             vals = [r[4] for r in avg2]
                             out2 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg2] if eff_gt == "points" else avg2
-                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
                     else:
                         grid = []
                         for cell_key, row in cell_accums.items():
@@ -1475,12 +1484,12 @@ def _iter_grid_data_legacy(
                             if cnt == 0:
                                 continue
                             lat_l, lat_r, lon_l, lon_r = cell_key
-                            grid.append([lat_l, lat_r, lon_l, lon_r, round(row[i2] / cnt, 6)])
+                            grid.append([lat_l, lat_r, lon_l, lon_r, round(row[i2] / cnt, _precision)])
                         if grid:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                             vals = [r[4] for r in grid]
                             out3 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid] if eff_gt == "points" else grid
-                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), 6), "vmax": round(max(vals), 6)}
+                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
 
     # Discover groups in one pass
     groups: set = set()
@@ -1517,16 +1526,17 @@ def _iter_grid_data_legacy(
         del cells_by_var2
 
     # Pass 3: per-FRT
-    for entry in per_bins_by_time:
-        rt = entry.get("ref_type") or "gridded"
-        ra = entry.get("ref_alias") or rt
-        lt = entry["lead_time"]
-        frt_raw = entry.get("forecast_reference_time", "")
-        frt_date = frt_raw[:10] if frt_raw else "unknown"
-        cells_frt: Dict[str, Dict[tuple, list]] = defaultdict(lambda: defaultdict(_make_row))
-        _accum_entry(entry, cells_frt)
-        yield from _emit_cells(cells_frt, ra, rt, f"{ra}|", f"|{lt}|{frt_date}")
-        del cells_frt
+    if not skip_frt_snapshots:
+        for entry in per_bins_by_time:
+            rt = entry.get("ref_type") or "gridded"
+            ra = entry.get("ref_alias") or rt
+            lt = entry["lead_time"]
+            frt_raw = entry.get("forecast_reference_time", "")
+            frt_date = frt_raw[:10] if frt_raw else "unknown"
+            cells_frt: Dict[str, Dict[tuple, list]] = defaultdict(lambda: defaultdict(_make_row))
+            _accum_entry(entry, cells_frt)
+            yield from _emit_cells(cells_frt, ra, rt, f"{ra}|", f"|{lt}|{frt_date}")
+            del cells_frt
 
 
 def _compute_color_scale_stats(
@@ -1695,7 +1705,14 @@ def write_map_data(
     )
 
 
-def preprocess_per_bins(results_dir: Path, output_dir: Path, config: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+def preprocess_per_bins(
+    results_dir: Path,
+    output_dir: Path,
+    config: Optional[Dict[str, Any]] = None,
+    *,
+    precision: int = 6,
+    skip_frt_snapshots: bool = False,
+) -> Optional[Dict[str, Any]]:
     """
     Main entry point: load per-bins files, aggregate, write output.
 
@@ -1740,7 +1757,7 @@ def preprocess_per_bins(results_dir: Path, output_dir: Path, config: Optional[Di
     # and what their local (per-grid) vmin/vmax were at write time.
     file_group: Dict[str, tuple] = {}  # filename → (group, local_vmin, local_vmax)
 
-    _iter = _iter_grid_data(datasets, metadata)
+    _iter = _iter_grid_data(datasets, metadata, precision=precision, skip_frt_snapshots=skip_frt_snapshots)
     if _HAS_RICH:
         _iter = _rich_progress.track(
             _iter,

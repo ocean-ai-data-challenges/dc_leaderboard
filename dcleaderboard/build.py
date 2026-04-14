@@ -89,6 +89,8 @@ def render_site_from_results(
     include_benchmarks: bool = False,
     custom_config: dict | None = None,
     site_base_url: str = "",
+    precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ) -> RenderedSite:
     """Render the website using pure Python.
 
@@ -157,7 +159,7 @@ def render_site_from_results(
                 if not dst.exists():
                     shutil.copy2(pb_file, dst)
             
-        build_site(output_site_dir, tmp_results_dir, styles_css, custom_config, site_base_url=site_base_url)
+        build_site(output_site_dir, tmp_results_dir, styles_css, custom_config, site_base_url=site_base_url, precision=precision, skip_frt_snapshots=skip_frt_snapshots)
 
     leaderboard_html = output_site_dir / "leaderboard.html"
     about_html = output_site_dir / "about.html"
@@ -177,6 +179,8 @@ def render_site_from_results_dir(
     custom_config: dict | None = None,
     config_file: str | Path | None = None,
     site_base_url: str = "",
+    precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ) -> RenderedSite:
     """Render the website from a directory of JSON results.
 
@@ -225,6 +229,8 @@ def render_site_from_results_dir(
         include_benchmarks=include_benchmarks,
         custom_config=effective_config,
         site_base_url=site_base_url,
+        precision=precision,
+        skip_frt_snapshots=skip_frt_snapshots,
     )
 
 
@@ -243,6 +249,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="",
         help="Base URL for the generated site (default: empty = relative paths)",
     )
+    parser.add_argument(
+        "--precision",
+        type=int,
+        default=6,
+        help="Decimal precision for metric values in map .js files (default: 6)",
+    )
+    parser.add_argument(
+        "--skip-frt-snapshots",
+        action="store_true",
+        help="Skip per-forecast-reference-time snapshot files (reduces output size)",
+    )
 
     args = parser.parse_args(list(argv) if argv is not None else None)
 
@@ -253,6 +270,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             template_dir=args.template_dir,
             config_file=args.config,
             site_base_url=args.site_base_url,
+            precision=args.precision,
+            skip_frt_snapshots=args.skip_frt_snapshots,
         )
         logger.opt(colors=True).success("<green>✓</green>  Site generated successfully.")
         logger.opt(colors=True).success("<green>✓</green>  Leaderboard  <dim>→</dim>  <cyan>{}</cyan>", outputs.leaderboard_html)

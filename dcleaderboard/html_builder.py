@@ -347,6 +347,8 @@ def build_site(
     styles_css: Path,
     custom_config: Optional[Dict[str, Any]] = None,
     site_base_url: str = "",
+    precision: int = 6,
+    skip_frt_snapshots: bool = False,
 ) -> None:
     """Build the complete static site."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -387,7 +389,7 @@ def build_site(
         from dcleaderboard.map_processing import preprocess_per_bins
         from dcleaderboard.map_builder import build_map_page
 
-        map_metadata = preprocess_per_bins(results_dir, output_dir, config=custom_config)
+        map_metadata = preprocess_per_bins(results_dir, output_dir, config=custom_config, precision=precision, skip_frt_snapshots=skip_frt_snapshots)
         if map_metadata:
             maps_html = build_map_page(
                 metadata=map_metadata,
