@@ -148,6 +148,10 @@ def render_site_from_results(
 
         # Also copy per-bins files (.jsonl.gz, .jsonl and legacy .json) from
         # the same source directories so that map_processing.py can find them.
+        # For large .jsonl.gz files use a symlink instead of a full copy to
+        # avoid wasting disk space and time in the temporary directory.
+        # map_processing.py resolves symlinks when computing the NPZ cache path,
+        # so the cache is placed next to the real file and survives across runs.
         source_dirs = {src.parent for src in results_paths}
         for src_dir in source_dirs:
             for pb_file in (
@@ -157,7 +161,10 @@ def render_site_from_results(
             ):
                 dst = tmp_results_dir / pb_file.name
                 if not dst.exists():
-                    shutil.copy2(pb_file, dst)
+                    try:
+                        dst.symlink_to(pb_file.resolve())
+                    except (OSError, NotImplementedError):
+                        shutil.copy2(pb_file, dst)
             
         build_site(output_site_dir, tmp_results_dir, styles_css, custom_config, site_base_url=site_base_url, precision=precision, skip_frt_snapshots=skip_frt_snapshots)
 

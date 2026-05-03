@@ -76,6 +76,31 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
     # Ref type map: { ref_alias: "gridded"|"observation" }
     ref_type_map = metadata.get("ref_type_map", {})
     ref_type_map_js = _json.dumps(ref_type_map, sort_keys=True)
+    # Ref depth vars: { ref_alias: [vars_with_depth_bins] }
+    # Used to hide the depth selector when the selected ref_alias has no depth data
+    # for the current variable (e.g. argo_profiles salinity vs glorys salinity).
+    ref_depth_vars = metadata.get("ref_depth_vars", {})
+    ref_depth_vars_js = _json.dumps(ref_depth_vars, sort_keys=True)
+
+    # FRT (Forecast Reference Time) per reference dataset.
+    # Empty when skip_frt_snapshots=True (map_processing strips them).
+    forecast_reference_times = metadata.get("forecast_reference_times", {})
+    frt_list_js = _json.dumps(
+        {ra: sorted(frts) for ra, frts in forecast_reference_times.items()},
+        sort_keys=True,
+    )
+    # When no FRT data is available, omit the frt-group div from the HTML
+    # entirely so it can never appear regardless of JS execution order or
+    # browser caching.  The JS updateFrtSelector guard handles the case where
+    # an older cached page still has the div.
+    _frt_group_html = (
+        '    <div class="control-group" id="frt-group" style="display:none;">\n'
+        '      <label for="select-frt">Period</label>\n'
+        '      <select id="select-frt">\n'
+        '        <option value="">All periods (aggregate)</option>\n'
+        '      </select>\n'
+        '    </div>'
+    ) if forecast_reference_times else ''
 
     # Colormap — sampled from matplotlib at build time.
     # Change CMAP_NAME to switch palettes (e.g. "cmocean.cm.balance",
@@ -114,6 +139,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
       <label for="select-lead">Lead Day</label>
       <select id="select-lead">{lead_options}</select>
     </div>
+    {_frt_group_html}
     <div class="control-group" id="depth-group" style="display:none;">
       <label for="select-depth">Depth</label>
       <select id="select-depth">
@@ -151,6 +177,13 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
   const DEPTH_BINS = {depth_bins_js};
   const REF_VARIABLES = {ref_variables_js};
   const REF_TYPE_MAP = {ref_type_map_js};
+  // REF_DEPTH_VARS[ref_alias] lists variables that have depth-resolved data
+  // for that ref.  When a ref_alias is absent or its variable is not listed,
+  // the depth selector is hidden even if DEPTH_BINS has entries for that var.
+  const REF_DEPTH_VARS = {ref_depth_vars_js};
+  // FRT_LIST[ref_alias] = sorted list of available forecast reference time dates.
+  // Empty object when skip_frt_snapshots=true (files were not generated).
+  const FRT_LIST = {frt_list_js};
   let map, gridLayer, gridRenderer, currentData = null;
 
   // --- Color scale ({cmap_name_label}) ---
@@ -390,13 +423,54 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
     updateDepthSelector();
   }}
 
+  // --- FRT (Period) selector update ---
+  // The selector is hidden when:
+  //   • the frt-group div was not rendered (skip_frt_snapshots mode — no FRT files exist)
+  //   • no FRT data exists for the selected ref_alias (FRT_LIST is empty or ref absent)
+  //   • the lead-day selector is set to "all" (per-FRT files only exist for
+  //     specific lead days, not for the all-days composite)
+  function updateFrtSelector() {{
+    const frtGroup = document.getElementById('frt-group');
+    if (!frtGroup) return;  // div not present: skip_frt_snapshots mode
+    const ref = document.getElementById('select-ref').value;
+    const lead = document.getElementById('select-lead').value;
+    const frtSelect = document.getElementById('select-frt');
+    const frts = FRT_LIST[ref] || [];
+
+    if (frts.length === 0 || lead === 'all') {{
+      frtGroup.style.display = 'none';
+      // Reset to aggregate so that a subsequent lead change doesn't keep a stale FRT
+      frtSelect.value = '';
+      return;
+    }}
+
+    const previousValue = frtSelect.value;
+    frtSelect.innerHTML = '<option value="">All periods (aggregate)</option>';
+    frts.forEach(function(frt) {{
+      const opt = document.createElement('option');
+      opt.value = frt;
+      opt.textContent = frt;
+      frtSelect.appendChild(opt);
+    }});
+    // Restore previous selection when still available
+    if (frts.indexOf(previousValue) >= 0) {{
+      frtSelect.value = previousValue;
+    }}
+    frtGroup.style.display = '';
+  }}
+
   // --- Depth selector update ---
   function updateDepthSelector() {{
+    const ref      = document.getElementById('select-ref').value;
     const variable = document.getElementById('select-variable').value;
     const depthGroup = document.getElementById('depth-group');
     const depthSelect = document.getElementById('select-depth');
+    // Only show depth selector when the current ref_alias actually has
+    // depth-resolved data for this variable (REF_DEPTH_VARS gating).
+    const refDepthVars = REF_DEPTH_VARS[ref] || [];
+    const refHasDepth = refDepthVars.indexOf(variable) >= 0;
 
-    if (DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0) {{
+    if (refHasDepth && DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0) {{
       depthGroup.style.display = '';
       depthSelect.innerHTML = '<option value="all_depths">All depths (avg)</option>';
       DEPTH_BINS[variable].forEach(function(d) {{
@@ -415,26 +489,35 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
   //   1. model|ref_alias|variable|metric|lead   (current format, one file per ref)
   //   2. model|ref_type|variable|metric|lead    (legacy format, shared gridded/observation)
   //   3. model|variable|metric|lead             (oldest format, no ref at all)
-  function _buildKey(refSegment, depth) {{
+  function _buildKey(refSegment, depth, frt) {{
     const model    = document.getElementById('select-model').value;
     const variable = document.getElementById('select-variable').value;
     const metric   = document.getElementById('select-metric').value;
     const lead     = document.getElementById('select-lead').value;
     let key = refSegment ? model + '|' + refSegment + '|' + variable + '|' + metric + '|' + lead
                          : model + '|' + variable + '|' + metric + '|' + lead;
+    if (frt) key += '|' + frt;    // FRT inserted before depth (matches map_processing key format)
     if (depth) key += '|' + depth;
     return key;
   }}
 
   function _currentDepth() {{
+    const ref      = document.getElementById('select-ref').value;
     const variable = document.getElementById('select-variable').value;
-    const hasDepth = DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0;
+    const refDepthVars = REF_DEPTH_VARS[ref] || [];
+    const hasDepth = refDepthVars.indexOf(variable) >= 0
+                     && DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0;
     return hasDepth ? document.getElementById('select-depth').value : null;
+  }}
+
+  function _currentFrt() {{
+    const el = document.getElementById('select-frt');
+    return (el && el.value) ? el.value : null;
   }}
 
   function getDataKey() {{
     const ref = document.getElementById('select-ref').value;
-    return _buildKey(ref, _currentDepth());
+    return _buildKey(ref, _currentDepth(), _currentFrt());
   }}
 
   // Fallback 1: use ref_type (gridded / observation) – matches map_data files
@@ -442,7 +525,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
   function getDataKeyRefType() {{
     const ref     = document.getElementById('select-ref').value;
     const refType = REF_TYPE_MAP[ref] || 'gridded';
-    return _buildKey(refType, _currentDepth());
+    return _buildKey(refType, _currentDepth(), _currentFrt());
   }}
 
   // Fallback 2: no ref segment at all (oldest data format).
@@ -643,23 +726,6 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
   // bounds so that the colour map covers the bulk of the data.  Without
   // this, a single extreme cell (e.g. 30 PSU RMSE when 99 % of cells are
   // < 1 PSU) compresses the colour scale and makes most cells invisible.
-  function computeRobustColorBounds(data) {{
-    var n = data.length;
-    if (n < 8) return null;
-    var lastIdx = data[0].length - 1;   // value is always last element
-    var vals = new Array(n);
-    for (var i = 0; i < n; i++) vals[i] = data[i][lastIdx];
-    vals.sort(function(a, b) {{ return a - b; }});
-    var q1 = vals[Math.floor(0.25 * n)];
-    var q3 = vals[Math.floor(0.75 * n)];
-    var iqr = q3 - q1;
-    if (iqr <= 0) return null;            // constant or near-constant data
-    var lo = Math.max(vals[0], q1 - 1.5 * iqr);
-    var hi = Math.min(vals[n - 1], q3 + 1.5 * iqr);
-    if (hi <= lo) return null;
-    return [lo, hi];
-  }}
-
   // --- Render: pick strategy based on grid_type ---
   function renderGrid(json) {{
     // Clean up zoom handler from any previous renderPoints call.
@@ -686,10 +752,12 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
     gridLayer = L.layerGroup({{ pane: 'gridPane' }}).addTo(map);
 
     const data = json.data;
-    // Use robust colour bounds when extreme outliers compress the scale.
-    var bounds = computeRobustColorBounds(data);
-    var vmin = bounds ? bounds[0] : json.vmin;
-    var vmax = bounds ? bounds[1] : json.vmax;
+    // Always use the globally-normalised vmin/vmax written by the backend
+    // (same scale across all lead times for the same ref/var/metric group).
+    // Do NOT recompute per-layer IQR-clipped bounds — that would break the
+    // shared colour scale and make lead day 1 look "redder" than lead day 10.
+    var vmin = json.vmin;
+    var vmax = json.vmax;
 
     if (json.grid_type === 'lat_band') {{
       renderLatBands(data, vmin, vmax);
@@ -835,18 +903,25 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
 
     document.getElementById('select-ref').addEventListener('change', function() {{
       updateVariableSelector();
+      updateFrtSelector();
       loadData();
     }});
     document.getElementById('select-variable').addEventListener('change', function() {{
       updateDepthSelector();
       loadData();
     }});
+    document.getElementById('select-lead').addEventListener('change', function() {{
+      updateFrtSelector();
+      loadData();
+    }});
     // Auto-load on any selector change
-    ['select-model', 'select-metric', 'select-lead', 'select-depth'].forEach(function(id) {{
+    ['select-model', 'select-metric', 'select-depth', 'select-frt'].forEach(function(id) {{
       const el = document.getElementById(id);
       if (el) el.addEventListener('change', loadData);
     }});
 
+    // Initial state
+    updateFrtSelector();
     // Initial load
     loadData();
   }});

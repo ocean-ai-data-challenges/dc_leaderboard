@@ -33,9 +33,13 @@ try:
     import orjson as _orjson
     def _json_loads(s: Any) -> Any:
         return _orjson.loads(s)
+    def _json_dumps(obj: Any) -> str:
+        return _orjson.dumps(obj).decode()
 except ImportError:
     def _json_loads(s: Any) -> Any:  # type: ignore[misc]
         return json.loads(s)
+    def _json_dumps(obj: Any) -> str:  # type: ignore[misc]
+        return json.dumps(obj, separators=(",", ":"))
 
 try:
     from rich import progress as _rich_progress
@@ -55,6 +59,45 @@ def _mean(values: List[float]) -> float:
     """Compute mean, ignoring NaN."""
     valid = [v for v in values if v is not None and not math.isnan(v)]
     return sum(valid) / len(valid) if valid else float("nan")
+
+
+# Quantile clipping fraction used for robust color-scale bounds.
+# 5 % from each tail keeps 90 % of data in the color range, which is
+# sufficient to make regional variation visible while suppressing the
+# handful of extreme-error bins (e.g. bad Argo profiles) that would
+# otherwise collapse the entire palette onto a single hue.
+_SCALE_QUANTILE: float = 0.05
+
+
+def _robust_vminmax(vals, precision: int) -> Tuple[float, float]:
+    """Return (vmin, vmax) clipped to the [_SCALE_QUANTILE, 1-_SCALE_QUANTILE]
+    quantile range so that a handful of extreme outliers cannot inflate the
+    color scale and make the rest of the map look uniform.
+
+    Falls back to absolute min/max when there are too few values to
+    compute meaningful percentiles (< 5 elements).
+    """
+    if _HAS_NUMPY:
+        arr = _np.asarray(vals, dtype=float)
+        finite = arr[_np.isfinite(arr)]
+        if len(finite) < 5:
+            lo = float(_np.nanmin(arr)) if len(arr) else float("nan")
+            hi = float(_np.nanmax(arr)) if len(arr) else float("nan")
+        else:
+            lo = float(_np.percentile(finite, _SCALE_QUANTILE * 100))
+            hi = float(_np.percentile(finite, (1.0 - _SCALE_QUANTILE) * 100))
+    else:
+        finite = [v for v in vals if v is not None and not math.isnan(v) and not math.isinf(v)]
+        if not finite:
+            return float("nan"), float("nan")
+        if len(finite) < 5:
+            lo, hi = min(finite), max(finite)
+        else:
+            finite_sorted = sorted(finite)
+            n = len(finite_sorted)
+            lo = finite_sorted[max(0, int(_SCALE_QUANTILE * n))]
+            hi = finite_sorted[min(n - 1, int((1.0 - _SCALE_QUANTILE) * n))]
+    return round(lo, precision), round(hi, precision)
 
 
 # Regex for pd.Interval string representation: "(left, right]"
@@ -244,13 +287,23 @@ class _PerBinsStream:
     Also supports ``len()`` (counts entries) and ``bool()`` (non-empty check).
     """
 
-    def __init__(self, path: Path) -> None:
+    def __init__(
+        self,
+        path: Path,
+        n_entries_hint: Optional[int] = None,
+        v2_hint: Optional[bool] = None,
+    ) -> None:
         self._path = path
         self._is_gz = path.suffix == ".gz"
         self._v2: bool = False
-        # Count entries and detect v2 in a single quick pass.
-        self._n_entries = 0
-        self._v2 = self._probe()
+        if n_entries_hint is not None and v2_hint is not None:
+            # Fast path: skip the expensive full-file probe.
+            self._n_entries = n_entries_hint
+            self._v2 = v2_hint
+        else:
+            # Count entries and detect v2 in a single quick pass.
+            self._n_entries = 0
+            self._v2 = self._probe()
 
     def _open(self):
         if self._is_gz:
@@ -322,18 +375,23 @@ class _NpzBinStore:
     _SPATIAL = frozenset({"yl", "yr", "xl", "xr", "dl", "dr"})
 
     def __init__(self, path: Path, stream: "_PerBinsStream") -> None:
-        stem = path.name
+        # Resolve symlinks so the cache is placed next to the REAL file.
+        # This ensures the cache persists across re-runs even when the caller
+        # operates on a symlinked copy in a temporary directory.
+        resolved = path.resolve() if path.is_symlink() else path
+        stem = resolved.name
         for ext in (".jsonl.gz", ".jsonl"):
             if stem.endswith(ext):
                 stem = stem[: -len(ext)]
                 break
         # Place cache in a dedicated subdirectory so that results/ stays clean.
-        cache_base = path.parent / "_npy_cache"
+        cache_base = resolved.parent / "_npy_cache"
         self._cache_dir = cache_base / (stem + "_per_bins_cache")
         self._meta_path = self._cache_dir / "meta.npz"
         self._stream = stream
-        self._source_path = path
+        self._source_path = resolved
         self._meta: Optional[Any] = None  # lazy np.load of meta.npz
+        self._arr_cache: Dict[str, Any] = {}  # (var, col) → mmap'd numpy array
 
     # ------------------------------------------------------------------
     def _needs_rebuild(self) -> bool:
@@ -353,7 +411,10 @@ class _NpzBinStore:
         import numpy as _np
 
         self._cache_dir.mkdir(parents=True, exist_ok=True)
-        logger.debug("Building numpy cache {} …", self._cache_dir.name)
+        logger.opt(colors=True).info(
+            "  <dim>◎</dim>  Building numpy cache <dim>({})</dim> …",
+            self._cache_dir.name,
+        )
 
         # ---- pass 0: entry metadata + variable/column discovery -----------
         meta_ra:  List[str] = []
@@ -432,8 +493,9 @@ class _NpzBinStore:
             )
             del col_bufs, ei_buf, ei_arr
 
-        logger.debug(
-            "  Numpy cache built in {}", self._cache_dir.name,
+        logger.opt(colors=True).info(
+            "  <cyan>✓</cyan>  Numpy cache ready  <dim>({})</dim>",
+            self._cache_dir.name,
         )
 
     # ------------------------------------------------------------------
@@ -465,7 +527,12 @@ class _NpzBinStore:
     def var_array(self, var: str, col: str):
         import numpy as _np
         self._ensure()
-        return _np.load(str(self._cache_dir / f"{var}__{col}.npy"), mmap_mode="r")
+        key = (var, col)
+        arr = self._arr_cache.get(key)
+        if arr is None:
+            arr = _np.load(str(self._cache_dir / f"{var}__{col}.npy"), mmap_mode="r")
+            self._arr_cache[key] = arr
+        return arr
 
     def has_col(self, var: str, col: str) -> bool:
         self._ensure()
@@ -481,6 +548,60 @@ class _NpzBinStore:
         ]
 
     # ------------------------------------------------------------------
+    def fastmeta(self) -> Dict[str, Any]:
+        """Return all metadata needed by :func:`discover_metadata` in O(total_rows).
+
+        Avoids the expensive per-entry iteration path by reading the flat numpy
+        arrays directly.  Returns a dict with:
+          - ``lead_times``   : set of int
+          - ``frt_per_ref``  : dict ref_alias → set of frt strings
+          - ``variables``    : list of variable names
+          - ``metric_cols``  : dict var → list of metric column names
+          - ``depth_bins``   : dict var → set of (left, right) float tuples
+        """
+        import numpy as _np
+        self._ensure()
+        result: Dict[str, Any] = {
+            "lead_times": set(int(x) for x in self.meta_lt),
+            "frt_per_ref": {},
+            "variables": self.variables(),
+            "metric_cols": {},
+            "depth_bins": {},
+        }
+        fpr: Dict[str, set] = {}
+        for ra, frt in zip(self.meta_ra, self.meta_frt):
+            ra_s = str(ra)
+            frt_s = str(frt)[:10]
+            if frt_s:
+                fpr.setdefault(ra_s, set()).add(frt_s)
+        result["frt_per_ref"] = fpr
+
+        for var in result["variables"]:
+            result["metric_cols"][var] = self.metric_cols(var)
+            if self.has_col(var, "dl"):
+                dl = self.var_array(var, "dl")
+                dr = self.var_array(var, "dr")
+                # Depth bins are a small fixed set (typically < 100 unique pairs).
+                # NaN-filled rows exist for entries without depth bins (e.g. surface
+                # obs merged with depth-resolved entries).  Read sequential chunks
+                # until we have at least 1 valid pair or exhaust the array.
+                import numpy as _np2
+                depth_set: set = set()
+                chunk = 500_000
+                for start in range(0, len(dl), chunk):
+                    dl_c = dl[start:start + chunk]
+                    valid = ~_np2.isnan(dl_c)
+                    if valid.any():
+                        dr_c = dr[start:start + chunk]
+                        depth_set.update(
+                            zip(dl_c[valid].tolist(), dr_c[valid].tolist())
+                        )
+                        break  # depth bins are uniform across entries – one chunk is enough
+                if depth_set:
+                    result["depth_bins"][var] = depth_set
+        return result
+
+    # ------------------------------------------------------------------
     def __len__(self) -> int:
         return int(len(self.meta_lt))
 
@@ -492,16 +613,33 @@ class _NpzBinStore:
 
         Only the first bin per variable is materialised so that
         :func:`discover_metadata` can inspect bin structure cheaply.
+
+        Pre-builds a reverse index (ei → row indices) for each variable
+        in O(total_rows) time instead of O(n_entries × total_rows) time.
         """
+        import numpy as _np
         n = len(self)
+        # Build reverse index per variable: dict[ei_value → row_indices array]
+        var_rev: Dict[str, Dict[int, Any]] = {}
+        for var in self.variables():
+            ei_arr = self.var_array(var, "ei")  # int16, shape (total_rows,)
+            # argsort by ei then groupby — O(total_rows log total_rows)
+            order = _np.argsort(ei_arr, kind="stable")
+            sorted_ei = ei_arr[order]
+            # Find split points
+            starts = _np.concatenate([[0], _np.where(_np.diff(sorted_ei))[0] + 1])
+            ends = _np.concatenate([starts[1:], [len(sorted_ei)]])
+            rev: Dict[int, Any] = {}
+            for s, e in zip(starts, ends):
+                key = int(sorted_ei[s])
+                rev[key] = order[s:e]
+            var_rev[var] = rev
+
         for ei in range(n):
             per_bins: Dict[str, Any] = {}
             for var in self.variables():
-                ei_arr = self.var_array(var, "ei")
-                # np.searchsorted is faster than np.where for sorted arrays,
-                # but ei may not be sorted globally; use where.
-                idxs = _np.where(ei_arr == ei)[0]
-                if len(idxs) == 0:
+                idxs = var_rev[var].get(ei)
+                if idxs is None or len(idxs) == 0:
                     continue
                 per_bins[var] = _NpzVarProxy(self, var, idxs)
             yield {
@@ -556,7 +694,36 @@ class _NpzVarProxy:
             yield b
 
     def __getitem__(self, idx: int) -> Dict[str, Any]:
-        return next(x for i, x in enumerate(self) if i == idx)
+        """Return bin dict at *idx*.
+
+        For idx==0 uses a fast single-element path (avoids loading full arrays)
+        so that ``discover_metadata``'s ``bins[0]`` peek is O(1) per column.
+        """
+        store = self._store
+        var = self._var
+        idxs = self._idxs
+        row = int(idxs[idx])
+        has_lon   = store.has_col(var, "xl")
+        has_depth = store.has_col(var, "dl")
+        b: Dict[str, Any] = {
+            "lat_bin": {
+                "left":  float(store.var_array(var, "yl")[row]),
+                "right": float(store.var_array(var, "yr")[row]),
+            }
+        }
+        if has_lon:
+            b["lon_bin"] = {
+                "left":  float(store.var_array(var, "xl")[row]),
+                "right": float(store.var_array(var, "xr")[row]),
+            }
+        if has_depth:
+            b["depth_bin"] = {
+                "left":  float(store.var_array(var, "dl")[row]),
+                "right": float(store.var_array(var, "dr")[row]),
+            }
+        for metric in store.metric_cols(var):
+            b[metric] = float(store.var_array(var, metric)[row])
+        return b
 
 
 
@@ -593,7 +760,29 @@ def load_per_bins_files(results_dir: Path) -> List[Dict[str, Any]]:
     for f in files:
         logger.debug("Loading per-bins file: {} ...", f.name)
         if f.name.endswith(".jsonl.gz"):
-            stream = _PerBinsStream(f)
+            # Fast path: if an NPZ cache already exists for this file, skip
+            # the 47s+ full-file probe and read entry count from meta.npz.
+            _n_hint: Optional[int] = None
+            _v2_hint: Optional[bool] = None
+            if _HAS_NUMPY and _HAS_PANDAS:
+                _resolved = f.resolve() if f.is_symlink() else f
+                _stem = _resolved.name
+                for _ext in (".jsonl.gz", ".jsonl"):
+                    if _stem.endswith(_ext):
+                        _stem = _stem[: -len(_ext)]
+                        break
+                _cache_meta = _resolved.parent / "_npy_cache" / (_stem + "_per_bins_cache") / "meta.npz"
+                if _cache_meta.exists() and _cache_meta.stat().st_mtime >= _resolved.stat().st_mtime:
+                    try:
+                        import numpy as _np_hint
+                        _m = _np_hint.load(str(_cache_meta), allow_pickle=True)
+                        _n_hint = int(len(_m["lt"]))
+                        _v2_hint = True  # cache is only built for v2 files
+                        logger.debug("  NPZ cache hit — skipping file probe for {}", f.name)
+                    except Exception:
+                        _n_hint = None
+                        _v2_hint = None
+            stream = _PerBinsStream(f, n_entries_hint=_n_hint, v2_hint=_v2_hint)
             dataset_name = f.name[: f.name.index("_per_bins")]
             if dataset_name.startswith("results_"):
                 dataset_name = dataset_name[len("results_"):]
@@ -752,7 +941,24 @@ def discover_metadata(
     for ds in datasets:
         model = ds["dataset"]
         models.append(model)
-        for entry in ds["per_bins_by_time"]:
+        src = ds["per_bins_by_time"]
+
+        # Fast path: NpzBinStore exposes all metadata without entry iteration.
+        if isinstance(src, _NpzBinStore):
+            fm = src.fastmeta()
+            lead_times.update(fm["lead_times"])
+            for ra, frts in fm["frt_per_ref"].items():
+                frt_per_ref[ra].update(frts)
+            for var in fm["variables"]:
+                variables.add(var)
+                for m in fm["metric_cols"].get(var, []):
+                    if m not in skip_keys:
+                        metrics.add(m)
+            for var, dbs in fm["depth_bins"].items():
+                depth_bins_by_var[var].update(dbs)
+            continue
+
+        for entry in src:
             lead_times.add(entry["lead_time"])
             ra = entry.get("ref_alias") or entry.get("ref_type") or "unknown"
             frt_raw = entry.get("forecast_reference_time", "")
@@ -856,7 +1062,14 @@ def _extract_lat_lon_bounds(b: Dict[str, Any]) -> Tuple[float, float, float, flo
 def _is_lat_band_only(datasets: List[Dict[str, Any]]) -> bool:
     """Return True if the data contains only latitude-band bins (no lon_bin)."""
     for ds in datasets:
-        for entry in ds.get("per_bins_by_time", []):
+        src = ds.get("per_bins_by_time")
+        # Fast path for _NpzBinStore: check has_col() directly in O(1)
+        # instead of building the full reverse index just to peek at one entry.
+        if isinstance(src, _NpzBinStore):
+            for var in src.variables():
+                return not src.has_col(var, "xl")
+            return True  # no variables → treat as lat-band
+        for entry in (src or []):
             for var_name, bins in entry.get("per_bins", {}).items():
                 if bins:
                     sample = bins[0]
@@ -875,6 +1088,25 @@ def _is_lat_band_only_from_sets(
 def _is_depth_label(s: str) -> bool:
     """Return True if *s* looks like a depth label (e.g. ``"50.0-200.0"`` or ``"all_depths"``)."""
     return s == "all_depths" or ("." in s and len(s) > 0 and s[0].isdigit())
+
+
+def _is_frt_key(parts: List[str]) -> bool:
+    """Return True if *parts* (key split by ``|``) represents a per-FRT snapshot.
+
+    Per-FRT keys have a forecast-reference-time date at position 5 (the 6th
+    pipe-separated field), which is a ``"YYYY-MM-DD"``-style string rather than
+    a depth label.
+
+    Key formats::
+
+        model|ra|var|metric|lt              → per-lt          (5 parts)
+        model|ra|var|metric|lt|depth        → per-lt + depth  (parts[5] is depth label)
+        model|ra|var|metric|lt|frt_date     → per-FRT         (parts[5] is NOT depth label)
+        model|ra|var|metric|lt|frt|depth    → per-FRT + depth (7 parts)
+    """
+    if len(parts) < 6:
+        return False
+    return not _is_depth_label(parts[5])
 
 
 def _extract_depth_from_key(key: str) -> str:
@@ -1161,200 +1393,267 @@ def _iter_grid_data_npz(
     _precision: int = 6,
     skip_frt_snapshots: bool = False,
 ):
-    """Vectorised aggregation using pandas groupby on the .npz arrays."""
+    """Vectorised aggregation using numpy mmap slicing — minimal peak RAM.
+
+    Memory model:
+    - Only *filter* arrays (rac, rtc, lt, frtc) are fully materialised in RAM
+      per variable, totalling ~730 MB for the largest variable (salinity,
+      94 M rows × int8/int16 dtypes).
+    - Coordinate and metric arrays (yl, yr, xl, xr, dl, dr, metric) are
+      mmap'd.  For each (rac, rtc, lt) group we load only the *row indices*
+      that belong to the group via cheap numpy boolean operations on the small
+      filter arrays, then fetch those exact rows from the mmap files.  This
+      means only the current group's rows (~few thousand to ~few hundred
+      thousand) ever land in RAM at once.
+    - Peak RAM = filter arrays (~730 MB) + one group's coord/metric slice
+      (typically ≪ 100 MB) + the aggregated result dict (≪ 1 MB).
+    """
     import numpy as _np
     import pandas as _pd
 
-    meta_ra  = store.meta_ra   # object array of strings, length = n_entries
-    meta_rt  = store.meta_rt
-    meta_lt  = store.meta_lt   # int16 array
+    meta_ra = store.meta_ra
+    meta_rt = store.meta_rt
+    meta_lt = store.meta_lt
     meta_frt = store.meta_frt
 
-    # Build integer-coded lookup tables for ra/rt/frt so that per-row arrays
-    # are int8/int16 (1-2 bytes) instead of Python object strings (~50 bytes).
-    ra_vals  = list(dict.fromkeys(str(s) for s in meta_ra))   # unique, order-preserved
-    rt_vals  = list(dict.fromkeys(str(s) for s in meta_rt))
+    ra_vals = list(dict.fromkeys(str(s) for s in meta_ra))
+    rt_vals = list(dict.fromkeys(str(s) for s in meta_rt))
     frt_vals = list(dict.fromkeys(str(s) for s in meta_frt))
-    ra_code  = {s: i for i, s in enumerate(ra_vals)}
-    rt_code  = {s: i for i, s in enumerate(rt_vals)}
+    ra_code = {s: i for i, s in enumerate(ra_vals)}
+    rt_code = {s: i for i, s in enumerate(rt_vals)}
     frt_code = {s: i for i, s in enumerate(frt_vals)}
 
-    # Maps from entry-index → integer code (length = n_entries, dtype int8)
     n_ent = len(meta_ra)
-    ei_to_rac  = _np.array([ra_code[str(meta_ra[i])]  for i in range(n_ent)], dtype=_np.int8)
-    ei_to_rtc  = _np.array([rt_code[str(meta_rt[i])]  for i in range(n_ent)], dtype=_np.int8)
-    ei_to_lt   = _np.array([int(meta_lt[i])             for i in range(n_ent)], dtype=_np.int16)
-    ei_to_frtc = _np.array([frt_code[str(meta_frt[i])] for i in range(n_ent)], dtype=_np.int8)
+    ei_to_rac = _np.array([ra_code[str(meta_ra[i])] for i in range(n_ent)], dtype=_np.int8)
+    ei_to_rtc = _np.array([rt_code[str(meta_rt[i])] for i in range(n_ent)], dtype=_np.int8)
+    ei_to_lt = _np.array([int(meta_lt[i]) for i in range(n_ent)], dtype=_np.int16)
+    ei_to_frtc = _np.array([frt_code[str(meta_frt[i])] for i in range(n_ent)], dtype=_np.int16)
+
+    def _emit_agg_small(
+        idx: "_np.ndarray",
+        metric_mmap,
+        eff_gt: str,
+        ref_prefix: str,
+        metric_name: str,
+        key_suffix: str,
+        eff_has_depth: bool,
+    ):
+        """Aggregate one (rac, rtc, lt) slice and yield grid entries.
+
+        ``idx`` is a small int array of row indices into the mmap arrays.
+        Only those rows are loaded from disk.
+        """
+        m_sub = metric_mmap[idx].astype(float)
+        valid = ~_np.isnan(m_sub)
+        if not valid.any():
+            return
+        idx_v = idx[valid]
+        m_v = m_sub[valid]
+
+        # Load only valid rows of coord arrays from mmap
+        yl_v = yl_mmap[idx_v].astype(float)
+        yr_v = yr_mmap[idx_v].astype(float)
+        xl_v = xl_mmap[idx_v].astype(float) if has_lon else _np.full(len(idx_v), -180.0)
+        xr_v = xr_mmap[idx_v].astype(float) if has_lon else _np.full(len(idx_v), 180.0)
+        if eff_has_depth:
+            dl_v = dl_mmap[idx_v].astype(float)
+            dr_v = dr_mmap[idx_v].astype(float)
+
+        # Aggregate (mean) per spatial cell using pandas groupby on the
+        # small per-group DataFrame.
+        if lat_band_mode:
+            if eff_has_depth:
+                cell_cols = ["yl", "yr", "dl", "dr"]
+                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "dl": dl_v, "dr": dr_v, "m": m_v})
+            else:
+                cell_cols = ["yl", "yr"]
+                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "m": m_v})
+        else:
+            if eff_has_depth:
+                cell_cols = ["yl", "yr", "xl", "xr", "dl", "dr"]
+                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "xl": xl_v, "xr": xr_v, "dl": dl_v, "dr": dr_v, "m": m_v})
+            else:
+                cell_cols = ["yl", "yr", "xl", "xr"] if has_lon else ["yl", "yr"]
+                if has_lon:
+                    sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "xl": xl_v, "xr": xr_v, "m": m_v})
+                else:
+                    sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "m": m_v})
+
+        grouped = sub.groupby(cell_cols, sort=False)["m"].mean().reset_index(name="m")
+        ga = grouped["m"].to_numpy(dtype=float)
+        gv = ~_np.isnan(ga)
+        if not gv.any():
+            return
+
+        key_base = f"{model}|{ref_prefix}{var}|{metric_name}"
+
+        if lat_band_mode:
+            if eff_has_depth:
+                depth_groups: Dict[tuple, list] = {}
+                for row in zip(grouped["yl"].to_numpy(), grouped["yr"].to_numpy(),
+                               grouped["dl"].to_numpy(), grouped["dr"].to_numpy(), ga):
+                    s, n, dl_, dr_, v = row
+                    if _np.isnan(v):
+                        continue
+                    depth_groups.setdefault((dl_, dr_), []).append([float(s), float(n), round(float(v), _precision)])
+                all_depth: Dict[tuple, list] = {}
+                for (dl_, dr_), bdata in depth_groups.items():
+                    depth_label = f"{dl_:.1f}-{dr_:.1f}"
+                    key = f"{key_base}{key_suffix}|{depth_label}"
+                    vals = [r[2] for r in bdata]
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
+                    for r in bdata:
+                        all_depth.setdefault((r[0], r[1]), []).append(r[2])
+                avg = [[s, n, round(sum(vs) / len(vs), _precision)] for (s, n), vs in all_depth.items()]
+                if avg:
+                    key = f"{key_base}{key_suffix}|all_depths"
+                    vals = [r[2] for r in avg]
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
+            else:
+                yl_o = grouped["yl"].to_numpy(dtype=float)[gv].tolist()
+                yr_o = grouped["yr"].to_numpy(dtype=float)[gv].tolist()
+                m_r = _np.round(ga[gv], _precision).tolist()
+                band = [[yl_o[i], yr_o[i], m_r[i]] for i in range(len(yl_o))]
+                if band:
+                    vals = [r[2] for r in band]
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    yield f"{key_base}{key_suffix}", {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
+        else:
+            if eff_has_depth:
+                depth_grids: Dict[tuple, list] = {}
+                all_depth2: Dict[tuple, list] = {}
+                for row in zip(grouped["yl"].to_numpy(), grouped["yr"].to_numpy(),
+                               grouped["xl"].to_numpy(), grouped["xr"].to_numpy(),
+                               grouped["dl"].to_numpy(), grouped["dr"].to_numpy(), ga):
+                    ll, lr, xll, xlr, dl_, dr_, v = row
+                    if _np.isnan(v):
+                        continue
+                    depth_grids.setdefault((dl_, dr_), []).append([float(ll), float(lr), float(xll), float(xlr), round(float(v), _precision)])
+                    all_depth2.setdefault((float(ll), float(lr), float(xll), float(xlr)), []).append(float(v))
+                for (dl_, dr_), raw in depth_grids.items():
+                    depth_label = f"{dl_:.1f}-{dr_:.1f}"
+                    key = f"{key_base}{key_suffix}|{depth_label}"
+                    vals = [r[4] for r in raw]
+                    out = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in raw] if eff_gt == "points" else raw
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    yield key, {"grid_type": eff_gt, "data": out, "vmin": _vlo, "vmax": _vhi}
+                avg2 = [[ll, lr, xll, xlr, round(sum(vs)/len(vs), _precision)] for (ll, lr, xll, xlr), vs in all_depth2.items()]
+                if avg2:
+                    key = f"{key_base}{key_suffix}|all_depths"
+                    vals = [r[4] for r in avg2]
+                    out2 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg2] if eff_gt == "points" else avg2
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    yield key, {"grid_type": eff_gt, "data": out2, "vmin": _vlo, "vmax": _vhi}
+            else:
+                m_r = _np.round(ga[gv], _precision).tolist()
+                if has_lon:
+                    yl_o = grouped["yl"].to_numpy(dtype=float)[gv].tolist()
+                    yr_o = grouped["yr"].to_numpy(dtype=float)[gv].tolist()
+                    xl_o = grouped["xl"].to_numpy(dtype=float)[gv].tolist()
+                    xr_o = grouped["xr"].to_numpy(dtype=float)[gv].tolist()
+                    grid = [[yl_o[i], yr_o[i], xl_o[i], xr_o[i], m_r[i]] for i in range(len(yl_o))]
+                else:
+                    yl_o = grouped["yl"].to_numpy(dtype=float)[gv].tolist()
+                    yr_o = grouped["yr"].to_numpy(dtype=float)[gv].tolist()
+                    grid = [[yl_o[i], yr_o[i], -180.0, 180.0, m_r[i]] for i in range(len(yl_o))]
+                if grid:
+                    vals = [r[4] for r in grid]
+                    _vlo, _vhi = _robust_vminmax(vals, _precision)
+                    out3 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid] if eff_gt == "points" else grid
+                    yield f"{key_base}{key_suffix}", {"grid_type": eff_gt, "data": out3, "vmin": _vlo, "vmax": _vhi}
 
     for var in sorted(store.variables()):
         has_depth = var in metadata["depth_bins"]
-        has_lon   = store.has_col(var, "xl")
+        has_lon = store.has_col(var, "xl")
 
-        # Build full DataFrame for this variable once — use int codes instead
-        # of string arrays to keep per-row memory at 1-2 bytes per column.
-        ei  = store.var_array(var, "ei").astype(_np.int16)
-        yl  = store.var_array(var, "yl")
-        yr  = store.var_array(var, "yr")
+        # ── Filter arrays: fully loaded (~730 MB for the largest variable) ─
+        ei = store.var_array(var, "ei")  # int16 mmap
+        rac_arr = ei_to_rac[ei]          # int8  — 94 MB for 94 M rows
+        rtc_arr = ei_to_rtc[ei]          # int8
+        lt_arr  = ei_to_lt[ei]           # int16 — 188 MB
+        frtc_arr = ei_to_frtc[ei]        # int16
 
-        cols: Dict[str, Any] = {
-            "ei": ei,
-            "rac":  ei_to_rac[ei],   # int8  — ref_alias code
-            "rtc":  ei_to_rtc[ei],   # int8  — ref_type code
-            "lt":   ei_to_lt[ei],    # int16 — lead time
-            "frtc": ei_to_frtc[ei],  # int8  — frt code
-            "yl": yl,
-            "yr": yr,
-        }
-        if has_lon:
-            cols["xl"] = store.var_array(var, "xl")
-            cols["xr"] = store.var_array(var, "xr")
-        if has_depth:
-            cols["dl"] = store.var_array(var, "dl")
-            cols["dr"] = store.var_array(var, "dr")
+        # Unique (rac, rtc) pairs
+        rac_rtc_pairs = list(dict.fromkeys(
+            (int(r), int(t)) for r, t in zip(rac_arr.tolist(), rtc_arr.tolist())
+        ))
 
-        metrics = store.metric_cols(var)
-        for m in metrics:
-            cols[m] = store.var_array(var, m)
+        # ── Coordinate mmap handles (not loaded until sliced) ─────────────
+        yl_mmap = store.var_array(var, "yl")
+        yr_mmap = store.var_array(var, "yr")
+        xl_mmap = store.var_array(var, "xl") if has_lon else None
+        xr_mmap = store.var_array(var, "xr") if has_lon else None
+        dl_mmap = store.var_array(var, "dl") if has_depth else None
+        dr_mmap = store.var_array(var, "dr") if has_depth else None
 
-        df = _pd.DataFrame(cols)
-        # Drop rows where ALL metrics are NaN (bins not observed for any metric)
-        df = df.dropna(subset=metrics, how="all")
+        # Precompute per-group index arrays once (cheap boolean ops on small
+        # int arrays) so they're reused across all metrics.
+        # Structure: group_indices[(rac, rtc)][lt] = int32 index array
+        group_indices: Dict[tuple, Dict[int, "_np.ndarray"]] = {}
+        group_indices_all: Dict[tuple, "_np.ndarray"] = {}
+        for rac_i, rtc_i in rac_rtc_pairs:
+            mask_rart = (rac_arr == rac_i) & (rtc_arr == rtc_i)
+            group_indices_all[(rac_i, rtc_i)] = _np.where(mask_rart)[0].astype(_np.int32)
+            lts: Dict[int, "_np.ndarray"] = {}
+            for lt in _np.unique(lt_arr[mask_rart]).tolist():
+                lts[int(lt)] = _np.where(mask_rart & (lt_arr == lt))[0].astype(_np.int32)
+            group_indices[(rac_i, rtc_i)] = lts
+            del mask_rart
 
-        # Determine group-by columns for spatial cells
-        if lat_band_mode:
-            cell_cols = ["yl", "yr"]
-            if has_depth:
-                cell_cols += ["dl", "dr"]
-        else:
-            if has_lon:
-                cell_cols = ["yl", "yr", "xl", "xr"]
-            else:
-                cell_cols = ["yl", "yr"]
-            if has_depth:
-                cell_cols += ["dl", "dr"]
-
-        def _emit_agg(df_sub: "_pd.DataFrame", ra: str, rt: str, key_suffix: str):
-            """Aggregate df_sub by spatial cell and emit grid entries."""
-            if df_sub.empty:
-                return
-            eff_gt = grid_type_fn(rt)
-            ref_prefix = f"{ra}|"
-
-            agg: Dict[str, str] = {m: "mean" for m in metrics}
-            grouped = df_sub.groupby(cell_cols, sort=False)[metrics].mean()
-            grouped = grouped.reset_index()
-
-            for metric in metrics:
-                if metric not in grouped.columns:
-                    continue
-                m_vals = grouped[metric].to_numpy(dtype=float)
-                valid = ~_np.isnan(m_vals)
-                if not valid.any():
-                    continue
-
-                if lat_band_mode:
-                    if has_depth:
-                        # emit per depth level
-                        dl_arr = grouped["dl"].to_numpy()
-                        dr_arr = grouped["dr"].to_numpy()
-                        depth_groups: Dict[tuple, list] = {}
-                        for row in zip(grouped["yl"].to_numpy(),
-                                       grouped["yr"].to_numpy(),
-                                       dl_arr, dr_arr, m_vals):
-                            s, n, dl_, dr_, v = row
-                            if _np.isnan(v): continue
-                            depth_groups.setdefault((dl_, dr_), []).append([float(s), float(n), round(float(v), _precision)])
-                        all_depth: Dict[tuple, list] = {}
-                        for (dl_, dr_), bdata in depth_groups.items():
-                            depth_label = f"{dl_:.1f}-{dr_:.1f}"
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|{depth_label}"
-                            vals = [r[2] for r in bdata]
-                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-                            for r in bdata:
-                                all_depth.setdefault((r[0], r[1]), []).append(r[2])
-                        avg = [[s, n, round(sum(vs)/len(vs), _precision)] for (s, n), vs in all_depth.items()]
-                        if avg:
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|all_depths"
-                            vals = [r[2] for r in avg]
-                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-                    else:
-                        band = [[float(r["yl"]), float(r["yr"]), round(float(r[metric]), _precision)]
-                                for _, r in grouped[valid].iterrows()]
-                        if band:
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}"
-                            vals = [r[2] for r in band]
-                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-                else:
-                    xl_col = "xl" if has_lon else None
-                    xr_col = "xr" if has_lon else None
-                    if has_depth:
-                        dl_arr = grouped["dl"].to_numpy()
-                        dr_arr = grouped["dr"].to_numpy()
-                        depth_grids: Dict[tuple, list] = {}
-                        all_depth2: Dict[tuple, list] = {}
-                        for row in zip(grouped["yl"].to_numpy(),
-                                       grouped["yr"].to_numpy(),
-                                       grouped["xl"].to_numpy() if has_lon else _np.zeros(len(grouped)),
-                                       grouped["xr"].to_numpy() if has_lon else _np.zeros(len(grouped)),
-                                       dl_arr, dr_arr, m_vals):
-                            ll, lr, xll, xlr, dl_, dr_, v = row
-                            if _np.isnan(v): continue
-                            depth_grids.setdefault((dl_, dr_), []).append([float(ll), float(lr), float(xll), float(xlr), round(float(v), _precision)])
-                            all_depth2.setdefault((float(ll), float(lr), float(xll), float(xlr)), []).append(float(v))
-                        for (dl_, dr_), raw in depth_grids.items():
-                            depth_label = f"{dl_:.1f}-{dr_:.1f}"
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|{depth_label}"
-                            vals = [r[4] for r in raw]
-                            out = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in raw] if eff_gt == "points" else raw
-                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-                        avg2 = [[ll, lr, xll, xlr, round(sum(vs)/len(vs), _precision)] for (ll, lr, xll, xlr), vs in all_depth2.items()]
-                        if avg2:
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}|all_depths"
-                            vals = [r[4] for r in avg2]
-                            out2 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg2] if eff_gt == "points" else avg2
-                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-                    else:
-                        if has_lon:
-                            grid = [[float(r["yl"]), float(r["yr"]), float(r["xl"]), float(r["xr"]), round(float(r[metric]), _precision)]
-                                    for _, r in grouped.iterrows() if not _np.isnan(r[metric])]
-                        else:
-                            grid = [[float(r["yl"]), float(r["yr"]), -180.0, 180.0, round(float(r[metric]), _precision)]
-                                    for _, r in grouped.iterrows() if not _np.isnan(r[metric])]
-                        if grid:
-                            key = f"{model}|{ref_prefix}{var}|{metric}{key_suffix}"
-                            vals = [r[4] for r in grid]
-                            out3 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid] if eff_gt == "points" else grid
-                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
-
-        # Unique (rac, rtc) integer-coded pairs → decode to strings for key building
-        rac_rtc_pairs = list(dict.fromkeys(zip(df["rac"].tolist(), df["rtc"].tolist())))
-
-        # Pass 1: per lt
-        for rac, rtc in rac_rtc_pairs:
-            ra, rt = ra_vals[rac], rt_vals[rtc]
-            mask_rart = (df["rac"] == rac) & (df["rtc"] == rtc)
-            for lt in sorted(df.loc[mask_rart, "lt"].unique()):
-                mask = mask_rart & (df["lt"] == lt)
-                yield from _emit_agg(df[mask], ra, rt, f"|{lt}")
-
-        # Pass 2: all lt
-        for rac, rtc in rac_rtc_pairs:
-            ra, rt = ra_vals[rac], rt_vals[rtc]
-            mask = (df["rac"] == rac) & (df["rtc"] == rtc)
-            yield from _emit_agg(df[mask], ra, rt, "|all")
-
-        # Pass 3: per FRT
+        # Per-FRT indices (only if needed)
+        group_indices_frt: Dict[tuple, Dict[int, Dict[str, "_np.ndarray"]]] = {}
         if not skip_frt_snapshots:
-            for rac, rtc in rac_rtc_pairs:
-                ra, rt = ra_vals[rac], rt_vals[rtc]
-                mask_rart = (df["rac"] == rac) & (df["rtc"] == rtc)
-                for lt in sorted(df.loc[mask_rart, "lt"].unique()):
-                    for frtc in sorted(df.loc[mask_rart & (df["lt"] == lt), "frtc"].unique()):
-                        frt = frt_vals[frtc]
-                        mask = mask_rart & (df["lt"] == lt) & (df["frtc"] == frtc)
-                        yield from _emit_agg(df[mask], ra, rt, f"|{lt}|{frt}")
+            for rac_i, rtc_i in rac_rtc_pairs:
+                frt_by_lt: Dict[int, Dict[str, "_np.ndarray"]] = {}
+                for lt, idx_lt in group_indices[(rac_i, rtc_i)].items():
+                    frts = {}
+                    for frtc_i in _np.unique(frtc_arr[idx_lt]).tolist():
+                        frts[str(frt_vals[int(frtc_i)])] = idx_lt[frtc_arr[idx_lt] == frtc_i]
+                    frt_by_lt[lt] = frts
+                group_indices_frt[(rac_i, rtc_i)] = frt_by_lt
 
-        del df
+        # Free filter arrays — indices are all we need from here on
+        del rac_arr, rtc_arr, lt_arr, frtc_arr, ei
+
+        # ── Process each metric independently ─────────────────────────────
+        for metric_name in store.metric_cols(var):
+            metric_mmap = store.var_array(var, metric_name)  # stays mmap'd
+
+            for rac_i, rtc_i in rac_rtc_pairs:
+                ra, rt = ra_vals[rac_i], rt_vals[rtc_i]
+                eff_gt = grid_type_fn(rt)
+                ref_prefix = f"{ra}|"
+                eff_has_depth = has_depth  # refined per-group below if needed
+
+                # Per-lt
+                for lt, idx in group_indices[(rac_i, rtc_i)].items():
+                    # Determine effective depth availability lazily (rare NaN
+                    # patterns for some ref_aliases)
+                    if has_depth:
+                        eff_has_depth = dl_mmap is not None and not _np.all(_np.isnan(dl_mmap[idx]))
+                    yield from _emit_agg_small(idx, metric_mmap, eff_gt, ref_prefix, metric_name, f"|{lt}", eff_has_depth)
+
+                # All-lt
+                idx_all = group_indices_all[(rac_i, rtc_i)]
+                if has_depth:
+                    eff_has_depth = dl_mmap is not None and not _np.all(_np.isnan(dl_mmap[idx_all]))
+                yield from _emit_agg_small(idx_all, metric_mmap, eff_gt, ref_prefix, metric_name, "|all", eff_has_depth)
+
+                # Per-FRT
+                if not skip_frt_snapshots:
+                    for lt, frt_map in group_indices_frt[(rac_i, rtc_i)].items():
+                        for frt, idx_frt in frt_map.items():
+                            if has_depth:
+                                eff_has_depth = dl_mmap is not None and not _np.all(_np.isnan(dl_mmap[idx_frt]))
+                            yield from _emit_agg_small(idx_frt, metric_mmap, eff_gt, ref_prefix, metric_name, f"|{lt}|{frt}", eff_has_depth)
+
+        # Release all mmap handles for this variable
+        del yl_mmap, yr_mmap, xl_mmap, xr_mmap, dl_mmap, dr_mmap
+        del group_indices, group_indices_all
+        if not skip_frt_snapshots:
+            del group_indices_frt
 
 
 # ---------------------------------------------------------------------------
@@ -1435,12 +1734,14 @@ def _iter_grid_data_legacy(
                             depth_label = f"{dl:.1f}-{dr:.1f}"
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[2] for r in bdata]
-                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
+                            yield key, {"grid_type": eff_gt, "data": sorted(bdata, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
                         avg = [[s, n, round(_mean(vs), _precision)] for (s, n), vs in all_depth.items() if not math.isnan(_mean(vs))]
                         if avg:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                             vals = [r[2] for r in avg]
-                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
+                            yield key, {"grid_type": eff_gt, "data": sorted(avg, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
                     else:
                         band = []
                         for cell_key, row in cell_accums.items():
@@ -1452,7 +1753,8 @@ def _iter_grid_data_legacy(
                         if band:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                             vals = [r[2] for r in band]
-                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
+                            yield key, {"grid_type": eff_gt, "data": sorted(band, key=lambda r: r[0]), "vmin": _vlo, "vmax": _vhi}
                 else:
                     if has_depth:
                         depth_grids: Dict[tuple, list] = defaultdict(list)
@@ -1470,13 +1772,15 @@ def _iter_grid_data_legacy(
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|{depth_label}"
                             vals = [r[4] for r in raw]
                             out = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in raw] if eff_gt == "points" else raw
-                            yield key, {"grid_type": eff_gt, "data": out, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
+                            yield key, {"grid_type": eff_gt, "data": out, "vmin": _vlo, "vmax": _vhi}
                         avg2 = [[ll, lr, xl, xr, round(_mean(vs), _precision)] for (ll, lr, xl, xr), vs in all_depth2.items() if not math.isnan(_mean(vs))]
                         if avg2:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}|all_depths"
                             vals = [r[4] for r in avg2]
                             out2 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in avg2] if eff_gt == "points" else avg2
-                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
+                            yield key, {"grid_type": eff_gt, "data": out2, "vmin": _vlo, "vmax": _vhi}
                     else:
                         grid = []
                         for cell_key, row in cell_accums.items():
@@ -1488,8 +1792,9 @@ def _iter_grid_data_legacy(
                         if grid:
                             key = f"{model}|{ref_prefix}{var_name}|{metric}{key_suffix}"
                             vals = [r[4] for r in grid]
+                            _vlo, _vhi = _robust_vminmax(vals, _precision)
                             out3 = [[(r[0]+r[1])/2, (r[2]+r[3])/2, r[4]] for r in grid] if eff_gt == "points" else grid
-                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": round(min(vals), _precision), "vmax": round(max(vals), _precision)}
+                            yield key, {"grid_type": eff_gt, "data": out3, "vmin": _vlo, "vmax": _vhi}
 
     # Discover groups in one pass
     groups: set = set()
@@ -1683,7 +1988,7 @@ def write_map_data(
         filename = f"{safe_name}.js"
         filepath = map_dir / filename
 
-        payload = json.dumps(grid_info, separators=(",", ":"))
+        payload = _json_dumps(grid_info)
         with open(filepath, "w") as f:
             f.write(f"_mapDataCallback({payload});\n")
 
@@ -1759,17 +2064,45 @@ def preprocess_per_bins(
 
     _iter = _iter_grid_data(datasets, metadata, precision=precision, skip_frt_snapshots=skip_frt_snapshots)
     if _HAS_RICH:
+        # Use the previous run's manifest file count for a precise grid total.
+        # The manifest records every JS file written, so its len() matches the
+        # exact number of items the generator will yield.  This avoids the
+        # progress bar getting stuck at 100% because a formula-based lower
+        # bound (datasets × refs × vars × metrics × lead_times) ignores depth
+        # levels and per-ref variable coverage, leading to a ~2× underestimate.
+        # Falls back to the formula if no manifest exists yet (first ever run).
+        _grid_total: Optional[int] = None
+        _prev_manifest = map_dir / "manifest.json"
+        if _prev_manifest.exists():
+            try:
+                with open(_prev_manifest) as _pf:
+                    _grid_total = len(json.load(_pf).get("files", {})) or None
+            except Exception:
+                pass
+        if _grid_total is None:
+            _n_lts  = len(metadata.get("lead_times", []))
+            _n_refs = max(len(metadata.get("ref_variables") or {}), 1)
+            _n_vars = max(len(metadata.get("variables", [])), 1)
+            _n_mets = max(len(metadata.get("metrics", [])), 1)
+            _grid_total = len(datasets) * _n_refs * _n_vars * _n_mets * _n_lts
         _iter = _rich_progress.track(
             _iter,
             description="  Writing grid files …",
+            total=_grid_total,
             transient=True,
         )
 
     for key, grid_info in _iter:
-        # Track colour-scale stats
+        # Track colour-scale stats — per-FRT snapshot keys are intentionally
+        # excluded from this calculation.  Weekly snapshots may have much
+        # wider p95 ranges than the full-year aggregates (e.g. a bad week of
+        # Saral data), which would inflate the group scale and make the
+        # aggregate maps appear flat.  Only per-lt and all-lt aggregates drive
+        # the group limits; those limits are then applied to all files,
+        # including per-FRT snapshots.
         parts = key.split("|")
         grp = None
-        if len(parts) >= 5:
+        if len(parts) >= 5 and not _is_frt_key(parts):
             depth_label = _extract_depth_from_key(key)
             grp = (parts[1], parts[2], parts[3], depth_label)
             vmin = grid_info.get("vmin")
@@ -1781,12 +2114,17 @@ def preprocess_per_bins(
                 else:
                     group_min[grp] = min(group_min[grp], vmin)
                     group_max[grp] = max(group_max[grp], vmax)
+        elif len(parts) >= 5:
+            # Still need grp for file_group tracking (so fixup pass can apply
+            # the global scale to per-FRT files too).
+            depth_label = _extract_depth_from_key(key)
+            grp = (parts[1], parts[2], parts[3], depth_label)
 
         # Write JSONP grid file
         safe_name = key.replace("|", "_").replace(" ", "_")
         filename = f"{safe_name}.js"
         filepath = map_dir / filename
-        payload = json.dumps(grid_info, separators=(",", ":"))
+        payload = _json_dumps(grid_info)
         with open(filepath, "w") as f:
             f.write(f"_mapDataCallback({payload});\n")
         manifest[key] = filename
@@ -1799,6 +2137,11 @@ def preprocess_per_bins(
     # global values.  Each file is a small JSONP snippet (a few KB to a
     # few hundred KB), so this is orders of magnitude cheaper than
     # re-iterating _iter_grid_data.
+    logger.opt(colors=True).info(
+        "  <dim>◎</dim>  Applying global colour scales"
+        " <dim>({} groups, {} files to fix up) …</dim>",
+        len(group_min), len(file_group),
+    )
     _n_fixed = 0
     for filename, (grp, local_vmin, local_vmax) in file_group.items():
         gmin = group_min.get(grp)
@@ -1819,6 +2162,27 @@ def preprocess_per_bins(
 
     logger.debug("  Found {} colour-scale groups", len(group_min))
 
+    # ── Compute which (ref_alias, variable) pairs have depth data ──────
+    # Scan manifest keys for depth-label segments (e.g. "0.5-47.4").  This
+    # avoids showing the depth selector for ref_aliases that only provide
+    # surface data (e.g. argo_profiles salinity, which has no depth bins),
+    # even when another ref_alias for the same variable does have depth.
+    ref_depth_vars: Dict[str, list] = {}
+    for key in manifest:
+        parts = key.split("|")
+        if len(parts) < 5:
+            continue
+        ra_key = parts[1]
+        var_key = parts[2]
+        for seg in parts[5:]:
+            if _is_depth_label(seg):
+                if ra_key not in ref_depth_vars:
+                    ref_depth_vars[ra_key] = []
+                if var_key not in ref_depth_vars[ra_key]:
+                    ref_depth_vars[ra_key].append(var_key)
+                break
+    metadata["ref_depth_vars"] = ref_depth_vars
+
     # ── Write manifest + metadata ──────────────────────────────────────
     meta_file = map_dir / "manifest.json"
     with open(meta_file, "w") as f:
@@ -1834,5 +2198,12 @@ def preprocess_per_bins(
         "  <dim>→</dim>  <cyan>{}</cyan>",
         len(manifest), map_dir,
     )
+
+    # If per-FRT snapshot files were not generated, strip the FRT date lists
+    # from the returned metadata so that map_builder.py does not render a
+    # Period selector whose options would all return 404 errors.
+    if skip_frt_snapshots:
+        metadata = dict(metadata)
+        metadata["forecast_reference_times"] = {}
 
     return metadata
