@@ -216,7 +216,7 @@ def generate_report_items(
     texts = config.get("texts", {})
 
     # Apply model aliasing if provided
-    if models_map:
+    if models_map and not df.empty:
         df["dataset"] = df["dataset"].map(lambda x: models_map.get(x, x))
         df["model"] = df["model"].map(lambda x: models_map.get(x, x))
 
