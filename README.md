@@ -9,7 +9,7 @@ Le package produit un site HTML/CSS/JS avec:
 
 ## Prerequis
 
-- Python >= 3.11 et < 3.14
+- Python >= 3.10 et < 3.14
 - Poetry
 
 ## Installation
@@ -22,7 +22,13 @@ cd dc_leaderboard
 
 # 2) Installer les dependances
 poetry install
+
+# (optionnel) Ajouter les outils Jupyter (ipython, ipykernel, nbformat, jupyter)
+poetry install --extras notebook
 ```
+
+Les outils Jupyter ne sont pas necessaires pour generer le site : ils sont
+fournis dans l'extra optionnel `notebook` (`pip install "dcleaderboard[notebook]"`).
 
 ## Demarrage rapide (5 minutes)
 
