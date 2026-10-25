@@ -424,6 +424,10 @@ class _NpzBinStore:
         all_vars: List[str] = []
         # var → set of all column names seen across every entry
         var_all_cols: Dict[str, set] = {}
+        # var → total number of bin-rows across every entry (needed to
+        # pre-size the on-disk memmap arrays in pass 1..N below without
+        # ever materialising the full variable in RAM).
+        var_total_n: Dict[str, int] = {}
 
         for entry in self._stream:
             ra = entry.get("ref_alias") or entry.get("ref_type") or "unknown"
@@ -439,6 +443,7 @@ class _NpzBinStore:
                     all_vars.append(var)
                 if bins:
                     var_all_cols.setdefault(var, set()).update(bins._cols.keys())
+                    var_total_n[var] = var_total_n.get(var, 0) + len(bins)
 
         _np.savez_compressed(
             str(self._meta_path),
@@ -450,48 +455,63 @@ class _NpzBinStore:
         )
 
         # ---- pass 1…N: one variable at a time -------------------------
+        # Data is written directly into disk-backed memmap ``.npy`` files
+        # (pre-sized using the row counts gathered in pass 0) instead of
+        # being accumulated in growing in-RAM bytearrays. This keeps peak
+        # RSS bounded regardless of how large a single variable's total
+        # per-bins data is (previously the whole variable — every column,
+        # every entry — was held in memory at once via ``col_bufs``, which
+        # caused an OOM kill on large multi-GB per-bins files where a
+        # single variable's data alone can be tens of GB).
         for var in all_vars:
             all_cols = var_all_cols.get(var, set())
-            # Collect all columns for this variable across all entries.
-            # Use bytearray buffers to avoid Python list overhead.
-            col_bufs: Dict[str, bytearray] = {c: bytearray() for c in all_cols}
-            ei_buf = bytearray()
+            n_total = var_total_n.get(var, 0)
 
-            for ei, entry in enumerate(self._stream):
-                bins = entry["per_bins"].get(var)
-                if not bins:
-                    continue
-                cols = bins._cols
-                n = len(bins)
-                ei_bytes = _np.full(n, ei, dtype=_np.int16).tobytes()
-                ei_buf.extend(ei_bytes)
+            ei_path = self._cache_dir / f"{var}__ei.npy"
+            ei_mmap = _np.lib.format.open_memmap(
+                str(ei_path), mode="w+", dtype=_np.int16, shape=(n_total,)
+            )
+            col_mmaps: Dict[str, Any] = {
+                col: _np.lib.format.open_memmap(
+                    str(self._cache_dir / f"{var}__{col}.npy"),
+                    mode="w+", dtype=_np.float32, shape=(n_total,),
+                )
+                for col in all_cols
+            }
 
-                for col in all_cols:
-                    if col in cols:
-                        arr = cols[col]
-                        if isinstance(arr, _array):
-                            data = _np.frombuffer(arr, dtype=_np.float32).tobytes()
+            offset = 0
+            if n_total:
+                for ei, entry in enumerate(self._stream):
+                    bins = entry["per_bins"].get(var)
+                    if not bins:
+                        continue
+                    cols = bins._cols
+                    n = len(bins)
+                    ei_mmap[offset:offset + n] = ei
+
+                    for col in all_cols:
+                        if col in cols:
+                            arr = cols[col]
+                            if isinstance(arr, _array):
+                                data = _np.frombuffer(arr, dtype=_np.float32)
+                            else:
+                                data = _np.asarray(arr, dtype=_np.float32)
                         else:
-                            data = _np.array(arr, dtype=_np.float32).tobytes()
-                    else:
-                        # Fill missing metric column with NaN for this entry
-                        data = _np.full(n, _np.nan, dtype=_np.float32).tobytes()
-                    col_bufs[col].extend(data)
+                            # Fill missing metric column with NaN for this entry
+                            data = _np.full(n, _np.nan, dtype=_np.float32)
+                        col_mmaps[col][offset:offset + n] = data
+                    offset += n
 
-            # Write
-            n_total = len(ei_buf) // 2  # int16 = 2 bytes
-            ei_arr = _np.frombuffer(ei_buf, dtype=_np.int16)
-            _np.save(str(self._cache_dir / f"{var}__ei.npy"), ei_arr)
-
-            for col, buf in col_bufs.items():
-                arr = _np.frombuffer(bytes(buf), dtype=_np.float32)
-                _np.save(str(self._cache_dir / f"{var}__{col}.npy"), arr)
+            ei_mmap.flush()
+            del ei_mmap
+            for col_mmap in col_mmaps.values():
+                col_mmap.flush()
+            del col_mmaps
 
             logger.debug(
                 "  {} : {} bins, cols={}",
-                var, n_total, sorted(col_bufs.keys()),
+                var, n_total, sorted(all_cols),
             )
-            del col_bufs, ei_buf, ei_arr
 
         logger.opt(colors=True).info(
             "  <cyan>✓</cyan>  Numpy cache ready  <dim>({})</dim>",
@@ -1429,6 +1449,10 @@ def _iter_grid_data_npz(
     ei_to_lt = _np.array([int(meta_lt[i]) for i in range(n_ent)], dtype=_np.int16)
     ei_to_frtc = _np.array([frt_code[str(meta_frt[i])] for i in range(n_ent)], dtype=_np.int16)
 
+    # Rows are processed in bounded-size chunks rather than materialised in
+    # one shot (see _emit_agg_small docstring below for why).
+    _AGG_CHUNK_ROWS = 2_000_000
+
     def _emit_agg_small(
         idx: "_np.ndarray",
         metric_mmap,
@@ -1440,46 +1464,74 @@ def _iter_grid_data_npz(
     ):
         """Aggregate one (rac, rtc, lt) slice and yield grid entries.
 
-        ``idx`` is a small int array of row indices into the mmap arrays.
-        Only those rows are loaded from disk.
+        ``idx`` is an int array of row indices into the mmap arrays — for the
+        "all lead-times" pass this can be hundreds of millions of rows for
+        full-resolution ("points") grid types. Rows are processed in bounded
+        chunks (``_AGG_CHUNK_ROWS``) via a running per-cell (sum, count)
+        accumulator instead of materialising the whole slice as float64
+        arrays plus a single pandas DataFrame in one shot — the latter could
+        allocate tens of GB (several float64 copies of data that is float32
+        on disk, plus an equally sized DataFrame) and was observed to OOM-kill
+        the leaderboard build on large variables (e.g. u_current, ~276M rows).
         """
-        m_sub = metric_mmap[idx].astype(float)
-        valid = ~_np.isnan(m_sub)
-        if not valid.any():
-            return
-        idx_v = idx[valid]
-        m_v = m_sub[valid]
-
-        # Load only valid rows of coord arrays from mmap
-        yl_v = yl_mmap[idx_v].astype(float)
-        yr_v = yr_mmap[idx_v].astype(float)
-        xl_v = xl_mmap[idx_v].astype(float) if has_lon else _np.full(len(idx_v), -180.0)
-        xr_v = xr_mmap[idx_v].astype(float) if has_lon else _np.full(len(idx_v), 180.0)
-        if eff_has_depth:
-            dl_v = dl_mmap[idx_v].astype(float)
-            dr_v = dr_mmap[idx_v].astype(float)
-
-        # Aggregate (mean) per spatial cell using pandas groupby on the
-        # small per-group DataFrame.
         if lat_band_mode:
-            if eff_has_depth:
-                cell_cols = ["yl", "yr", "dl", "dr"]
-                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "dl": dl_v, "dr": dr_v, "m": m_v})
-            else:
-                cell_cols = ["yl", "yr"]
-                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "m": m_v})
+            cell_cols = ["yl", "yr", "dl", "dr"] if eff_has_depth else ["yl", "yr"]
         else:
             if eff_has_depth:
                 cell_cols = ["yl", "yr", "xl", "xr", "dl", "dr"]
-                sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "xl": xl_v, "xr": xr_v, "dl": dl_v, "dr": dr_v, "m": m_v})
             else:
                 cell_cols = ["yl", "yr", "xl", "xr"] if has_lon else ["yl", "yr"]
-                if has_lon:
-                    sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "xl": xl_v, "xr": xr_v, "m": m_v})
-                else:
-                    sub = _pd.DataFrame({"yl": yl_v, "yr": yr_v, "m": m_v})
+        include_xl = "xl" in cell_cols
+        include_dl = "dl" in cell_cols
 
-        grouped = sub.groupby(cell_cols, sort=False)["m"].mean().reset_index(name="m")
+        acc_sum: Dict[tuple, float] = {}
+        acc_cnt: Dict[tuple, int] = {}
+
+        n_idx = len(idx)
+        for start in range(0, n_idx, _AGG_CHUNK_ROWS):
+            chunk_idx = idx[start:start + _AGG_CHUNK_ROWS]
+            m_sub = metric_mmap[chunk_idx].astype(_np.float32)
+            valid = ~_np.isnan(m_sub)
+            if not valid.any():
+                continue
+            idx_v = chunk_idx[valid]
+            m_v = m_sub[valid]
+
+            cols_data: Dict[str, "_np.ndarray"] = {
+                "yl": yl_mmap[idx_v].astype(_np.float32),
+                "yr": yr_mmap[idx_v].astype(_np.float32),
+            }
+            if include_xl:
+                if has_lon:
+                    cols_data["xl"] = xl_mmap[idx_v].astype(_np.float32)
+                    cols_data["xr"] = xr_mmap[idx_v].astype(_np.float32)
+                else:
+                    cols_data["xl"] = _np.full(len(idx_v), -180.0, dtype=_np.float32)
+                    cols_data["xr"] = _np.full(len(idx_v), 180.0, dtype=_np.float32)
+            if include_dl:
+                cols_data["dl"] = dl_mmap[idx_v].astype(_np.float32)
+                cols_data["dr"] = dr_mmap[idx_v].astype(_np.float32)
+            cols_data["m"] = m_v
+
+            chunk_df = _pd.DataFrame(cols_data)
+            chunk_g = chunk_df.groupby(cell_cols, sort=False)["m"].agg(["sum", "count"])
+            for key_tuple, s, c in zip(
+                chunk_g.index.tolist(), chunk_g["sum"].to_numpy(), chunk_g["count"].to_numpy()
+            ):
+                if key_tuple in acc_sum:
+                    acc_sum[key_tuple] += float(s)
+                    acc_cnt[key_tuple] += int(c)
+                else:
+                    acc_sum[key_tuple] = float(s)
+                    acc_cnt[key_tuple] = int(c)
+
+        if not acc_sum:
+            return
+
+        keys = list(acc_sum.keys())
+        means = [acc_sum[k] / acc_cnt[k] for k in keys]
+        grouped = _pd.DataFrame(keys, columns=cell_cols)
+        grouped["m"] = means
         ga = grouped["m"].to_numpy(dtype=float)
         gv = ~_np.isnan(ga)
         if not gv.any():
