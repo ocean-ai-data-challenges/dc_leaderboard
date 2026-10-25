@@ -187,3 +187,6 @@ dcleaderboard/_site/
 
 # Local editor settings
 .vscode/
+
+# Local comparison results (not read by the build)
+dcleaderboard/results/comp/
