@@ -179,3 +179,11 @@ cython_debug/
 dcleaderboard/results/*_per_bins.json
 dcleaderboard/results/**/*_per_bins.json
 dcleaderboard/results/*_per_bins.json.gz
+dcleaderboard/results/*_per_bins.jsonl.gz
+dcleaderboard/results/**/*_per_bins.jsonl.gz
+
+# Generated site output
+dcleaderboard/_site/
+
+# Local editor settings
+.vscode/
