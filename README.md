@@ -432,3 +432,34 @@ poetry run dcleaderboard-build \
 2. **Testez l'API:** `poetry run python test_api.py`
 3. **Consultez les exemples:** `dcleaderboard/results/leaderboard_config.yaml`
 4. **Executez le build local:** `poetry run python dcleaderboard/run_local.py`
+
+## Options d'affichage (branche `dc2-optimisation`)
+
+Toutes optionnelles, dans le `leaderboard_config.yaml` :
+
+```yaml
+# Metriques affichees, dans cet ordre (les autres sont masquees)
+allowed_metrics: [rmse, crmse, bias, crps, ssr]
+
+# Modele de reference (premiere ligne, couleurs relatives a lui)
+reference_model: glonet
+
+# Moyennes sur la periode commune des modeles (debut le plus tardif, fin la plus precoce) ;
+# un tableau en tete donne la periode et le nombre de previsions retenues de chaque modele
+common_period: true
+
+# Echeances : numerotees a partir de 0 (l'echeance 0 est le jour d'initialisation) et
+# reparties du premier au dernier jour de l'horizon ("odd" : 1, 3, 5, 7, 9, l'ancien defaut)
+lead_days: {zero_based: true, mode: spread, max_count: 5}
+
+# Lecture des couleurs : une erreur est meilleure plus basse (defaut), un biais ou un ratio
+# plus proche de sa cible, une dispersion ou un effectif n'ont pas de bon cote (null).
+# Defauts : DEFAULT_METRIC_TARGETS (bias 0, ssr 1, energy_ratio_* 1, count/spread null)
+metrics_targets: {bias: 0, "energy_ratio_*": 1, count: null}
+
+texts:
+  legend_label: "Error relative to GloNet (%): blue better, red worse"
+```
+
+Les noms de `variables_names` s'appliquent aussi a la partie apres la profondeur
+(`50m u_current` avec `u_current: "Eastward velocity"` donne `50m Eastward velocity`).

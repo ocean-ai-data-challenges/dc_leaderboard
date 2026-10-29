@@ -298,7 +298,8 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
             
     # Legend Plot
     logger.debug("Generating legend plot...")
-    fig = create_legend_plot()
+    _legend = (config or {}).get("texts", {}).get("legend_label")
+    fig = create_legend_plot(label=_legend) if _legend else create_legend_plot()
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)
     buf.seek(0)

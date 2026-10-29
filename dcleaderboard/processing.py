@@ -5,6 +5,7 @@ This module handles data loading, statistical calculations (percent differences)
 HTML generation via Pandas Styler, and Matplotlib-based visualizations.
 """
 
+import fnmatch
 import json
 import re
 from pathlib import Path
@@ -23,6 +24,82 @@ METRICS_NAMES = {
     "rmsd_mld": "RMSD of Mixed Layer Depth",
     "lagrangian": "Lagrangian analysis",
 }
+
+
+# How a metric is read, for the colours: "lower" (an error: lower is better), a target value
+# (closer is better: a bias, a ratio), or None (no better or worse: a count, a spread). Patterns
+# (fnmatch) are allowed; ``metrics_targets`` in the config adds to / overrides these.
+DEFAULT_METRIC_TARGETS: Dict[str, Any] = {
+    "bias": 0.0,
+    "me": 0.0,
+    "ssr": 1.0,
+    "ssr_c": 1.0,
+    "energy_ratio_mean_*": None,   # the ensemble mean is smoother than the truth by design
+    "energy_ratio_*": 1.0,
+    "count": None,
+    "spread": None,
+    "n_members": None,
+}
+
+
+def metric_target(metric: str, config: Optional[Dict[str, Any]] = None) -> Any:
+    """"lower", a target value, or None (neutral) for ``metric``; first matching pattern wins,
+    the config's ``metrics_targets`` before the defaults."""
+    targets = dict((config or {}).get("metrics_targets") or {})
+    for table in (targets, DEFAULT_METRIC_TARGETS):
+        if metric in table:
+            return table[metric]
+        for pattern, value in table.items():
+            if any(c in pattern for c in "*?[") and fnmatch.fnmatch(metric, pattern):
+                return value
+    return "lower"
+
+
+def lead_day_label(lead_time: Any, zero_based: bool = False) -> str:
+    """"Lead day N": N is the lead time in days (``zero_based``) or the lead time + 1."""
+    if lead_time is None:
+        return "unknown"
+    return f"Lead day {int(lead_time) if zero_based else int(lead_time) + 1}"
+
+
+def restrict_to_common_period(df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    """Keep the forecasts every model has a period for: initialisations between the latest first
+    one and the earliest last one of the models (their periods' overlap).
+
+    A model's means over another period than the others' are not comparable (a 2024 baseline
+    against a 2023-2024 challenger). Returns the restricted frame and, per model, its
+    ``first``/``last`` initialisation and the number of forecasts kept / in total, plus the
+    ``common`` period (None when the periods do not overlap: nothing is then removed).
+    """
+    info: Dict[str, Any] = {"models": {}, "common": None}
+    if df.empty or "frt" not in df.columns or df["frt"].isna().all():
+        return df, info
+    frt = pd.to_datetime(df["frt"], errors="coerce")
+    by_model = frt.groupby(df["model"])
+    first, last = by_model.min(), by_model.max()
+    lo, hi = first.max(), last.min()
+    keep = (frt >= lo) & (frt <= hi) if lo <= hi else pd.Series(True, index=df.index)
+    for model in first.index:
+        sel = df["model"] == model
+        info["models"][model] = {
+            "first": first[model], "last": last[model],
+            "n_total": int(frt[sel].nunique()), "n_kept": int(frt[sel & keep].nunique()),
+        }
+    if lo <= hi:
+        info["common"] = (lo, hi)
+        df = df[keep]
+    return df, info
+
+
+def display_variable(label: str, variables_map: Dict[str, str]) -> str:
+    """The display name of a variable label: the label's own entry, else its depth prefix
+    ("Surface", "50m") kept and the rest translated ("50m u_current" with u_current mapped)."""
+    if label in variables_map:
+        return variables_map[label]
+    m = re.match(r"^(surface|\d+(?:\.\d+)?m)\s+(.+)$", label, flags=re.IGNORECASE)
+    if m and m.group(2) in variables_map:
+        return f"{m.group(1)} {variables_map[m.group(2)]}"
+    return label
 
 
 def get_depth_order(variable_name: str) -> int:
@@ -70,14 +147,27 @@ def sort_variables_by_type_and_depth(variables: List[str]) -> List[str]:
     return sorted(variables, key=sort_key)
 
 
-def get_lead_days_for_display(all_lead_days: List[str], max_count: int = 5) -> List[str]:
+def get_lead_days_for_display(all_lead_days: List[str], max_count: int = 5,
+                              mode: str = "odd") -> List[str]:
     """
     Select lead days for display.
+
+    ``mode`` "spread": ``max_count`` lead days evenly spread from the first to the last (the
+    horizon may be any length). ``mode`` "odd" (the former behaviour):
 
     - Always include Lead day 1 if it exists
     - Take odd lead days
     - Limit total count and remove last if necessary
     """
+    if mode == "spread":
+        ordered = sorted(
+            (ld for ld in all_lead_days if re.search(r"(\d+)", ld)),
+            key=lambda ld: int(re.search(r"(\d+)", ld).group(1)),  # type: ignore[union-attr]
+        )
+        if len(ordered) <= max_count:
+            return ordered
+        idx = np.unique(np.round(np.linspace(0, len(ordered) - 1, max_count)).astype(int))
+        return [ordered[i] for i in idx]
     # Extract and sort all lead days numerically
     lead_days_with_nums = []
     for ld in all_lead_days:
@@ -128,9 +218,8 @@ def load_data(results_dir: Path) -> pd.DataFrame:
                             model = entry.get("model", model_key)
                             ref_alias = entry.get("ref_alias", "unknown")
                             lead_time = entry.get("lead_time", None)
-                            lead_day = (
-                                f"Lead day {lead_time + 1}" if lead_time is not None else "unknown"
-                            )
+                            lead_day = lead_day_label(lead_time)
+                            frt = entry.get("forecast_reference_time")
                             result = entry.get("result", [])
 
                             # Process each item in result
@@ -148,6 +237,8 @@ def load_data(results_dir: Path) -> pd.DataFrame:
                                             "model": model,
                                             "metric": metric,
                                             "lead_day": lead_day,
+                                            "lead_time": lead_time,
+                                            "frt": frt,
                                             "variable": variable,
                                             "score": value,
                                             "ref_alias": ref_alias,
@@ -163,6 +254,8 @@ def load_data(results_dir: Path) -> pd.DataFrame:
                                                 "model": model,
                                                 "metric": metric_name,
                                                 "lead_day": lead_day,
+                                                "lead_time": lead_time,
+                                                "frt": frt,
                                                 "variable": variable,
                                                 "score": score,
                                                 "ref_alias": ref_alias,
@@ -226,14 +319,33 @@ def generate_report_items(
         yield ("markdown", "## Aucune donnée trouvée dans les fichiers JSON")
         return
 
+    lead_cfg = config.get("lead_days") or {}
+    if lead_cfg.get("zero_based") and "lead_time" in df.columns:
+        df = df.copy()
+        df["lead_day"] = [lead_day_label(t, zero_based=True) if pd.notna(t) else "unknown"
+                          for t in df["lead_time"]]
+
+    # Models compared over their common period only (config ``common_period``)
+    if config.get("common_period"):
+        df, period = restrict_to_common_period(df)
+        if period.get("models"):
+            yield ("markdown", "## " + texts.get("period_header", "Compared period"))
+            yield ("markdown", _period_summary(period, texts))
+            yield ("markdown", '<div style="height: 50px;"></div>')
+        if df.empty:
+            yield ("markdown", "*No forecast in the common period of the models.*")
+            return
+
     # Check for lead days
     if "lead_day" in df.columns:
         all_unique_lead_days = df["lead_day"].unique()
-        lead_days = get_lead_days_for_display(list(all_unique_lead_days), max_count=5)
+        lead_days = get_lead_days_for_display(
+            list(all_unique_lead_days), max_count=int(lead_cfg.get("max_count", 5)),
+            mode=lead_cfg.get("mode", "odd"))
     else:
         lead_days = []
 
-    reference_model = "glonet"  # Default
+    reference_model = config.get("reference_model", "glonet")  # Default
 
     for ref_alias in sorted(df["ref_alias"].unique()):
         header = texts.get("reference_header", "## Reference dataset: {ref_alias}")
@@ -243,9 +355,10 @@ def generate_report_items(
 
         # Determine reference model for this dataset
         datasets_in_ref = ref_df["dataset"].unique()
-        glonet_alias = models_map.get("glonet", "glonet")
-        if glonet_alias in datasets_in_ref:
-            reference_model = glonet_alias
+        ref_key = config.get("reference_model", "glonet")
+        ref_alias_name = models_map.get(ref_key, ref_key)
+        if ref_alias_name in datasets_in_ref:
+            reference_model = ref_alias_name
         else:
             # Take first dataset as reference
             reference_model = datasets_in_ref[0]
@@ -266,7 +379,8 @@ def generate_report_items(
         # Loop: variable group first, then metric
         for var_type, var_group in variables_by_type.items():
             header = texts.get("variable_group_header", "#### {var_type} Variables")
-            yield ("markdown", header.format(var_type=var_type.title()))
+            yield ("markdown", header.format(
+                var_type=variables_map.get(var_type, var_type.title())))
 
             # When the pipeline provides an explicit allowed_metrics list
             # (derived from the sources' metrics in the project YAML), use it
@@ -277,7 +391,8 @@ def generate_report_items(
             _available = sorted(ref_df.metric.unique())
             _allowed = (config or {}).get("allowed_metrics")
             if _allowed:
-                _filtered = [m for m in _available if m in _allowed]
+                # in the order of the list (the scores to read first come first)
+                _filtered = [m for m in _allowed if m in _available]
                 _available = _filtered if _filtered else _available
 
             for metric in _available:
@@ -338,21 +453,31 @@ def generate_report_items(
                     # Reindex with new order
                     pivot = pivot.reindex(columns=new_columns)
 
-                    # APPLY VARIABLE MAPPING HERE
+                    # APPLY VARIABLE MAPPING HERE (depth prefix kept: "50m" + mapped name)
                     if variables_map:
-                        # Rename levels of columns using dict
-                        pivot = pivot.rename(columns=variables_map, level=0)
+                        pivot = pivot.rename(
+                            columns=lambda v, vm=variables_map: display_variable(v, vm), level=0)
 
                 if len(pivot) == 0:
                     yield ("markdown", "*No data to display.*")
                     continue
 
                 # Reorder to put reference model first
+                target = metric_target(metric, config)
                 if reference_model in pivot.index:
                     new_order = [reference_model] + [m for m in pivot.index if m != reference_model]
                     pivot = pivot.reindex(new_order)
                     ref_values = pivot.loc[reference_model]
-                    percent_diff = (pivot - ref_values) / ref_values * 100
+                    # colours: how much worse (red) or better (blue) than the reference, in %
+                    # of the reference's error: the value itself for an error, the distance to
+                    # the target for a bias or a ratio, nothing for a neutral quantity
+                    if target is None:
+                        percent_diff = pd.DataFrame(np.nan, index=pivot.index, columns=pivot.columns)
+                    else:
+                        bad = pivot if target == "lower" else (pivot - float(target)).abs()
+                        bad_ref = bad.loc[reference_model]
+                        with np.errstate(divide="ignore", invalid="ignore"):
+                            percent_diff = (bad - bad_ref) / bad_ref.where(bad_ref.abs() > 1e-12) * 100
                 else:
                     # If no reference model, no coloring
                     ref_values = None
@@ -458,7 +583,30 @@ def generate_report_items(
                 yield ("markdown", '<div style="height: 50px;"></div>')
 
 
-def create_legend_plot(cmap_code: str = "coolwarm") -> plt.Figure:
+def _period_summary(period: Dict[str, Any], texts: Dict[str, Any]) -> str:
+    """HTML table of the period of each model and the forecasts kept."""
+    models = period.get("models") or {}
+    common = period.get("common")
+    if common is not None:
+        head = texts.get("common_period_text",
+                         "Every score is a mean over the forecasts initialised in the models' "
+                         "common period, {first} to {last}.")
+        head = head.format(first=f"{common[0]:%Y-%m-%d}", last=f"{common[1]:%Y-%m-%d}")
+    else:
+        head = "The models' periods do not overlap: each one is scored over its own."
+    rows = "".join(
+        f"<tr><th>{model}</th><td>{m['first']:%Y-%m-%d}</td><td>{m['last']:%Y-%m-%d}</td>"
+        f"<td>{m['n_kept']} / {m['n_total']}</td></tr>"
+        for model, m in models.items()
+    )
+    return (f"<p>{head}</p><div class=\"table-responsive\"><table class=\"dataframe table\">"
+            "<thead><tr><th>Model</th><th>First forecast</th><th>Last forecast</th>"
+            f"<th>Forecasts kept</th></tr></thead><tbody>{rows}</tbody></table></div>")
+
+
+def create_legend_plot(cmap_code: str = "coolwarm",
+                       label: str = "Error relative to the reference (%): blue better, red worse",
+                       ) -> plt.Figure:
     """Create a matplotlib figure for the legend."""
     cmap = plt.get_cmap(cmap_code)
     norm = plt.Normalize(-100, 100)
@@ -469,7 +617,7 @@ def create_legend_plot(cmap_code: str = "coolwarm") -> plt.Figure:
     # Colorbar
     cb = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, orientation="horizontal")
     
-    cb.set_label("Deviation from Reference (%)", fontsize=9.5, labelpad=5)
+    cb.set_label(label, fontsize=9.5, labelpad=5)
     cb.ax.tick_params(labelsize=8.5)
 
     return fig
