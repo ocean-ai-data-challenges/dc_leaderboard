@@ -98,11 +98,14 @@ def restrict_to_period(df: pd.DataFrame, period: Dict[str, Any]) -> Tuple[pd.Dat
     covers the period when its first forecast in it is at most that many days after ``start`` and
     its last one at most that many days before ``end`` (the last forecasts end before ``end`` by
     their horizon). A model that does not (a 2024 baseline in a 2023-2024 view) is left out of the
-    view, not scored over part of it. Returns the frame and {"excluded": {model: (first, last)}}.
+    view, not scored over part of it. ``exclude_models`` lists models left out whatever their
+    coverage (a model whose training saw part of the period: another track). Returns the frame and
+    {"excluded": {model: (first, last)}, "other_track": {model: (first, last)}}.
     """
-    info: Dict[str, Any] = {"excluded": {}}
+    info: Dict[str, Any] = {"excluded": {}, "other_track": {}}
     if df.empty or "frt" not in df.columns:
         return df, info
+    other_track = set(period.get("exclude_models") or [])
     start, end = pd.Timestamp(period["start"]), pd.Timestamp(period["end"])
     tol = pd.Timedelta(days=int(period.get("coverage_tolerance_days", 21)))
     frt = pd.to_datetime(df["frt"], errors="coerce")
@@ -111,7 +114,10 @@ def restrict_to_period(df: pd.DataFrame, period: Dict[str, Any]) -> Tuple[pd.Dat
     keep = pd.Series(True, index=df.index)
     for model, f in frt.groupby(df["model"]):
         first, last = f.min(), f.max()
-        if first - start > tol or end - last > tol:
+        if model in other_track:
+            info["other_track"][model] = (first, last)
+            keep &= df["model"] != model
+        elif first - start > tol or end - last > tol:
             info["excluded"][model] = (first, last)
             keep &= df["model"] != model
     return df[keep], info
@@ -354,8 +360,12 @@ def generate_report_items(
     # A declared period (config ``period``, one view of ``periods``): its forecasts, its models
     excluded: Dict[str, Any] = {}
     if config.get("period"):
-        df, _cov = restrict_to_period(df, config["period"])
-        excluded = _cov["excluded"]
+        _period = dict(config["period"])
+        # models named by their key or their display name (models_names)
+        _period["exclude_models"] = [models_map.get(m, m) for m in _period.get("exclude_models") or []]
+        df, _cov = restrict_to_period(df, _period)
+        excluded = {m: (*v, "coverage") for m, v in _cov["excluded"].items()}
+        excluded.update({m: (*v, "track") for m, v in _cov["other_track"].items()})
         if df.empty:
             yield ("markdown", "*No model covers this period.*")
             return
@@ -635,10 +645,14 @@ def _period_summary(period: Dict[str, Any], texts: Dict[str, Any]) -> str:
         f"<td>{m['n_kept']} / {m['n_total']}</td></tr>"
         for model, m in models.items()
     )
+    why = {
+        "coverage": texts.get("excluded_text", "not shown: does not cover the period"),
+        "track": texts.get("other_track_text", "not shown: ranked in another track"),
+    }
     rows += "".join(
         f"<tr><th>{model}</th><td>{first:%Y-%m-%d}</td><td>{last:%Y-%m-%d}</td>"
-        f"<td>{texts.get('excluded_text', 'not shown: does not cover the period')}</td></tr>"
-        for model, (first, last) in (period.get("excluded") or {}).items()
+        f"<td>{why[reason]}</td></tr>"
+        for model, (first, last, reason) in (period.get("excluded") or {}).items()
     )
     return (f"<p>{head}</p><div class=\"table-responsive\"><table class=\"dataframe table\">"
             "<thead><tr><th>Model</th><th>First forecast</th><th>Last forecast</th>"

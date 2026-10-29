@@ -135,3 +135,17 @@ def test_the_page_has_one_view_per_period(tmp_path):
     v2024, vall = html.split('data-period="all" style=')[0], html.split('data-period="all" style=')[1]
     assert "glonet" in v2024 and "does not cover the period" in vall
     assert 'id="2024-' in html and 'id="all-' in html                       # anchors kept apart
+
+
+def test_a_model_of_another_track_is_left_out(tmp_path):
+    from dcleaderboard.processing import restrict_to_period
+    _write(tmp_path, "ens", ["2023-01-05", "2024-12-19"], {"rmse": 2.0})
+    _write(tmp_path, "late", ["2023-01-04", "2024-12-18"], {"rmse": 1.0})   # trained on 2023
+    df = load_data(tmp_path)
+    kept, info = restrict_to_period(df, {"start": "2023-01-01", "end": "2024-12-31",
+                                         "exclude_models": ["late"]})
+    assert set(kept["model"]) == {"ens"} and "late" in info["other_track"]
+    items = list(generate_report_items(df, config={
+        "common_period": True, "models_names": {"late": "Late model"},
+        "period": {"start": "2023-01-01", "end": "2024-12-31", "exclude_models": ["late"]}}))
+    assert any("ranked in another track" in c for k, c in items if k == "markdown")

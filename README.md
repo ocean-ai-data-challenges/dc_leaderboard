@@ -469,6 +469,7 @@ periods:
     start: "2023-01-01"
     end: "2024-12-31"
     description: "The models that cover the whole period."
+    exclude_models: [glonet]     # classes dans une autre piste (entrainement sur une partie de la periode)
     config: {reference_model: glo4ens}
 
 # Cartes : sans la carte moyennee sur les profondeurs (un niveau est toujours choisi)
@@ -478,6 +479,7 @@ texts:
   legend_label: "Error relative to GloNet (%): blue better, red worse"
   period_switch_label: "Evaluation period"
   excluded_text: "not shown: does not cover the period"
+  other_track_text: "not shown: ranked in another track"
   docs_url: "https://..."            # lien Documentation (accueil, pied de page)
   footer_text: "..."                 # phrase du pied de page
   about_how_it_works: "..."          # paragraphes de la page About (HTML admis)
