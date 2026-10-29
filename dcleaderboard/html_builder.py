@@ -192,13 +192,15 @@ def build_footer(config: Dict[str, Any] = None) -> str:
         config = {}
     texts = config.get("texts", {})
     github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
-    
+    docs_url = texts.get("docs_url", "")
+    docs_link = f'<a href="{docs_url}" target="_blank">Documentation</a>' if docs_url else ""
+
     return f"""
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <h3>Ocean &amp; Climate Data Challenge</h3>
-      <p>An open benchmark for evaluating ocean forecasting models, maintained by IMT Atlantique.</p>
+      <p>{texts.get("footer_text", "An open benchmark for evaluating ocean forecasting models, maintained by IMT Atlantique.")}</p>
     </div>
     <div class="footer-links">
       <div class="footer-links-col">
@@ -206,6 +208,7 @@ def build_footer(config: Dict[str, Any] = None) -> str:
         <a href="leaderboard.html">Leaderboard</a>
         <a href="maps.html">Spatial Maps</a>
         <a href="about.html">About</a>
+        {docs_link}
       </div>
       <div class="footer-links-col">
         <h4>Community</h4>
@@ -245,29 +248,27 @@ def build_page(title: str, content: str, active_page: str = "", config: Dict[str
 """
 
 
-def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> str:
-    """Generate the HTML content for the leaderboard page."""
-    logger.debug("Loading data for leaderboard...")
-    df = load_data(results_dir)
+def _render_view(df, config: Dict[str, Any], prefix: str = "") -> str:
+    """The tables of one view (section nav, cards, legend); ``prefix`` keeps its anchors apart."""
     html_parts = []
-    
+
     # Collect section anchors for nav
     sections: List[Tuple[str, str]] = []
     card_buffer: List[str] = []
     current_section_id = ""
 
     # First pass: collect section names
-    for item_type, content in generate_report_items(df, config=config):
+    for item_type, content in generate_report_items(df.copy(), config=config):
         if item_type == "markdown" and isinstance(content, str) and content.startswith("## "):
             label = content[3:].strip()
-            slug = _slugify(label)
+            slug = prefix + _slugify(label)
             sections.append((slug, label))
 
     # Section nav
     html_parts.append(build_section_nav(sections))
 
     # Second pass: build actual content
-    for item_type, content in generate_report_items(df, config=config):
+    for item_type, content in generate_report_items(df.copy(), config=config):
         if item_type == "markdown":
             if '<div style="height: 50px;"></div>' in content:
                 if card_buffer:
@@ -283,7 +284,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
                 # Inject anchor ids for h2 section headers
                 if content.startswith("## "):
                     label = content[3:].strip()
-                    current_section_id = _slugify(label)
+                    current_section_id = prefix + _slugify(label)
                 card_buffer.append(rendered)
         elif item_type == "styler":
             card_buffer.append('<div class="table-responsive">')
@@ -295,7 +296,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
         html_parts.append(f'<div class="leaderboard-card" id="{current_section_id}">')
         html_parts.extend(card_buffer)
         html_parts.append('</div>')
-            
+
     # Legend Plot
     logger.debug("Generating legend plot...")
     _legend = (config or {}).get("texts", {}).get("legend_label")
@@ -305,7 +306,7 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
     buf.seek(0)
     img_str = base64.b64encode(buf.read()).decode("utf-8")
     plt.close(fig)
-    
+
     html_parts.append(
         f'<div class="legend-section">\n'
         f'<div class="legend-container">\n'
@@ -316,13 +317,80 @@ def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> s
     return "\n".join(html_parts)
 
 
+# The period switch: shows one view, remembers nothing (the first view is the default)
+_PERIOD_SWITCH_JS = """
+<script>
+function dcShowPeriod(key) {
+  document.querySelectorAll('.period-view').forEach(function (v) {
+    v.style.display = v.dataset.period === key ? '' : 'none';
+  });
+  document.querySelectorAll('.period-switch button').forEach(function (b) {
+    b.classList.toggle('active', b.dataset.period === key);
+    b.setAttribute('aria-pressed', b.dataset.period === key ? 'true' : 'false');
+  });
+}
+</script>
+"""
+
+
+def generate_leaderboard_content(results_dir: Path, config: Dict[str, Any]) -> str:
+    """Generate the HTML content for the leaderboard page.
+
+    With ``periods`` in the config (a list of {key, label, start, end, description?,
+    coverage_tolerance_days?, config?}), one view per period and a switch between them: each view
+    keeps the models that cover its period (``restrict_to_period``) and its ``config`` overrides
+    the page's (a reference model, a legend for the models it has).
+    """
+    logger.debug("Loading data for leaderboard...")
+    df = load_data(results_dir)
+    periods = config.get("periods") or []
+    if not periods:
+        return _render_view(df, config)
+
+    texts = config.get("texts", {})
+    buttons, views = [], []
+    for i, period in enumerate(periods):
+        key = _slugify(str(period.get("key", i)))
+        view_cfg = _merge_configs(config, period.get("config") or {})
+        view_cfg = {**view_cfg, "period": period}
+        view_cfg.pop("periods", None)
+        active = i == 0
+        hidden = "" if active else ' style="display:none"'
+        onclick = f"dcShowPeriod('{key}')"
+        buttons.append(
+            f'<button type="button" data-period="{key}" class="{"active" if active else ""}" '
+            f'aria-pressed="{"true" if active else "false"}" onclick="{onclick}">'
+            f'{period.get("label", key)}</button>')
+        description = period.get("description")
+        intro = f'<p class="period-description">{description}</p>' if description else ""
+        views.append(f'<div class="period-view" data-period="{key}"{hidden}>{intro}'
+                     + _render_view(df, view_cfg, prefix=f"{key}-") + "</div>")
+    switch = (
+        '<div class="period-switch" role="group" aria-label="Evaluation period">'
+        f'<span class="period-switch-title">{texts.get("period_switch_label", "Evaluation period")}'
+        f'</span>{"".join(buttons)}</div>')
+    return _PERIOD_SWITCH_JS + switch + "\n".join(views)
+
+
 def generate_about_content(config: Dict[str, Any] = None) -> str:
     """Generate the HTML content for the about page."""
     if config is None:
         config = {}
     texts = config.get("texts", {})
     github_url = texts.get("github_url", "https://github.com/ppr-ocean-ia/dc-tools")
-    
+    how = texts.get(
+        "about_how_it_works",
+        "Models are evaluated against reference satellite datasets using standard metrics. "
+        "The tables show metric values for each model, with color coding indicating performance "
+        'relative to the reference model: <strong style="color:#1a73e8;">blue = better</strong>, '
+        '<strong style="color:#c53929;">red = worse</strong>.')
+    participating = texts.get(
+        "about_participating",
+        f'Want to add your model? Check out the <a href="{github_url}" target="_blank">GitHub '
+        "repository</a> for submission guidelines and evaluation code.")
+    supporters = texts.get("about_supporters", "")
+    supporters = f"<h3>Support</h3><p>{supporters}</p>" if supporters else ""
+
     return f"""
 <div class="leaderboard-card">
 <h2>About this Leaderboard</h2>
@@ -330,14 +398,11 @@ def generate_about_content(config: Dict[str, Any] = None) -> str:
 <strong>PPR Oc&eacute;an et Climat</strong> Data Challenge initiative.</p>
 
 <h3>How it works</h3>
-<p>Models are evaluated against reference satellite datasets using standard metrics. 
-The tables show metric values for each model, with color coding indicating performance 
-relative to the reference model: <strong style="color:#1a73e8;">blue = better</strong>, 
-<strong style="color:#c53929;">red = worse</strong>.</p>
+<p>{how}</p>
 
 <h3>Participating</h3>
-<p>Want to add your model? Check out the 
-<a href="{github_url}" target="_blank">GitHub repository</a> for submission guidelines and evaluation code.</p>
+<p>{participating}</p>
+{supporters}
 </div>
 """
 

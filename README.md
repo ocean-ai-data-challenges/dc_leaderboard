@@ -457,9 +457,35 @@ lead_days: {zero_based: true, mode: spread, max_count: 5}
 # Defauts : DEFAULT_METRIC_TARGETS (bias 0, ssr 1, energy_ratio_* 1, count/spread null)
 metrics_targets: {bias: 0, "energy_ratio_*": 1, count: null}
 
+# Vues par periode d'evaluation, avec un selecteur en tete de page (la premiere est affichee
+# par defaut). Une vue garde les previsions initialisees dans sa periode, des modeles qui la
+# couvrent (premiere et derniere prevision a moins de coverage_tolerance_days, 21 par defaut,
+# du debut et de la fin) ; les autres sont listes "not shown". ``config`` remplace, pour la vue,
+# des cles de la configuration (modele de reference, legende)
+periods:
+  - {key: "2024", label: "2024", start: "2024-01-01", end: "2024-12-31"}
+  - key: "2023_2024"
+    label: "2023-2024"
+    start: "2023-01-01"
+    end: "2024-12-31"
+    description: "The models that cover the whole period."
+    config: {reference_model: glo4ens}
+
+# Cartes : sans la carte moyennee sur les profondeurs (un niveau est toujours choisi)
+maps: {all_depths_option: false}
+
 texts:
   legend_label: "Error relative to GloNet (%): blue better, red worse"
+  period_switch_label: "Evaluation period"
+  excluded_text: "not shown: does not cover the period"
+  docs_url: "https://..."            # lien Documentation (accueil, pied de page)
+  footer_text: "..."                 # phrase du pied de page
+  about_how_it_works: "..."          # paragraphes de la page About (HTML admis)
+  about_participating: "..."
+  about_supporters: "..."            # section "Support" (absente si vide)
 ```
+
+Les echeances des cartes suivent `lead_days.zero_based` (Day 0 .. 9 au lieu de Day 1 .. 10).
 
 Les noms de `variables_names` s'appliquent aussi a la partie apres la profondeur
 (`50m u_current` avec `u_current: "Eastward velocity"` donne `50m Eastward velocity`).

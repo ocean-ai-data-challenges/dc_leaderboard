@@ -105,3 +105,33 @@ def test_ratio_colours_are_relative_to_the_target():
     })
     styler = _tables(df, {})[0]
     assert np.isfinite(styler.data.values).all()
+
+
+def test_a_period_keeps_the_models_that_cover_it(tmp_path):
+    from dcleaderboard.processing import restrict_to_period
+    _write(tmp_path, "glonet", ["2024-01-03", "2024-06-05", "2024-12-18"], {"rmse": 1.0})
+    _write(tmp_path, "ens", ["2023-01-05", "2023-06-01", "2024-01-04", "2024-12-19"],
+           {"rmse": 2.0})
+    df = load_data(tmp_path)
+    full, info = restrict_to_period(df, {"start": "2023-01-01", "end": "2024-12-31"})
+    assert set(full["model"]) == {"ens"} and "glonet" in info["excluded"]   # 2024 only
+    y2024, info = restrict_to_period(df, {"start": "2024-01-01", "end": "2024-12-31"})
+    assert set(y2024["model"]) == {"ens", "glonet"} and not info["excluded"]
+    assert pd.to_datetime(y2024["frt"]).min() >= pd.Timestamp("2024-01-01")
+
+
+def test_the_page_has_one_view_per_period(tmp_path):
+    from dcleaderboard.html_builder import generate_leaderboard_content
+    _write(tmp_path, "glonet", ["2024-01-03", "2024-12-18"], {"rmse": 1.0})
+    _write(tmp_path, "ens", ["2023-01-05", "2024-01-04", "2024-12-19"], {"rmse": 2.0})
+    html = generate_leaderboard_content(tmp_path, {
+        "common_period": True,
+        "periods": [
+            {"key": "2024", "label": "2024", "start": "2024-01-01", "end": "2024-12-31"},
+            {"key": "all", "label": "2023-2024", "start": "2023-01-01", "end": "2024-12-31",
+             "config": {"reference_model": "ens"}},
+        ]})
+    assert html.count('class="period-view"') == 2 and "dcShowPeriod('all')" in html
+    v2024, vall = html.split('data-period="all" style=')[0], html.split('data-period="all" style=')[1]
+    assert "glonet" in v2024 and "does not cover the period" in vall
+    assert 'id="2024-' in html and 'id="all-' in html                       # anchors kept apart

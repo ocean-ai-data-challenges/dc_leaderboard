@@ -28,6 +28,11 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
         config = {}
     _models_labels = config.get("models_names", {})
     _metrics_labels = config.get("metrics_names", {})
+    # lead days numbered as in the tables (``lead_days.zero_based``: 0 = the initialisation day)
+    _lead_offset = 0 if (config.get("lead_days") or {}).get("zero_based") else 1
+    # ``maps.all_depths_option: false`` drops the map averaged over depths (errors of levels as
+    # different as the surface and 1000 m mixed): a level is then always chosen
+    _all_depths = bool((config.get("maps") or {}).get("all_depths_option", True))
 
 
     models = metadata["models"]
@@ -60,7 +65,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
         if lt == "all":
             lead_option_parts.append('<option value="all" selected>All days (composite)</option>')
         else:
-            lead_option_parts.append(f'<option value="{lt}">Day {lt + 1}</option>')
+            lead_option_parts.append(f'<option value="{lt}">Day {lt + _lead_offset}</option>')
     lead_options = "\n".join(lead_option_parts)
 
     # Depth bins as JS object
@@ -175,6 +180,7 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
 
   // --- Config ---
   const DEPTH_BINS = {depth_bins_js};
+  const ALL_DEPTHS_OPTION = {"true" if _all_depths else "false"};
   const REF_VARIABLES = {ref_variables_js};
   const REF_TYPE_MAP = {ref_type_map_js};
   // REF_DEPTH_VARS[ref_alias] lists variables that have depth-resolved data
@@ -479,6 +485,10 @@ def generate_map_page_content(metadata: Dict[str, Any], site_base_url: str = "",
         opt.textContent = d + ' m';
         depthSelect.appendChild(opt);
       }});
+      if (!ALL_DEPTHS_OPTION) {{
+        depthSelect.remove(0);
+        depthSelect.selectedIndex = 0;
+      }}
     }} else {{
       depthGroup.style.display = 'none';
     }}

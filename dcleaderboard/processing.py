@@ -91,6 +91,32 @@ def restrict_to_common_period(df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str,
     return df, info
 
 
+def restrict_to_period(df: pd.DataFrame, period: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    """Keep the forecasts initialised in a declared period, of the models that cover it.
+
+    ``period``: ``start``, ``end`` (dates) and ``coverage_tolerance_days`` (default 21): a model
+    covers the period when its first forecast in it is at most that many days after ``start`` and
+    its last one at most that many days before ``end`` (the last forecasts end before ``end`` by
+    their horizon). A model that does not (a 2024 baseline in a 2023-2024 view) is left out of the
+    view, not scored over part of it. Returns the frame and {"excluded": {model: (first, last)}}.
+    """
+    info: Dict[str, Any] = {"excluded": {}}
+    if df.empty or "frt" not in df.columns:
+        return df, info
+    start, end = pd.Timestamp(period["start"]), pd.Timestamp(period["end"])
+    tol = pd.Timedelta(days=int(period.get("coverage_tolerance_days", 21)))
+    frt = pd.to_datetime(df["frt"], errors="coerce")
+    df = df[(frt >= start) & (frt <= end)]
+    frt = frt[df.index]
+    keep = pd.Series(True, index=df.index)
+    for model, f in frt.groupby(df["model"]):
+        first, last = f.min(), f.max()
+        if first - start > tol or end - last > tol:
+            info["excluded"][model] = (first, last)
+            keep &= df["model"] != model
+    return df[keep], info
+
+
 def display_variable(label: str, variables_map: Dict[str, str]) -> str:
     """The display name of a variable label: the label's own entry, else its depth prefix
     ("Surface", "50m") kept and the rest translated ("50m u_current" with u_current mapped)."""
@@ -325,9 +351,19 @@ def generate_report_items(
         df["lead_day"] = [lead_day_label(t, zero_based=True) if pd.notna(t) else "unknown"
                           for t in df["lead_time"]]
 
+    # A declared period (config ``period``, one view of ``periods``): its forecasts, its models
+    excluded: Dict[str, Any] = {}
+    if config.get("period"):
+        df, _cov = restrict_to_period(df, config["period"])
+        excluded = _cov["excluded"]
+        if df.empty:
+            yield ("markdown", "*No model covers this period.*")
+            return
+
     # Models compared over their common period only (config ``common_period``)
     if config.get("common_period"):
         df, period = restrict_to_common_period(df)
+        period["excluded"] = excluded
         if period.get("models"):
             yield ("markdown", "## " + texts.get("period_header", "Compared period"))
             yield ("markdown", _period_summary(period, texts))
@@ -598,6 +634,11 @@ def _period_summary(period: Dict[str, Any], texts: Dict[str, Any]) -> str:
         f"<tr><th>{model}</th><td>{m['first']:%Y-%m-%d}</td><td>{m['last']:%Y-%m-%d}</td>"
         f"<td>{m['n_kept']} / {m['n_total']}</td></tr>"
         for model, m in models.items()
+    )
+    rows += "".join(
+        f"<tr><th>{model}</th><td>{first:%Y-%m-%d}</td><td>{last:%Y-%m-%d}</td>"
+        f"<td>{texts.get('excluded_text', 'not shown: does not cover the period')}</td></tr>"
+        for model, (first, last) in (period.get("excluded") or {}).items()
     )
     return (f"<p>{head}</p><div class=\"table-responsive\"><table class=\"dataframe table\">"
             "<thead><tr><th>Model</th><th>First forecast</th><th>Last forecast</th>"
