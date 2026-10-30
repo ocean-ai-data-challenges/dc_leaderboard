@@ -194,7 +194,8 @@ class _V2BinView:
         compact: Dict[str, Any] = {}
         for k, v in cols.items():
             if isinstance(v, list):
-                compact[k] = _array("f", v)
+                # a NaN score is written as JSON null (e.g. an ensemble score in a bin without it)
+                compact[k] = _array("f", (float("nan") if x is None else x for x in v))
             else:
                 compact[k] = v
         self._cols = compact

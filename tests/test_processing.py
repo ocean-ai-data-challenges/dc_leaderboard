@@ -149,3 +149,10 @@ def test_a_model_of_another_track_is_left_out(tmp_path):
         "common_period": True, "models_names": {"late": "Late model"},
         "period": {"start": "2023-01-01", "end": "2024-12-31", "exclude_models": ["late"]}}))
     assert any("ranked in another track" in c for k, c in items if k == "markdown")
+
+
+def test_a_null_bin_score_is_a_nan():
+    import math
+    from dcleaderboard.map_processing import _V2BinView
+    view = _V2BinView({"yl": [0.0, 1.0], "yr": [1.0, 2.0], "crps": [0.5, None]})
+    assert len(view) == 2 and math.isnan(list(view)[1]["crps"])
